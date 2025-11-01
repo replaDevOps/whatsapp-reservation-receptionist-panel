@@ -1,19 +1,21 @@
 import {Form, Select, Typography} from 'antd';
 import './index.css'
-export const MySelect = ({withoutForm,name,label,mode,disabled,required,message,value,options, ...props}) => {
+export const MySelect = ({withoutForm, placeholder, name,label,mode,disabled,required,message,value,options, className, error, ...props}) => {
   return (
     withoutForm?
       <Select 
         maxTagCount= 'responsive'
-        className='select w-100'
+        className={`select without-form-select w-100 ${className}`}
         value={value || ''} 
         mode={mode || ''} 
         disabled={disabled || false} 
         {...props}
+        placeholder={placeholder}
       >
           {
               options?.map(opt=><Select.Option value={opt?.id} key={opt?.id}>{opt?.name}</Select.Option>)
           }
+
           
       </Select>
       :
@@ -26,6 +28,7 @@ export const MySelect = ({withoutForm,name,label,mode,disabled,required,message,
               message,
               },
           ]}
+          help={error}
           className='custom-select'
           >
               <Select 
@@ -34,6 +37,7 @@ export const MySelect = ({withoutForm,name,label,mode,disabled,required,message,
                 disabled={disabled || false} 
                 maxTagCount= 'responsive'
                 {...props}
+                placeholder={placeholder}
                 >
                   {
                       options?.map(opt=><Select.Option value={opt?.name} key={opt?.id}>{opt?.name}</Select.Option>)

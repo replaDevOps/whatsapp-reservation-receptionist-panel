@@ -16,7 +16,7 @@
 }
 
 .custom-input1 .ant-input-affix-wrapper{
-    padding: 10px !important;
+    padding: 8px !important;
     border-radius: 5px !important;
 }
 
@@ -92,4 +92,13 @@
 
 .otp-cs .ant-otp .ant-otp-input-wrapper input{
     height: 50px;
+}
+
+
+.without-form-select .ant-select-selection-wrap{
+    height: 100%;
+}
+
+.without-form-select .ant-select-selection-wrap{
+    height: 100% !important;
 }

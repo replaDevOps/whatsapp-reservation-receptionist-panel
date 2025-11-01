@@ -6,33 +6,33 @@ const UserProfileDrawer= ({visible, onClose})=>{
 
     const [loading, setLoading]= useState(false)
 
-    // const logout = () => {
-    //     setLoading(true)
-    //     const {userToken}= checkAuthorization()
-    //     var myHeaders = new Headers();
-    //     myHeaders.append("Authorization", userToken)
-    //     var requestOptions = {
-    //       method: 'GET',
-    //       headers: myHeaders,
-    //       redirect: 'follow'
-    //     }
-    //     fetch(domainUrl + '/logout', requestOptions)
-    //     .then(response => response.json())
-    //     .then(result => {
-    //     if (result?.success)
-    //         {
-    //             localStorage.clear()
-    //             window.location.href = '/'
-    //         }
-    //     else
-    //         throw 'error'
-    //     })
-    //     .catch(() => {
-    //         setLoading(false)
-    //         localStorage.clear()
-    //         window.location.href = '/'
-    //     })
-    // }
+    const logout = () => {
+        setLoading(true)
+        const {userToken}= checkAuthorization()
+        var myHeaders = new Headers();
+        myHeaders.append("Authorization", userToken)
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+        }
+        fetch(domainUrl + '/logout', requestOptions)
+        .then(response => response.json())
+        .then(result => {
+        if (result?.success)
+            {
+                localStorage.clear()
+                window.location.href = '/'
+            }
+        else
+            throw 'error'
+        })
+        .catch(() => {
+            setLoading(false)
+            localStorage.clear()
+            window.location.href = '/'
+        })
+    }
 
     return (
         <Drawer

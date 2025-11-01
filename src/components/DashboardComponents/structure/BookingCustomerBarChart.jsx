@@ -10,7 +10,7 @@ const BookingCustomerBarChart = () => {
 
     const [order, setOrder] = useState(0);
     const items = [
-        { label: <NavLink to={''}>Last 10 days</NavLink>, key: 0 },
+        { label: <NavLink to={''}>2024</NavLink>, key: 0 },
     ];
 
     const onClick = ({ key }) => {
@@ -23,11 +23,11 @@ const BookingCustomerBarChart = () => {
         series: [
           {
             name: 'New Customers Bookings',
-            data: [20, 40, 60, 45, 75, 90, 55,30,43, 60],
+            data: [20, 40, 60, 45, 75, 90, 55,30,43, 60, 44, 50],
           },
           {
             name: 'Old Customers Bookings',
-            data: [10, 30, 45, 25, 60, 75, 50,25,38, 55],
+            data: [10, 30, 45, 25, 60, 75, 50,25,38, 55, 53, 40],
           },
         ],
         options: {
@@ -39,7 +39,7 @@ const BookingCustomerBarChart = () => {
           stroke: { curve: 'smooth', width: 2, },
           xaxis: {
             categories: [
-              '01 Oct','02 Oct','03 Oct','04 Oct','05 Oct','06 Oct','07 Oct','08 Oct','09 Oct','10 Oct',
+              'Jan','Feb','Mar','Apr','May','June','July','Aug','Sep','Oct','Nov','Dec'
             ],
             labels: { style: { colors: '#000' } },
           },
@@ -69,7 +69,7 @@ const BookingCustomerBarChart = () => {
     <Card className='radius-12 border-gray card-cs'>
         <Flex justify='space-between' align='flex-start' wrap gap={10}>
             <Flex vertical>
-              <ModuleTopHeading level={4} name='Booking by Customer Type' />
+              <ModuleTopHeading level={5} name='Booking by Customer Type' />
               <Text className='text-gray fs-13'>Old vs New Customers Bookings</Text>
             </Flex>
             <Flex justify='end' gap={10}>
@@ -78,48 +78,50 @@ const BookingCustomerBarChart = () => {
                 trigger={['click']}
                 className='margin-top'
               >
-                <Button className='btncancel fs-13'>
-                    <Space>
+                <Button className='btncancel pad-x fs-13'>
+                    <Space size={10}>
                         {
-                            order == 0 ? 'Last 10 days' : ''
+                            order == 0 ? '2024' : ''
                         }  
-                        {/* <DownOutlined /> */}
+                        <DownOutlined className='fs-12' />
                     </Space>
                 </Button>
               </Dropdown>
             </Flex>
         </Flex>
-        <Row gutter={[24,24]} align={'middle'}>
-          <Col span={24} lg={18} xl={19}>
+        <Row gutter={[24,24]} >
+          <Col span={24}>
+            <Flex gap={15} align='center' wrap className='my-4 h-40'>
+              <Flex gap={15} align='center'>
+                  <Image src='/assets/icons/newcust-ar.webp' width={40} alt='new customer icon' fetchPriority="high" />
+                  <Flex vertical>
+                      <Text className='text-gray fs-15'>New Customers</Text>
+                      <Title className='fw-600 m-0' level={4}>
+                          190
+                      </Title>
+                  </Flex>
+              </Flex>
+              <Divider type='vertical' className='h-100'/>
+              <Flex gap={15} align='center'>
+                  <Image src='/assets/icons/oldcust-ar.webp' width={40} alt='old customer icon' fetchPriority="high" />
+                  <Flex vertical>
+                      <Text className='text-gray fs-15'>Old Customers</Text>
+                      <Title className='fw-600 m-0' level={4}>
+                          78
+                      </Title>
+                  </Flex>
+              </Flex>
+            </Flex>
+          </Col>
+          <Col span={24}>
             <ReactApexChart
               options={chartData.options}
               series={chartData.series}
               type="bar"
-              height={300}
+              height={300}  
+              width={'100%'}
+              className='bar-width'
             />
-          </Col>
-          <Col span={24} lg={6} xl={5}>
-            <Flex vertical>
-              <Flex gap={15} align='center'>
-                <Image src='/assets/icons/newcust-ar.png' width={45} />
-                <Flex vertical>
-                  <Text className='text-gray fs-16'>New Customers</Text>
-                  <Title className='fw-600 m-0' level={3}>
-                    190
-                  </Title>
-                </Flex>
-              </Flex>
-              <Divider  className='bg-divider'/>
-              <Flex gap={15} align='center'>
-                <Image src='/assets/icons/oldcust-ar.png' width={45} />
-                <Flex vertical>
-                  <Text className='text-gray fs-16'>Old Customers</Text>
-                  <Title className='fw-600 m-0' level={3}>
-                    78
-                  </Title>
-                </Flex>
-              </Flex>
-            </Flex>
           </Col>
         </Row>
       </Card>

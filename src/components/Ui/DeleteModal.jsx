@@ -1,13 +1,14 @@
 import { Button, Divider, Flex, Modal, Typography } from 'antd'
 
 const { Title, Text } = Typography
-const DeleteModal = ({visible,onClose,title,subtitle,type,onConfirm}) => {
+const DeleteModal = ({visible,onClose,title,subtitle,onConfirm}) => {
+
+    
   return (
     <Modal
         title={null}
         open={visible}
         onCancel={onClose}
-        closeIcon={false}
         centered
         footer={
             <Flex justify='center' gap={5}>
@@ -21,12 +22,12 @@ const DeleteModal = ({visible,onClose,title,subtitle,type,onConfirm}) => {
         }
       > 
 
-        <Flex vertical align='center' className='text-center' gap={10}>
-            <img src='/assets/icons/delete.svg' width={50} />
+        <Flex vertical align='center' className='mt-3' gap={5}>
+            <img src='/assets/icons/delete.svg' width={50} alt='bin icon' fetchPriority="high" />
             <Title level={5} className='m-0'>
                 {title}
             </Title>
-            <Text className='fs-14'>
+            <Text className='fs-14 text-center'>
                 {subtitle}
             </Text>
         </Flex>

@@ -1,3 +1,4 @@
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Flex, Select, Pagination } from 'antd';
 
 const CustomPagination = ({
@@ -9,6 +10,16 @@ const CustomPagination = ({
 }) => {
   if (!total || total <= pageSize) return null;
 
+  const itemRender = (_, type, originalElement) => {
+    if (type === 'prev') {
+      return <a className='text-black'><LeftOutlined /> Previous</a>;
+    }
+    if (type === 'next') {
+      return <a className='text-black'>Next <RightOutlined /></a>;
+    }
+    return originalElement;
+  };
+
   return (
     <Flex justify="space-between" align="center" className="px-2 py-4">
       <Flex align="center" gap={8}>
@@ -16,12 +27,11 @@ const CustomPagination = ({
         <Select
           value={pageSize}
           onChange={(value) => onPageChange(1, value)}
-          style={{ width: 80 }}
           options={pageSizeOptions.map((size) => ({
             value: size,
             label: size.toString(),
           }))}
-          className="filter-pag"
+          className="filter-pag w-80"
         />
       </Flex>
       <Pagination
@@ -31,6 +41,7 @@ const CustomPagination = ({
         onChange={onPageChange}
         showLessItems
         className="pagination"
+        itemRender={itemRender}
       />
     </Flex>
   );

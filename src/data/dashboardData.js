@@ -39,7 +39,7 @@ const dashboardtableData = [
 const bookerserviceData = [
     {
         id: 1,
-        icon: '/assets/images/butterfly.png',
+        icon: '/assets/images/butterfly.webp',
         title:'Bob Haircut',
         subtitle: 34,
         per: 55,
@@ -47,7 +47,7 @@ const bookerserviceData = [
     },
     {
         id: 2,
-        icon: '/assets/images/butterfly.png',
+        icon: '/assets/images/butterfly.webp',
         title:'Layer Cut',
         subtitle: 31,
         per: 45,
@@ -55,7 +55,7 @@ const bookerserviceData = [
     },
     {
         id: 3,
-        icon: '/assets/images/butterfly.png',
+        icon: '/assets/images/butterfly.webp',
         title:'Wavy Cut',
         subtitle: 23,
         per: 35,
@@ -63,7 +63,7 @@ const bookerserviceData = [
     },
     {
         id: 4,
-        icon: '/assets/images/butterfly.png',
+        icon: '/assets/images/butterfly.webp',
         title:'Wolf Cut',
         subtitle: 21,
         per: 24,
@@ -71,7 +71,7 @@ const bookerserviceData = [
     },
     {
         id: 5,
-        icon: '/assets/images/butterfly.png',
+        icon: '/assets/images/butterfly.webp',
         title:'Wolf Cut',
         subtitle: 25,
         per: 24,

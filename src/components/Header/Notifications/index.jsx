@@ -1,11 +1,12 @@
 import React, { useState } from "react"
-import { Badge, Button, Image } from "antd"
+import { Avatar, Badge, Button, Card, Divider, Dropdown, Flex, Image, List, Typography } from "antd"
 import NotificationsDrawer from "./NotificationsDrawer"
+import { NavLink } from "react-router-dom"
 // import {GET_NOTIFICATIONS} from '../../../graphql/query'
 // import {NEW_NOTIFICATION_SUBSCRIPTION} from '../../../graphql/subscription'
 // import { useQuery,useSubscription } from '@apollo/client';
 
-
+const { Text } = Typography
 export const Notifications = () => {
     const userId = localStorage.getItem("userId"); 
 
@@ -37,25 +38,66 @@ export const Notifications = () => {
     // Count unread notifications
     // const count = data?.getNotifications?.count
 
+    const data = [
+        {
+            title: 'You’ve received a Requested Proposal for your service from CreativeBuyer93!',
+        },
+        {
+            title: 'Your service received a 5-star review from CreativeBuyer93!',
+        },
+        {
+            title: 'Your service received a 5-star review from CreativeBuyer93!',
+        },
+        {
+            title: 'Your service received a 5-star review from CreativeBuyer93!',
+        },
+    ];
+
+    const dropdownContent = (
+        <Card className='radius-12 shadow-c card-cs size-notify'>
+            <Text>Notification (10)</Text>
+            <Divider className="bg-divider my-3" />
+            <List
+                itemLayout="horizontal"
+                dataSource={data}
+                className="overflowstyle overflow-scroll"
+                renderItem={(item, index) => (
+                <List.Item key={index}>
+                    <List.Item.Meta
+                        avatar={<Avatar src={`/assets/icons/notify-ic.webp`} size={30} />}
+                        title={<NavLink to={''} className={'fw-500'}>{item.title}</NavLink>}
+                        description={<Flex gap={5} align="center">
+                            <Text className="fs-12 text-gray">1 hour ago</Text>
+                            <Text className="fs-12 text-gray">12:24 AM</Text>
+                        </Flex>}
+                    />
+                </List.Item>
+                )}
+            />
+        </Card>
+    );
+
     return (
         <>
-            <div>
+
+            <Dropdown
+                popupRender={()=>dropdownContent}
+                trigger={['click']}
+                className='p-0'
+            >
                 <Badge count={9} overflowCount={9} className="">
-                    <Button shape='circle' size='large' className='bg-transparent border-0 p-0' onClick={()=> setVisible(true)}>
+                    <Button shape='circle' size='large' className='bg-transparent p-0' onClick={()=> setVisible(true)}>
                         <Image 
-                            src='/assets/icons/notify.png' 
+                            src='/assets/icons/notify.webp' 
                             width={'20px'} 
                             preview={false}
-                            alt="jusoor" 
+                            alt="notification icon" 
                             className="up"
+                            fetchPriority="high"
                         />
                     </Button>
                 </Badge>
-            </div>
-            <NotificationsDrawer
-                visible={visible}
-                onClose={()=> setVisible(false)}
-            />
+            </Dropdown>
         </>
     )
 }

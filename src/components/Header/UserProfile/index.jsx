@@ -8,13 +8,13 @@ export const UserProfile = () => {
     return (
         <>
           <Space 
-            style={{ cursor: 'pointer' }}
             onClick={()=> setVisible(true)}
             size={10}
+            className="cursor"
           >
             <Avatar
               size={36}
-              icon={<img src="/assets/images/av-1.png" />}
+              icon={<img src="/assets/images/av-1.webp" alt='user image' fetchPriority="high" />}
             />
             <Flex vertical gap={0}>
               <Text className="fs-12" strong>

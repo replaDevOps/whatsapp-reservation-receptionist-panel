@@ -1,4 +1,4 @@
-import { Row, Col, Form, Space, Flex, Typography, Switch, Image } from "antd";
+import { Row, Col, Form, Space, Flex, Typography, Switch } from "antd";
 import { useState, useEffect } from "react";
 import { MyDatepicker } from "../Forms";
 
@@ -6,6 +6,7 @@ const { Text } = Typography;
 const TimeForm = ({ dayKey, title, form, editactive }) => {
     const [isSwitchOn, setIsSwitchOn] = useState(dayKey !== "Friday");
 
+    const isEditable = editactive ?? true;
     const handleSwitchChange = (checked) => {
         setIsSwitchOn(checked);
     };
@@ -46,7 +47,7 @@ const TimeForm = ({ dayKey, title, form, editactive }) => {
                             {fields.map(({ key, name }) => (
                                 <Row
                                     key={key}
-                                    gutter={[16, 0]}
+                                    gutter={[16, 16]}
                                     align="middle"
                                     className="mb-1"
                                 >
@@ -60,12 +61,13 @@ const TimeForm = ({ dayKey, title, form, editactive }) => {
                                                     placeholder="From"
                                                     required
                                                     message="Please enter from time"
-                                                    disabled={!editactive}
+                                                    disabled={!isEditable}
                                                     value={form.getFieldValue([
                                                         dayKey,
                                                         name,
                                                         "fromTime",
                                                     ])}
+                                                    use12Hours format="h:mm A"
                                                 />
                                             </Col>
                                             <Col xs={24} sm={24} md={12} lg={12}>
@@ -75,19 +77,20 @@ const TimeForm = ({ dayKey, title, form, editactive }) => {
                                                     placeholder="To"
                                                     required
                                                     message="Please enter to time"
-                                                    disabled={!editactive}
+                                                    disabled={!isEditable}
                                                     value={form.getFieldValue([
                                                         dayKey,
                                                         name,
                                                         "toTime",
                                                     ])}
+                                                    use12Hours format="h:mm A"
                                                 />
                                             </Col>
                                         </>
                                         :
                                         <Col span={24}>
                                             <Flex className="offday" gap={5} align="center">
-                                                <img src="/assets/icons/off.png" width={20} />
+                                                <img src="/assets/icons/off.webp" width={20} alt='not allow icon' fetchPriority="high" />
                                                 <Text italic className="text-gray">Day Off</Text>
                                             </Flex>
                                         </Col>

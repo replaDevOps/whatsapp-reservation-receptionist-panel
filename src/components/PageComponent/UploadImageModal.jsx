@@ -65,7 +65,7 @@ const UploadImageModal = ({ visible, onClose }) => {
               {fileList.length < 5 && (
                 <div>
                   <PlusOutlined />
-                  <div style={{ marginTop: 8, }}>Upload</div>
+                  <div className='margintop-8'>Upload</div>
                 </div>
               )}
             </Upload>
@@ -78,6 +78,7 @@ const UploadImageModal = ({ visible, onClose }) => {
         visible={previewVisible}
         imageSrc={previewImage}
         onClose={closePreview}
+        
       />
     </>
   )

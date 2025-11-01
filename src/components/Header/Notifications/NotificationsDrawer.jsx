@@ -66,7 +66,7 @@ const NotificationsDrawer= ({visible, onClose})=>{
                 ]}
               >
                 <List.Item.Meta
-                  avatar={<Avatar src={"/assets/images/av-1.png"} />}
+                  avatar={<Avatar src={"/assets/images/av-1.webp"} />}
                   title={<Text strong>{item.name}</Text>}
                   description={<Text>{item.message}</Text>}
                 />

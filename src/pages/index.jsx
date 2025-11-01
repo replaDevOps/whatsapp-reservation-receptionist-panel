@@ -1,5 +1,20 @@
-export { Sidebar } from "./Sidebar";
-export { Dashboard } from "./Dashboard";
-export { ManageSettings } from "./ManageSettings";
-export { ManageCustomers } from "./ManageCustomers";
-export { ManageVacations } from "./ManageVacations";
+export * from './Dashboard'
+export * from './CustomersPage'
+export * from './BranchPage'
+export * from './ServicesPage'
+export * from './WhatsappSettingPage'
+export * from './SubscriptionPlanPage'
+export * from './StaffManagementPage'
+export * from './BusinessSettingsPage'
+export * from './SettingsPage'
+export * from './ActivityLogPage'
+export * from './BookingPage'
+export * from './PromotionPage'
+export * from './SelfBookingTabletPage'
+export * from './WhatsappAdsPage'
+
+export * from './Sidebar'
+export * from './LoginPage'
+export * from './ForgotPassword'
+export * from './SignInTabletPage'
+

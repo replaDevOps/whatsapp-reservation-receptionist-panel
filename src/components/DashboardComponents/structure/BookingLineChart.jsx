@@ -90,7 +90,7 @@ const BookingLineChart = () => {
                     <Text className='text-gray fs-13'>Manual VS WhatsApp Bookings</Text>
                 </Flex>
                 <Title level={4} className='fw-500 text-black m-0'>
-                    6820 <span className='text-bright-red fs-13 fw-400'>-9% then last month <img src='/assets/icons/down-ar.png' width={12} /></span>
+                    6820 <span className='text-bright-red fs-13 fw-400'>-9% then last month <img src='/assets/icons/down-ar.webp' width={12} alt='down arrow icon' fetchPriority="high" /></span>
                 </Title>
             </Flex>
             <Flex justify='end' gap={10}>
@@ -109,6 +109,8 @@ const BookingLineChart = () => {
             series={chartData.series}
             type="line"
             height={300}
+            width={'100%'}
+            className='bar-width'
         />
       </Card>
   );

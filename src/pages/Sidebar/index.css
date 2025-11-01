@@ -1,7 +1,7 @@
   
   .logo {
     height: auto;
-    margin: 20px 14px;
+    margin: 12px 14px;
     text-align: center;   
   }
   
@@ -218,4 +218,12 @@
     color: var(--black-color);
     font-size: 13px !important;
     font-weight: 500;
+  }
+
+
+  .shap-position{
+    width: 100%;
+    position: absolute;
+    top: -10px;
+    right: -6px;
   }

@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
-import { PlusOutlined, DeleteOutlined, MinusCircleFilled } from '@ant-design/icons';
-import { message as Mesage, Upload, Form, Typography, Flex, Button } from 'antd';
+import React, { useState } from "react";
+import { PlusOutlined, MinusCircleFilled } from "@ant-design/icons";
+import { Upload, Form, Flex } from "antd";
+
 const { Dragger } = Upload;
 
-const SingleFileUpload = ({ multiple = false, name, required, message, form, label, title,onUpload }) => {
+const SingleFileUpload = ({
+  multiple = false,
+  name,
+  required,
+  message,
+  form,
+  label,
+  title,
+  onUpload,
+  align = "center",
+  width = 150,
+  height = 150
+}) => {
   const [fileList, setFileList] = useState([]);
 
   const handleChange = async (info) => {
@@ -15,43 +28,43 @@ const SingleFileUpload = ({ multiple = false, name, required, message, form, lab
 
     setFileList(newFileList);
 
-    const files = multiple ? newFileList.map(file => file.originFileObj) : newFileList[0]?.originFileObj || null;
+    const files = multiple
+      ? newFileList.map((file) => file.originFileObj)
+      : newFileList[0]?.originFileObj || null;
     form.setFieldsValue({ [name]: files });
+
     try {
       if (multiple) {
-        // upload all files in parallel
-        await Promise.all(files.map(file => onUpload(file)));
-      } else {
+        await Promise.all(files.map((file) => onUpload(file)));
+      } else if (files) {
         await onUpload(files);
       }
-      // You can show success message or update UI here if needed
     } catch (error) {
       console.error("Upload error:", error);
-      message.error("Upload failed");
     }
   };
 
   const handleRemove = (file) => {
-    const newFileList = fileList.filter(f => f.uid !== file.uid);
+    const newFileList = fileList.filter((f) => f.uid !== file.uid);
     setFileList(newFileList);
-    
-    const files = multiple ? newFileList.map(f => f.originFileObj) : null;
+    const files = multiple ? newFileList.map((f) => f.originFileObj) : null;
     form.setFieldsValue({ [name]: files || null });
   };
 
   return (
-    <div className='w-100'>
-      <Form.Item
-        name={name}
-        label={label}
-        rules={[
-          {
-            required,
-            message,
-          },
-        ]}
-        className="m-0 w-100"
-      >
+    <Form.Item
+      name={name}
+      label={label}
+      rules={[
+        {
+          required,
+          message,
+        },
+      ]}
+      className="m-0 w-100"
+    >
+      <Flex vertical align={align} className="w-100">
+        {/* Upload Area */}
         {(multiple || fileList.length === 0) && (
           <Dragger
             name="file"
@@ -60,47 +73,82 @@ const SingleFileUpload = ({ multiple = false, name, required, message, form, lab
             customRequest={({ file, onSuccess }) => {
               setTimeout(() => {
                 onSuccess("ok");
-              }, 1000);
+              }, 500);
             }}
             fileList={fileList}
             onChange={handleChange}
-            onDrop={(e) => console.log('Dropped files', e.dataTransfer.files)}
-            className='upload-d'
+            className="upload-d"
           >
             {fileList.length === 0 || multiple ? (
-              <Flex vertical align='center' justify='center' className='upload-flex'>
-                <PlusOutlined style={{ fontSize: 16 }} />
+              <Flex
+                vertical
+                align="center"
+                justify="center"
+                className="upload-flex"
+              >
+                <PlusOutlined className="fs-16" />
                 <p className="ant-upload p-0 m-0 text-black">{title}</p>
               </Flex>
             ) : null}
           </Dragger>
         )}
+
+        {/* Uploaded Files / Images */}
         {fileList.length > 0 && (
-          <div className="w-100">
-            {fileList.map(file => (
-              <Flex key={file.uid} justify='space-between' className="w-100 p-2 mt-2" gap={4} style={{ border: '1px solid #d9d9d9', borderRadius: 4 }}>
-                <Flex align='flex-start' gap={10} className='w-100'>
-                  <img src="/assets/icons/file.png" alt="file-icon" width={24} className='pt-1' />
-                  <Flex vertical align='flex-start'>
-                    <Typography.Text strong className='text-gray'>{file.name.slice(0, 20)}{file.name.length > 20 ? '...' : ''}</Typography.Text>
-                    <Typography.Text className='fs-12'>
-                      {(file.size / 1024 / 1024).toFixed(1)} MB
-                    </Typography.Text>
-                  </Flex>
+          <Flex
+            vertical
+            gap={10}
+            align={align}
+            justify="center"
+            className="w-100 mt-2"
+          >
+            {fileList.map((file) => {
+              const isImage =
+                file.type?.startsWith("image/") ||
+                /\.(png|jpe?g|gif|webp)$/i.test(file.name);
+
+              return (
+                <Flex
+                  key={file.uid}
+                  align="center"
+                  gap={10}
+                  className="position-relative"
+                  justify={align}
+                >
+                  {isImage ? (
+                    <img
+                      src={
+                        file.thumbUrl || URL.createObjectURL(file.originFileObj)
+                      }
+                      alt={file.name}
+                      width={width}
+                      height={height}
+                      className="object-cover radius-12"
+                      fetchPriority="high"
+                    />
+                  ) : (
+                    <img
+                      src="/assets/icons/file.png"
+                      alt="file-icon"
+                      width={24}
+                      className="pt-1"
+                      fetchPriority="high"
+                    />
+                  )}
+                  <MinusCircleFilled
+                    className="text-red cursor delete-btn fs-18"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemove(file);
+                    }}
+                  />
                 </Flex>
-                <MinusCircleFilled 
-                  className="text-red cursor-pointer" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleRemove(file);
-                  }}
-                />
-              </Flex>
-            ))}
-          </div>
+              );
+            })}
+          </Flex>
         )}
-      </Form.Item>
-    </div>
+      </Flex>
+    </Form.Item>
   );
 };
 
