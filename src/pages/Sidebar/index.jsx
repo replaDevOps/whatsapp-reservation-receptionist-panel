@@ -1,24 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate, Route, Routes, useLocation, replace } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Route, Routes, useLocation } from 'react-router-dom';
 import './index.css';
-import { Layout, Menu, Image, Space, Divider, Card, Flex, Typography, Button } from 'antd';
+import { Layout, Menu, Image, Space, Divider, Flex, Typography, Button } from 'antd';
 import { Notifications, UserDropdown } from '../../components/Header';
 import { Dashboard } from '../Dashboard';
 import { SearchInput } from '../../components/Forms';
 import { CustomersPage } from '../CustomersPage';
-import { AddEditBranch, AddEditStaff, AddEditWhatsappAds, ManageVacations, SingleViewCustomer, SingleViewStaffManagement, SingleWhatsappAdsView, ViewBookingHistory, ViewStaffDetails } from '../../components';
-import { BranchPage } from '../BranchPage';
-import { ServicesPage } from '../ServicesPage';
-import { WhatsappSettingPage } from '../WhatsappSettingPage';
-import { SubscriptionPlanPage } from '../SubscriptionPlanPage';
-import { StaffManagementPage } from '../StaffManagementPage';
-import { BusinessSettingsPage } from '../BusinessSettingsPage';
+import { SingleViewCustomer, } from '../../components';
 import { SettingsPage } from '../SettingsPage';
-import { ActivityLogPage } from '../ActivityLogPage';
 import { BookingPage } from '../BookingPage';
-import { PromotionPage } from '../PromotionPage';
-import { SelfBookingTabletPage } from '../SelfBookingTabletPage';
-import { WhatsappAdsPage } from '../WhatsappAdsPage';
 import { MenuItems } from './MenuItems';
 
 
@@ -37,7 +27,6 @@ const Sidebar = () => {
       tab === 'customers' || tab === 'customers/singledetails' ? '2' :
 
       tab === 'booking' ? '12'  :
-      tab === 'selfbookingtablet' ? '13'  :
       tab === 'settingpages' ? '14'  :
     '1';
     setCurrentTab(tab);
@@ -55,9 +44,6 @@ const Sidebar = () => {
         break;
       case '12':
         navigate("/booking", { replace: true });
-        break;
-      case '13':
-        navigate("/selfbookingtablet", { replace: true });
         break;
       case '14':
         navigate("/settingpages", { replace: true });
@@ -148,9 +134,7 @@ const Sidebar = () => {
             <Route path="/customers" element={<CustomersPage />} />
             <Route path="/customers/singledetails/:id" element={<SingleViewCustomer />} />
             <Route path="/settingpages" element={<SettingsPage />} />
-            <Route path="/activitylog" element={<ActivityLogPage />} />
             <Route path="/booking" element={<BookingPage />} />
-            <Route path="/selfbookingtablet" element={<SelfBookingTabletPage />} />
           </Routes>
         </Content>
       </Layout>
