@@ -46,8 +46,8 @@ const MenuItems = ({ currentTab }) => {
         {type: 'group', label: 'BOOKING MANAGEMENT', key: 'header-3', className: 'heading-menu'},
         getItem(
             "Bookings",
-            "12",
-            currentTab === "12" ? (
+            "3",
+            currentTab === "3" ? (
                 <img src="/assets/icons/side-icon/booking-a.webp" width="20px" alt="booking icon" fetchPriority="high" />
             ) : (
                 <img
@@ -61,9 +61,23 @@ const MenuItems = ({ currentTab }) => {
         {type: 'divider', key: 'divider-4', className: 'bg-divider my-3'},
         {type: 'group', label: 'PROFILE SETTINGS', key: 'header-4', className: 'heading-menu'},
         getItem(
+            "Vacations",
+            "4",
+            currentTab === "4" ? (
+                <img src="/assets/icons/side-icon/vacation-a.webp" width="20px" alt="vacation icon" fetchPriority="high" />
+            ) : (
+                <img
+                    src="/assets/icons/side-icon/vacation.webp"
+                    width="20px"
+                    alt="vacation gray icon"
+                    fetchPriority="high"
+                />
+            )
+        ),
+         getItem(
             "Setting",
-            "14",
-            currentTab === "14" ? (
+            "5",
+            currentTab === "5" ? (
                 <img src="/assets/icons/side-icon/setting-a.webp" width="20px" alt="setting icon" fetchPriority="high" />
             ) : (
                 <img

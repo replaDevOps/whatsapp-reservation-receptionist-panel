@@ -26,8 +26,8 @@ const Sidebar = () => {
     tab = tab === '' ? '1' :
       tab === 'customers' || tab === 'customers/singledetails' ? '2' :
 
-      tab === 'booking' ? '12'  :
-      tab === 'settingpages' ? '14'  :
+      tab === 'booking' ? '3'  :
+      tab === 'settingpages' ? '5'  :
     '1';
     setCurrentTab(tab);
     
@@ -42,10 +42,10 @@ const Sidebar = () => {
       case '2':
         navigate("/customers", { replace: true });
         break;
-      case '12':
+      case '3':
         navigate("/booking", { replace: true });
         break;
-      case '14':
+      case '5':
         navigate("/settingpages", { replace: true });
         break;
       
