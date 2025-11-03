@@ -1,4 +1,4 @@
-export const myeventsData = [
+const myeventsData = [
     {
         id: 1,
         start: new Date(2025, 8, 15, 0, 0),
@@ -60,7 +60,7 @@ export const myeventsData = [
                 off: null,
                 offer:null,
                 service: "Head Scrub",
-                status: "progress",
+                status: "in-progress",
                 time: "04:00 pm - 05:40 pm",
                 date: "22/08/2025",
                 description: 'Lorem Ipsum. "Neque porro quisquam est qui dolorem',
@@ -163,3 +163,48 @@ export const myeventsData = [
         ]
     },
 ];
+
+const mystaffData = [
+    {
+        id: 1,
+        start: new Date(2025, 10, 2, 0, 0),
+        end: new Date(2025, 10, 2, 1, 0),
+        img:'/assets/images/av-3.webp',
+        name:'Muhammad Hamza',
+        type: 'Service Provider',
+        service: ["Hair Cut A","Hair Cut B"],
+        status: "accepted",
+    },
+    {
+        id: 3,
+        start: new Date(2025, 10, 13, 4, 0),
+        end: new Date(2025, 10, 14, 6, 0),
+        img:'/assets/images/av-2.webp',
+        name:'Bilal Ali Khan',
+        type: 'Service Provider',
+        service: ["Beard Cut"],
+        status: "rejected",  
+    },
+    {
+        id: 5,
+        start: new Date(2025, 10, 18, 4, 0),
+        end: new Date(2025, 10, 18, 6, 0),
+        img:'/assets/images/av-2.webp',
+        name:'Muhammad Ali',
+        type: 'Service Provider',
+        service: ["Head Scrub"],
+        status: "accepted",
+    },
+    {
+        id: 7,
+        start: new Date(2025, 10, 23, 7, 0),
+        end: new Date(2025, 10, 26, 8, 0),
+        img:'/assets/images/av-3.webp',
+        name:'Ali Abbas',
+        type: 'Service Provider',
+        service: ["Facial","Scrub"], 
+        status: "pending",
+    },
+];
+
+export { myeventsData, mystaffData }

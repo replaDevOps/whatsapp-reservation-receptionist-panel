@@ -1,11 +1,8 @@
 import { Col, Flex, Row, Typography } from 'antd'
-import { BasicPlanCard, BookingCustomerBarChart, BookingLineChart, MostBookService, MostBookTable, RenewSubscriptionModal, StatisticsCommonCards } from '../../components';
-import { useState } from 'react';
+import { BookingCustomerBarChart, BookingLineChart, MostBookService, MostBookTable, StatisticsCommonCards } from '../../components';
 
 const { Title } = Typography
 const Dashboard = () => {
-  const [ renewvisible, setRenewVisible ] = useState(false)
-  const [ renewstate, setRenewState ] = useState(null)
 
   const cardsData = [
       {
@@ -38,10 +35,6 @@ const Dashboard = () => {
     <div>
       <Flex vertical gap={24}>
         <Title level={4} className='m-0'>Hi Business Name!</Title>
-        <BasicPlanCard 
-          setRenewVisible={setRenewVisible}
-          setRenewState={setRenewState}
-        />
         <StatisticsCommonCards data={cardsData} />
         <BookingLineChart />
         <BookingCustomerBarChart />
@@ -54,12 +47,6 @@ const Dashboard = () => {
           </Col>
         </Row>
       </Flex>
-
-      <RenewSubscriptionModal 
-        visible={renewvisible}
-        renewstate={renewstate}
-        onClose={()=>{setRenewVisible(false);setRenewState(null)}}
-      />
     </div>
   )
 }

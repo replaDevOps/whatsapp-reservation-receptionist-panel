@@ -25,12 +25,29 @@ const MenuItems = ({ currentTab }) => {
             )
         ),
 
+        {type: 'divider', key: 'divider-3', className: 'bg-divider my-3'},
+        {type: 'group', label: 'BOOKING MANAGEMENT', key: 'header-3', className: 'heading-menu'},
+        getItem(
+            "Bookings",
+            "2",
+            currentTab === "2" ? (
+                <img src="/assets/icons/side-icon/booking-a.webp" width="20px" alt="booking icon" fetchPriority="high" />
+            ) : (
+                <img
+                    src="/assets/icons/side-icon/booking.webp"
+                    width="20px"
+                    alt="booking gray icon"
+                    fetchPriority="high"
+                />
+            )
+        ),
+        
         { type: "divider", key: "divider-1", className: "bg-divider my-3" },
         { type: "group", label: "CUSTOMER MANAGEMENT", key: "header-1", className: "heading-menu" },
         getItem(
             "Customers",
-            "2",
-            currentTab === "2" ? (
+            "3",
+            currentTab === "3" ? (
                 <img src="/assets/icons/side-icon/customer-a.webp" width="20px" alt="customer icon" fetchPriority="high" />
             ) : (
                 <img
@@ -42,34 +59,18 @@ const MenuItems = ({ currentTab }) => {
             )
         ),
 
-        {type: 'divider', key: 'divider-3', className: 'bg-divider my-3'},
-        {type: 'group', label: 'BOOKING MANAGEMENT', key: 'header-3', className: 'heading-menu'},
-        getItem(
-            "Bookings",
-            "3",
-            currentTab === "3" ? (
-                <img src="/assets/icons/side-icon/booking-a.webp" width="20px" alt="booking icon" fetchPriority="high" />
-            ) : (
-                <img
-                    src="/assets/icons/side-icon/booking.webp"
-                    width="20px"
-                    alt="booking gray icon"
-                    fetchPriority="high"
-                />
-            )
-        ),
         {type: 'divider', key: 'divider-4', className: 'bg-divider my-3'},
         {type: 'group', label: 'PROFILE SETTINGS', key: 'header-4', className: 'heading-menu'},
         getItem(
-            "Vacations",
+            "Staff Vacations",
             "4",
             currentTab === "4" ? (
-                <img src="/assets/icons/side-icon/vacation-a.webp" width="20px" alt="vacation icon" fetchPriority="high" />
+                <img src="/assets/icons/side-icon/vacation-a.webp" width="20px" alt="staff vacation icon" fetchPriority="high" />
             ) : (
                 <img
                     src="/assets/icons/side-icon/vacation.webp"
                     width="20px"
-                    alt="vacation gray icon"
+                    alt="staff vacation gray icon"
                     fetchPriority="high"
                 />
             )

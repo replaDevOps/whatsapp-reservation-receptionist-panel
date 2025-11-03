@@ -10,7 +10,6 @@ function BookingPage() {
                 {title:'Booking'}
             ]}
         />
-        {/* <BookingSchedular /> */}
         <BookingSchedularCalendar />
     </Flex>
   )

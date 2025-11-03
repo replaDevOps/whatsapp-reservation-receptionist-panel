@@ -5,4 +5,4 @@ export * from './BookingPage'
 export * from './Sidebar'
 export * from './LoginPage'
 export * from './ForgotPassword'
-
+export * from './StaffVacationPage'

@@ -61,6 +61,8 @@
     --sky-light: #E6F0FF;
     --gray-color: #B1B5C3;
     --time-slot-color: #F1F1F9;
+    --bg-drop-1: #F3E9CB;
+    --drop-text: #D2A82B;
 }   
 
 .card-bg{
@@ -1094,7 +1096,7 @@
 }
 
 .rbc-time-view-resources .rbc-time-column .rbc-timeslot-group{
-    min-height: 60px !important;
+    min-height: 90px !important;
     padding: 18px;
 }
 
@@ -1278,8 +1280,8 @@
 }
 
 .pending-dropdown-color{
-    color: var(--yellow);
-    background-color: var(--bg-drop);
+    color: var(--drop-text) !important;
+    background-color: var(--bg-drop-1) !important;
 }
 
 .dark-green-bg{
@@ -1337,6 +1339,31 @@
     overflow-y: auto;
     padding-top: 24px !important;
 }
+
+.h-700{
+    height: 700px !important;
+}
+
+.vacation-calendar .rbc-event{
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.rbc-overlay-header{
+    padding: 10px !important;
+    text-align: center;
+    font-size: 14px !important;
+}
+
+.vacation-calendar .rbc-month-view{
+    overflow-x: auto;
+}
+
+.vacation-calendar .rbc-month-view .rbc-month-row,
+.vacation-calendar .rbc-month-view .rbc-month-header{
+    min-width: 800px !important;
+}
+
 
 
 /* =================================================== media querry =============================================== */
