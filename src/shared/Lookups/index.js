@@ -150,6 +150,27 @@ const whatsappflowOp = [
     },
 ]
 
+const serviceType = [
+    {
+        id:1,
+        name:'Service One'
+    },
+     {
+        id:1,
+        name:'Service Two'
+    },
+]
+
+const serviceProvider = [
+    {
+        id:1,
+        name:'John Smith'
+    },
+    {
+        id:2,
+        name:'Eleeza Smith'
+    },
+]
 
 export { 
     planoption, 
@@ -163,5 +184,7 @@ export {
     freqitemsCust,
     branchCust,  
     requestuserOpt,
-    whatsappflowOp
+    whatsappflowOp,
+    serviceType,
+    serviceProvider
 }
