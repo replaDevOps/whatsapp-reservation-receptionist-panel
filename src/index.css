@@ -12,7 +12,7 @@
 }
 
 :root{
-    --brand-color:#0ABAB5;
+    --brand-color:#191e1d;
     --dark-brand: #07938F;
     --secondary-color: #D8E4FC;
     --light-brand: #E4F2FA;
@@ -86,7 +86,9 @@
 .text-dark-brand{
     color: var(--dark-brand) !important;
 }
-
+.bg-dark-brand{
+    background-color: var(--dark-brand) !important;
+}
 .bg-delete{
     background-color: var(--red-3) !important;
 }

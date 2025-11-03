@@ -6,15 +6,15 @@ const StatisticsCommonCards = ({ data = [], lg = 6,  md = 12, sm = 24, cardClass
         <Row gutter={[14, 24]} className="h-100">
             {data.map((item, index) => (
                 <Col key={index} span={24} sm={sm} md={md} lg={lg}>
-                    <Card className={`card-bg h-100 border-gray card-cs ${cardClass}`}>
+                    <Card className={`card-bg h-100 border-gray card-cs ${index === 0 ? 'bg-dark-brand' : ''} `}>
                         <Flex gap={8} vertical align="start">
                             {item?.icon && (
                                 <img src={item.icon} width={45} alt={item.subtitle || 'icon'} fetchPriority="high"/>
                             )}
                             {item?.subtitle && (
-                                <Text className="fs-14 text-gray">{item.subtitle}</Text>
+                                <Text className={`fs-14 text-gray ${index === 0 ? 'text-white' : ''}`}>{item.subtitle}</Text>
                             )}
-                            <Title level={5} className="fw-600 text-black m-0">
+                            <Title level={5} className={`fw-600 text-black m-0 ${index === 0 ? 'text-white' : ''}`}>
                                 {item.title}
                             </Title>
                         </Flex>

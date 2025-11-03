@@ -1,19 +1,25 @@
-import { useEffect } from 'react'
-import { CloseOutlined } from '@ant-design/icons'
+import { useState, useEffect } from 'react'
+import { CloseOutlined, EditFilled } from '@ant-design/icons'
 import { Button, Col, Divider, Flex, Form, Modal, Row, Typography } from 'antd'
-import { MyDatepicker, MyInput } from '../../Forms'
+import { MyInput, SingleFileUpload } from '../../Forms'
 
 const { Title } = Typography
-const EditGeneralSettings = ({visible,onClose,edititem}) => {
+const EditGeneralSettings = ({visible,onClose,edititem,setEditItem}) => {
 
     const [form] = Form.useForm();
-    useEffect(()=>{
-        if(visible && edititem){
-            form.setFieldsValue({
-                name: edititem,
-            })
-        }
-    },[visible,edititem])
+        const [ previewimage, setPreviewImage ] = useState('/assets/images/setting.webp')
+        useEffect(()=>{
+            if(visible && edititem){
+                form.setFieldsValue({
+                    name: edititem?.name,
+                })
+                setPreviewImage(edititem?.img)
+            }
+        },[edititem,visible])
+    
+        const handleChangeImage = () => {
+            setPreviewImage(null);
+        };
     return (
         <Modal
             title={null}
@@ -47,6 +53,33 @@ const EditGeneralSettings = ({visible,onClose,edititem}) => {
                     requiredMark={false}
                 >
                     <Row gutter={16}>
+                           <Col span={24} className='my-5'>
+                                    {
+                                        !previewimage ?
+                                        <SingleFileUpload
+                                            name="document"
+                                            title="Upload Logo"
+                                            form={form}
+                                            onUpload={(file) => console.log("uploading:", file)}
+                                            align="center"
+                                        />
+                                        :
+                                        <Flex vertical gap={5} justify='center' align='center'>
+                                            <img
+                                                src={previewimage}
+                                                alt="Category"
+                                                className='radius-12 mxw-mxh'
+                                                fetchPriority="high"
+                                            />
+                                            <div>
+                                                <Button type="link" className='fs-13 text-brand' onClick={handleChangeImage}>
+                                                    <EditFilled /> Edit
+                                                </Button>
+                                            </div>
+                                        </Flex>
+
+                                    }
+                                </Col>
                         <Col span={24}>
                             <MyInput 
                                 label="First Name" 
