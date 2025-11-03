@@ -6,7 +6,6 @@ import { Notifications, UserDropdown } from '../../components/Header';
 import { Dashboard } from '../Dashboard';
 import { SearchInput } from '../../components/Forms';
 import { CustomersPage } from '../CustomersPage';
-import { SingleViewCustomer, } from '../../components';
 import { SettingsPage } from '../SettingsPage';
 import { BookingPage } from '../BookingPage';
 import { MenuItems } from './MenuItems';
@@ -136,7 +135,6 @@ const Sidebar = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/booking" element={<BookingPage />} />
             <Route path="/customers" element={<CustomersPage />} />
-            <Route path="/customers/singledetails/:id" element={<SingleViewCustomer />} />
             <Route path="/staffvacation" element={<StaffVacationPage />} />
             <Route path="/settingpages" element={<SettingsPage />} />
           </Routes>

@@ -2,20 +2,13 @@ import { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Avatar, Card, Typography, Flex, Row, Col, Button } from "antd";
+import { Avatar, Card, Typography, Flex, Row, Col } from "antd";
 import "antd/dist/reset.css";
-<<<<<<<< HEAD:src/components/BookingComponents/structure/BookingSchedularCalendar.jsx
 import { MySelect } from "../../Forms";
 import { CalendarCard } from "./CalendarCard";
 import { myeventsData } from "../../../data";
 import { BookingEventCard } from "./BookingEventCard";
 import { AddEditBooking } from "../modal";
-========
-import { BookingEventCard } from "../../BookingManagementComponents";
-import { myeventsData } from "../../../data";
-import { ModuleTopHeading } from "../../PageComponent";
-import { useNavigate } from "react-router-dom";
->>>>>>>> 5374883598fa559da402887ea77e08acbde14d82:src/components/DashboardComponents/structure/TodaysBooking.jsx
 
 const localizer = momentLocalizer(moment);
 
@@ -73,16 +66,21 @@ const ResourceHeader = ({ resource }) => (
   </Flex>
 );
 
-const TodaysBooking = () => {
+const BookingSchedularCalendar = () => {
     const [events] = useState(myeventsData);
-<<<<<<<< HEAD:src/components/BookingComponents/structure/BookingSchedularCalendar.jsx
     const [ bookedevent, setBookedEvent ] = useState(false)
     const [ editevent, setEditEvent ] = useState(null)
     const [selectedProvider, setSelectedProvider] = useState(1);
     const [selectedService, setSelectedService] = useState('Hair Cut');
-========
->>>>>>>> 5374883598fa559da402887ea77e08acbde14d82:src/components/DashboardComponents/structure/TodaysBooking.jsx
     const [currentDate, setCurrentDate] = useState(new Date());
+
+    const serviceProviders = [
+      { id: 1, name: "Sameh Amin"},
+      { id: 2, name: "Muhammad Ali"},
+      { id: 3, name: "Mahmdul Hasan"},
+      { id: 4, name: "Ali Shaan"},
+      { id: 5, name: "Ajit"},
+    ];
 
     const formattedDate = currentDate.toDateString();
 
@@ -92,14 +90,9 @@ const TodaysBooking = () => {
       status: ev.booking[0]?.status,
     }));
 
-    const naigate = useNavigate();
     
     return (
-<<<<<<<< HEAD:src/components/BookingComponents/structure/BookingSchedularCalendar.jsx
       <>
-========
-      <Flex vertical gap={20}>
->>>>>>>> 5374883598fa559da402887ea77e08acbde14d82:src/components/DashboardComponents/structure/TodaysBooking.jsx
         <Card>
           <Flex vertical gap={20}>  
             <CalendarCard 
@@ -109,7 +102,6 @@ const TodaysBooking = () => {
               setBookedEvent={setBookedEvent}
             />
             <Row gutter={[12, 12]}>
-<<<<<<<< HEAD:src/components/BookingComponents/structure/BookingSchedularCalendar.jsx
                 <Col span={24} md={12} lg={4}>
                     <MySelect
                         placeholder="Select Service Provider"
@@ -134,16 +126,6 @@ const TodaysBooking = () => {
                         ]}
                         onChange={(value) => setSelectedService(value)}
                     />
-========
-                <Col span={24}>
-                <Flex justify="space-between" gap={30}>
-                    <Flex vertical align="center">
-                        <ModuleTopHeading level={4} name='Today’s Bookings' />
-                        <Text className='text-gray fs-13'>Today’s Incoming Bookings</Text>
-                    </Flex>
-                    <Button onClick={()=>naigate('/booking')}>View Calendar</Button>
-                </Flex>
->>>>>>>> 5374883598fa559da402887ea77e08acbde14d82:src/components/DashboardComponents/structure/TodaysBooking.jsx
                 </Col>
             </Row>
             <Calendar
@@ -191,4 +173,4 @@ const TodaysBooking = () => {
     );
 };
 
-export { TodaysBooking };
+export { BookingSchedularCalendar };

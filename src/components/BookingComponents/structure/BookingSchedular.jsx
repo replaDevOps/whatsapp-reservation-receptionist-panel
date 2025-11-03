@@ -149,7 +149,10 @@ const BookingSchedular = () => {
                 <Flex align="center" justify="center" gap={10}>
                     <Avatar
                         size={32}
-                        className="mb-4px"
+                        style={{
+                            backgroundColor: "#1890ff",
+                            marginBottom: "4px",
+                        }}
                     >
                         {provider.avatar}
                     </Avatar>

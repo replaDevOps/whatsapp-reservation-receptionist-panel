@@ -85,7 +85,7 @@ const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
                                 title='Need to notify'
                                 styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px',}}}
                             >
-                                <img src="/assets/icons/notify-need.webp" alt="notify need icon" fetchPriority="high" width={22} />
+                                <img src="/assets/icons/notify-need.webp" alt="notify need icon" width={22} />
                             </Tooltip>
                         }
                     </Flex>
