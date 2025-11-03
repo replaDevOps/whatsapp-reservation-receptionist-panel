@@ -1,5 +1,0 @@
-export * from './WhatsappAdsTable'
-export * from './AddEditWhatsappAds'
-export * from './CustomerSearchTable'
-export * from './SingleWhatsappAdsView'
-export * from './SingleAdsDetailTable'
