@@ -1,9 +1,15 @@
 import { Flex } from 'antd'
-import { BreadCrumbCard, ChangePasswordSetting, GeneralSetting, LanguageSetting, TitleCard } from '../../components'
+import { BreadCrumbCard, ChangePasswordSetting, GeneralSetting, LanguageSetting } from '../../components'
 
 const SettingsPage = () => {
     return (
         <Flex vertical gap={10}>
+            <BreadCrumbCard 
+                items={[
+                    {title:'Profile Settings'},
+                    {title:'Settings'}
+                ]}
+            />
             <GeneralSetting />
             <LanguageSetting />
             <ChangePasswordSetting />

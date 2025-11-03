@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Button, Card, Dropdown, Flex, Table, Typography, Row, Col, Form, notification, Image } from 'antd';
+import { Card, Flex, Table, Typography, Row, Col, Form, notification } from 'antd';
 import { ModuleTopHeading } from '../../PageComponent';
 import { CustomPagination } from '../../Ui';
 import { customerColumn, customertableData } from '../../../data';
-import { useNavigate } from 'react-router-dom';
 import { SearchInput } from '../../Forms';
 import { AddCustomer } from '../modal';
 
@@ -14,10 +13,8 @@ const CustomerTable = () => {
     const [form] = Form.useForm();
     const [pageSize, setPageSize] = useState(10);
     const [current, setCurrent] = useState(1);
-    const navigate = useNavigate();
     const [ addmodal, setAddModal ] = useState(false)
     const [toater, contextHolder] = notification.useNotification();
-    const [ visibleimport, setVisibleImport ] = useState(false)
 
     const handlePageChange = (page, size) => {
         setCurrent(page);
@@ -39,7 +36,7 @@ const CustomerTable = () => {
                     </Flex>
                     <Form layout="vertical" form={form}>
                         <Row gutter={[16, 16]}>
-                            <Col span={24} md={24} lg={10}>
+                            <Col span={24} md={24} lg={7}>
                                 <SearchInput
                                     name='name'
                                     placeholder='Search by Phone Number / Customer Name'

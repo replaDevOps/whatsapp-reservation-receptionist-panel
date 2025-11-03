@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { BookingEventCard } from "../../BookingComponents";
 
 const localizer = momentLocalizer(moment);
-
 const users = [
     { id: 1, name: "John", avatar: "https://i.pravatar.cc/40?img=1" },
     { id: 2, name: "Mark", avatar: "https://i.pravatar.cc/40?img=2" },
@@ -67,7 +66,6 @@ const ResourceHeader = ({ resource }) => (
 
 const TodaysBooking = () => {
     const [events] = useState(myeventsData);
-    const [currentDate, setCurrentDate] = useState(new Date());
 
     const normalizedEvents = events.map((ev) => ({
         ...ev,
@@ -80,7 +78,7 @@ const TodaysBooking = () => {
     return (
         <>
             <Flex vertical gap={20}>
-                <Card>
+                <Card className="radius-12 card-cs border-gray h-100">
                     <Flex vertical gap={20}>
                         <Flex justify="space-between" gap={30}>
                             <Flex vertical align="center">

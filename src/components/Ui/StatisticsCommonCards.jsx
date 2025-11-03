@@ -1,7 +1,7 @@
 import { Card, Col, Flex, Row, Typography } from 'antd'
 
 const { Title, Text } = Typography
-const StatisticsCommonCards = ({ data = [], lg = 6,  md = 12, sm = 24, cardClass = '',}) => {
+const StatisticsCommonCards = ({ data = [], lg = 6,  md = 12, sm = 24}) => {
     return (
         <Row gutter={[14, 24]} className="h-100">
             {data.map((item, index) => (

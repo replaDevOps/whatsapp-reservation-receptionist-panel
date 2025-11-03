@@ -4,7 +4,7 @@ import { Button, Col, Divider, Flex, Form, Modal, Row, Typography } from 'antd'
 import { MyInput, SingleFileUpload } from '../../../Forms'
 
 const { Title } = Typography
-const EditGeneralSettings = ({visible,onClose,edititem,setEditItem}) => {
+const EditGeneralSettings = ({visible,onClose,edititem}) => {
 
     const [form] = Form.useForm();
         const [ previewimage, setPreviewImage ] = useState('/assets/images/setting.webp')
