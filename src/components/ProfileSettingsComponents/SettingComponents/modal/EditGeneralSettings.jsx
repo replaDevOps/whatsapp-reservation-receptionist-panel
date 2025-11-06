@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { CloseOutlined, EditFilled } from '@ant-design/icons'
 import { Button, Col, Divider, Flex, Form, Modal, Row, Typography } from 'antd'
 import { MyInput, SingleFileUpload } from '../../../Forms'
-
+import { useTranslation } from 'react-i18next'
 const { Title } = Typography
 const EditGeneralSettings = ({visible,onClose,edititem}) => {
-
+const {t} = useTranslation();
     const [form] = Form.useForm();
         const [ previewimage, setPreviewImage ] = useState('/assets/images/setting.webp')
         useEffect(()=>{
@@ -30,10 +30,10 @@ const EditGeneralSettings = ({visible,onClose,edititem}) => {
             footer={
                 <Flex justify='end' gap={5}>
                     <Button type='button' className='btncancel text-black border-gray' onClick={onClose}>
-                        Cancel
+                        {t('Cancel')}
                     </Button>
                     <Button type="primary" className='btnsave border0 text-white brand-bg' onClick={()=>form.submit()}>
-                        Save
+                        {t('Save')}
                     </Button>
                 </Flex>
             }
@@ -41,7 +41,7 @@ const EditGeneralSettings = ({visible,onClose,edititem}) => {
             <Flex vertical gap={10}>
                 <Flex justify='space-between' gap={6}>
                     <Title level={5} className='m-0'>
-                        General Settings
+                        {t('General Settings')}
                     </Title>
                     <Button type='button' onClick={onClose} className='p-0 border-0 bg-transparent'>
                         <CloseOutlined className='fs-18' />
@@ -58,7 +58,7 @@ const EditGeneralSettings = ({visible,onClose,edititem}) => {
                                         !previewimage ?
                                         <SingleFileUpload
                                             name="document"
-                                            title="Upload Logo"
+                                            title={t('Upload Logo')}
                                             form={form}
                                             onUpload={(file) => console.log("uploading:", file)}
                                             align="center"
@@ -73,7 +73,7 @@ const EditGeneralSettings = ({visible,onClose,edititem}) => {
                                             />
                                             <div>
                                                 <Button type="link" className='fs-13 text-brand' onClick={handleChangeImage}>
-                                                    <EditFilled /> Edit
+                                                    <EditFilled /> {t('Edit')}
                                                 </Button>
                                             </div>
                                         </Flex>
@@ -82,40 +82,40 @@ const EditGeneralSettings = ({visible,onClose,edititem}) => {
                                 </Col>
                         <Col span={24}>
                             <MyInput 
-                                label="First Name" 
+                                label={t('First Name')}
                                 name="firstName" 
                                 required
-                                message='Please enter your first name'
-                                placeholder='Enter first name'
+                                message={t('Please enter your first name')}
+                                placeholder={t('Enter first name')}
                             />
                         </Col>
                         <Col span={24}>
                             <MyInput 
-                                label="Last Name" 
+                                label={t('Last Name')}
                                 name="lastName" 
                                 required
-                                message='Please enter your last name'
-                                placeholder='Enter last name'
+                                message={t('Please enter your last name')}
+                                placeholder={t('Enter last name')}
                             />
                         </Col>
                         <Col span={24}>
                             <MyInput
                                 type='number' 
-                                label="Phone Number" 
+                                label={t('Phone Number')} 
                                 name="phoneNo" 
                                 required 
-                                message="Please enter phone number" 
-                                placeholder="Enter phone number" 
+                                message={t('Please enter phone number')}
+                                placeholder={t('Enter phone number')} 
                                 prefix='+966 '
                             />
                         </Col>
                         <Col span={24}>
                             <MyInput 
-                                label="Email Address" 
+                                label={t('Email Address')} 
                                 name="email" 
                                 required 
-                                message="Please enter email address" 
-                                placeholder="Enter email address" 
+                                message={t('Please enter email address')} 
+                                placeholder={t('Enter email address')}
                             />
                         </Col>
                     </Row>

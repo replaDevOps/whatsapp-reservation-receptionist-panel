@@ -9,7 +9,7 @@ import { ModuleTopHeading } from "../../../PageComponent";
 import { PlusOutlined } from "@ant-design/icons";
 import { AddVacation } from "../modal";
 import { DeleteModal } from "../../../Ui";
-
+import { useTranslation } from "react-i18next";
 const localizer = momentLocalizer(moment);
 const getCellStatusColor = (date, events) => {
   const current = moment(date).startOf('day');
@@ -62,6 +62,7 @@ const eventStyleGetter = (event) => {
 };
 const { Title, Text } = Typography
 const StaffVacationsSchedule = () => {
+  const {t} = useTranslation();
     const [events] = useState(mystaffData);
     const [currentDate, setCurrentDate] = useState(new Date());
     const [ visible, setVisible ] = useState(false)
@@ -76,7 +77,7 @@ const StaffVacationsSchedule = () => {
           <Flex vertical gap={20}>
             <Flex justify="space-between" align="center" gap={10}>
               <Flex vertical>
-                <ModuleTopHeading level={4} name='Staff Vacations' />
+                <ModuleTopHeading level={4} name={t('Staff Vacations')} />
                 <Text className='text-gray fs-13'>Manage your staff vacations.</Text>
               </Flex>
               <Button className='btncancel' onClick={()=>{setVisible(true)}}> 

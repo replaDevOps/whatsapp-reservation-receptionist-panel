@@ -1,10 +1,10 @@
 import { LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Card, Flex, Space, Typography } from 'antd'
 import { ModuleTopHeading } from '../../PageComponent';
-
+import { useTranslation } from 'react-i18next';
 const { Title, Text } = Typography
 const CalendarCard = ({currentDate, setCurrentDate, formattedDate, setBookedEvent}) => {
-
+const {t} = useTranslation();
     
 
     const prevDay = () => {
@@ -24,11 +24,11 @@ const CalendarCard = ({currentDate, setCurrentDate, formattedDate, setBookedEven
             <Flex vertical gap={30}>
                 <Flex justify='space-between' align='center' gap={10}>
                     <Flex vertical>
-                        <ModuleTopHeading level={4} name='Booking' />
-                        <Text className='text-gray fs-13'>See all the booking in your system</Text>
+                        <ModuleTopHeading level={4} name={t('Booking')} />
+                        <Text className='text-gray fs-13'>{t('See all the booking in your system')}</Text>
                     </Flex>
                     <Button className='btncancel' onClick={()=>{setBookedEvent(true)}}> 
-                        <PlusOutlined /> Add Booking
+                        <PlusOutlined /> {t('Add Booking')}
                     </Button>
                 </Flex>
                 <Flex justify='center'>

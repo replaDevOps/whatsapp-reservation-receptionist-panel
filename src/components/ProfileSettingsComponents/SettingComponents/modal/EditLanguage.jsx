@@ -3,18 +3,18 @@ import { CloseOutlined } from '@ant-design/icons'
 import { Button, Col, Divider, Flex, Form, Modal, Row, Typography } from 'antd'
 import { MySelect } from '../../../Forms'
 import { languageopt } from '../../../../shared'
-
+import { useTranslation } from 'react-i18next'
 const { Title } = Typography
-const EditLanguage = ({visible,onClose,edititem}) => {
-
+const EditLanguage = ({ visible, onClose, edititem }) => {
+    const { t } = useTranslation();
     const [form] = Form.useForm();
-    useEffect(()=>{
-        if(visible && edititem){
+    useEffect(() => {
+        if (visible && edititem) {
             form.setFieldsValue({
                 languag: edititem?.language,
             })
         }
-    },[visible,edititem])
+    }, [visible, edititem])
     return (
         <Modal
             title={null}
@@ -25,37 +25,40 @@ const EditLanguage = ({visible,onClose,edititem}) => {
             footer={
                 <Flex justify='end' gap={5}>
                     <Button type='button' className='btncancel text-black border-gray' onClick={onClose}>
-                        Cancel
+                        {t('Cancel')}
                     </Button>
-                    <Button type="primary" className='btnsave border0 text-white brand-bg' onClick={()=>form.submit()}>
-                        Save
+                    <Button type="primary" className='btnsave border0 text-white brand-bg' onClick={() => form.submit()}>
+                        {t('Save')}
                     </Button>
                 </Flex>
             }
-        > 
+        >
             <Flex vertical gap={10}>
                 <Flex justify='space-between' gap={6}>
                     <Title level={5} className='m-0'>
-                        Language
+                        {t('Language')}
                     </Title>
                     <Button type='button' onClick={onClose} className='p-0 border-0 bg-transparent'>
                         <CloseOutlined className='fs-18' />
                     </Button>
-                </Flex> 
-                <Form layout="vertical" 
-                    form={form} 
+                </Flex>
+                <Form layout="vertical"
+                    form={form}
                     // onFinish={} 
                     requiredMark={false}
                 >
                     <Row gutter={16}>
                         <Col span={24}>
-                            <MySelect 
-                                label="Language" 
-                                name="language" 
-                                placeholder="Select Language"
+                            <MySelect
+                                label={t('Language')}
+                                name="language"
+                                placeholder={t('Select Language')}
                                 required
-                                message='Please select language'
-                                options={languageopt}
+                                message={t('Please select language')}
+                                options={languageopt.map(item => ({
+                                    ...item,
+                                    name: t(item.name),
+                                }))}
                             />
                         </Col>
                     </Row>
@@ -66,4 +69,4 @@ const EditLanguage = ({visible,onClose,edititem}) => {
     )
 }
 
-export {EditLanguage}
+export { EditLanguage }

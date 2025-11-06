@@ -5,15 +5,15 @@ import { CustomPagination } from '../../Ui';
 import { customerColumn, customertableData } from '../../../data';
 import { SearchInput } from '../../Forms';
 import { AddCustomer } from '../modal';
-
+import { useTranslation } from 'react-i18next';
 const { Text } = Typography;
 
 const CustomerTable = () => {
-
+    const { t } = useTranslation();
     const [form] = Form.useForm();
     const [pageSize, setPageSize] = useState(10);
     const [current, setCurrent] = useState(1);
-    const [ addmodal, setAddModal ] = useState(false)
+    const [addmodal, setAddModal] = useState(false)
     const [toater, contextHolder] = notification.useNotification();
 
     const handlePageChange = (page, size) => {
@@ -22,7 +22,7 @@ const CustomerTable = () => {
     };
 
 
-    
+
     return (
         <>
             {contextHolder}
@@ -30,8 +30,8 @@ const CustomerTable = () => {
                 <Flex vertical gap={10} className='mb-2'>
                     <Flex justify='space-between' align='center' gap={10}>
                         <Flex vertical>
-                            <ModuleTopHeading level={4} name='Customers' />
-                            <Text className='text-gray fs-13'>Manage all the Customers in your system</Text>
+                            <ModuleTopHeading level={4} name={t('Customers')} />
+                            <Text className='text-gray fs-13'>{t('Manage all the Customers in your system')}</Text>
                         </Flex>
                     </Flex>
                     <Form layout="vertical" form={form}>
@@ -39,7 +39,7 @@ const CustomerTable = () => {
                             <Col span={24} md={24} lg={7}>
                                 <SearchInput
                                     name='name'
-                                    placeholder='Search by Phone Number / Customer Name'
+                                    placeholder={t('Search by Phone Number / Customer Name')}
                                     // value={search}
                                     // onChange={(e) => {
                                     //     setSearch(e.target.value);
@@ -54,16 +54,16 @@ const CustomerTable = () => {
                 <Flex vertical gap={20}>
                     <Table
                         size='large'
-                        columns={customerColumn({setAddModal})}
+                        columns={customerColumn({ setAddModal })}
                         dataSource={customertableData}
                         className='pagination table-cs table'
                         showSorterTooltip={false}
                         scroll={{ x: 1000 }}
                         rowHoverable={false}
                         pagination={false}
-                        // loading={isLoading}
+                    // loading={isLoading}
                     />
-                    <CustomPagination 
+                    <CustomPagination
                         total={12}
                         current={current}
                         pageSize={pageSize}
@@ -73,8 +73,8 @@ const CustomerTable = () => {
             </Card>
 
             <AddCustomer
-            visible={addmodal}
-            onClose={()=>setAddModal(false)}
+                visible={addmodal}
+                onClose={() => setAddModal(false)}
             />
         </>
     );
