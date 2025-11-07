@@ -113,7 +113,21 @@
 "Rows per page": "عدد الصفوف في الصفحة",
 "Manage your staff vacations.": "إدارة إجازات الموظفين لديك.",
 "Add Vacation": "إضافة إجازة",
-"Total vacations (this month)": "إجمالي الإجازات (هذا الشهر)"
+"Total vacations (this month)": "إجمالي الإجازات (هذا الشهر)",
+"19": "١٩",
+"Delete": "حذف",
+"Update": "تحديث",
+"Add Vacations": "إضافة الإجازات",
+"Edit Vacations": "تعديل الإجازات",
+"Start Date": "تاريخ البدء",
+"Please enter start date": "يرجى إدخال تاريخ البدء",
+"Select date": "اختر التاريخ",
+"End Date": "تاريخ الانتهاء",
+"Please enter end date": "يرجى إدخال تاريخ الانتهاء",
+"Confirm": "تأكيد",
+"Are you sure?": "هل أنت متأكد؟",
+"This action cannot be undone. Are you sure you want to delete this vacation?": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف هذه الإجازة؟"
+
 
 
 }

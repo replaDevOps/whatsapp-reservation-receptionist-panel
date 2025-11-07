@@ -4,7 +4,9 @@ import { ModuleTopHeading } from '../../PageComponent';
 import { useTranslation } from 'react-i18next';
 const { Title, Text } = Typography
 const CalendarCard = ({currentDate, setCurrentDate, formattedDate, setBookedEvent}) => {
-const {t} = useTranslation();
+ 
+const {t, i18n} = useTranslation();
+   const isArabic = i18n.language === "ar";
     
 
     const prevDay = () => {
@@ -33,11 +35,11 @@ const {t} = useTranslation();
                 </Flex>
                 <Flex justify='center'>
                     <Space size={10}>
-                        <Button  icon={<LeftOutlined />} onClick={prevDay} />
+                        <Button  icon={isArabic ? <RightOutlined /> : <LeftOutlined />} onClick={prevDay} />
                         <Title level={5} className='m-0 fw-500'>
                             {formattedDate}
                         </Title>
-                        <Button  icon={<RightOutlined />} onClick={nextDay} />
+                        <Button  icon={isArabic ? <LeftOutlined /> : <RightOutlined />} onClick={nextDay} />
                     </Space>
                 </Flex>
             </Flex>

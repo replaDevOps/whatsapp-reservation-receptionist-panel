@@ -78,18 +78,18 @@ const StaffVacationsSchedule = () => {
             <Flex justify="space-between" align="center" gap={10}>
               <Flex vertical>
                 <ModuleTopHeading level={4} name={t('Staff Vacations')} />
-                <Text className='text-gray fs-13'>Manage your staff vacations.</Text>
+                <Text className='text-gray fs-13'>{t('Manage your staff vacations.')}</Text>
               </Flex>
               <Button className='btncancel' onClick={()=>{setVisible(true)}}> 
-                <PlusOutlined /> Add Vacation
+                <PlusOutlined /> {t('Add Vacation')}
               </Button>
             </Flex>
             <Flex gap={15} align='center'>
               <Image src='/assets/icons/newcust-ar.webp' width={40} preview={false} alt='total vacations icon' fetchPriority="high" />
               <Flex vertical>
-                  <Text className='text-gray fs-15'>Total vacations  (this month)</Text>
+                  <Text className='text-gray fs-15'>{t('Total vacations (this month)')}</Text>
                   <Title className='fw-600 m-0' level={4}>
-                      19
+                      {t('19')}
                   </Title>
               </Flex>
             </Flex>

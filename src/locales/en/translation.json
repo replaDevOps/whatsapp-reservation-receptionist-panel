@@ -113,5 +113,18 @@
   "Rows per page": "Rows per page",
   "Manage your staff vacations.": "Manage your staff vacations.",
   "Add Vacation": "Add Vacation",
-  "Total vacations (this month)": "Total vacations (this month)"
+  "Total vacations (this month)": "Total vacations (this month)",
+  "19": "19",
+  "Delete": "Delete",
+  "Update": "Update",
+  "Add Vacations": "Add Vacations",
+  "Edit Vacations": "Edit Vacations",
+  "Start Date": "Start Date",
+  "Please enter start date": "Please enter start date",
+  "Select date": "Select date",
+  "End Date": "End Date",
+  "Please enter end date": "Please enter end date",
+  "Confirm": "Confirm",
+  "Are you sure?": "Are you sure?",
+  "This action cannot be undone. Are you sure you want to delete this vacation?": "This action cannot be undone. Are you sure you want to delete this vacation?"
 }
