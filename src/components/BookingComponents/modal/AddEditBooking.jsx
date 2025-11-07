@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom'
 import { MyDatepicker, MyInput, MySelect } from '../../Forms'
 import moment from 'moment'
 import dayjs from 'dayjs'
-
+import { useTranslation } from 'react-i18next'
+import { toArabicDigits } from '../../../shared'
 const { Title, Text } = Typography
 const AddEditBooking = ({visible,onClose,edititem}) => {
-
+const{t, i18n} = useTranslation();
+const isArabic = i18n.language === "ar";
     const [form] = Form.useForm();
     const [isAccess, setIsAccess] = useState(1);
     const [ ischange, setIsChange ] = useState(0)
@@ -52,10 +54,10 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
             footer={
                 <Flex justify='end' gap={5}>
                     <Button type='button' className='btncancel text-black border-gray' onClick={onClose}>
-                        Cancel
+                        {t('Cancel')}
                     </Button>
                     <Button type="primary" className='btnsave border0 text-white brand-bg' onClick={()=>{onClose()}}>
-                        {edititem?'Update':'Save'}
+                        {edititem?t('Update'):t('Save')}
                     </Button>
                 </Flex>
             }
@@ -64,7 +66,7 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
                 <Flex vertical gap={0}>
                     <Flex justify='space-between' gap={6}>
                         <Title level={5} className='m-0'>
-                            { edititem ? 'Edit Booking' : 'Add New Booking' }
+                            { edititem ? t('Edit Booking') : t('Add New Booking') }
                         </Title>
                         <Button type='button' onClick={onClose} className='p-0 border-0 bg-transparent'>
                             <CloseOutlined className='fs-18' />
@@ -85,28 +87,28 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
                             >
                                 <Flex gap={20}>
                                     <Radio value={1} className="fs-14">
-                                        By time
+                                        {t('By time')}
                                     </Radio>
                                     <Radio value={2} className="fs-14">
-                                        By service provider
+                                        {t('By service provider')}
                                     </Radio>
                                 </Flex>
                             </Radio.Group>
                         </Col>
                         <Col span={24}>
                             <MyInput
-                                label="Phone Number"
+                                label={t('Phone Number')}
                                 name="phoneNo"
                                 required
-                                message="Please enter a valid phone number"
+                                message={t('Please enter a valid phone number')}
                                 addonBefore={
                                     <Select
-                                        defaultValue="+966"
+                                        defaultValue={`+${isArabic ? toArabicDigits(966):966}`}
                                         className='w-80'
                                         onChange={(value) => form.setFieldsValue({ countryCode: value })}
                                     >
-                                        <Select.Option value="sa">+966</Select.Option>
-                                        <Select.Option value="ae">+955</Select.Option>
+                                        <Select.Option value="sa">+{isArabic ? toArabicDigits(966):966}</Select.Option>
+                                        <Select.Option value="ae">+{isArabic ? toArabicDigits(955):955}</Select.Option>
                                     </Select>
                                 }
                                 placeholder="3445592382"
@@ -117,11 +119,11 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
                         </Col>
                         <Col span={24}>
                             <MyInput 
-                                label="Customer Name" 
+                                label={t('Customer Name')}
                                 name="customerName" 
                                 required 
-                                message="Please enter customer name" 
-                                placeholder="Enter customer name" 
+                                message={t('Please enter customer name')}
+                                placeholder={t('Enter customer name')}
                                 disabled={edititem}
                             />
                         </Col>
@@ -129,60 +131,60 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
                             !isAccess &&
                             <Col span={24}>
                                 <MyInput 
-                                    label="Email Address" 
+                                    label={t('Email Address')} 
                                     name="email" 
-                                    placeholder="Enter email address" 
+                                    placeholder={t('Enter email address')}
                                 />
                             </Col>
                         }
                         <Col span={24}>
                             <MySelect 
-                                label={'Service'}
+                                label={t('Service')}
                                 name={'service'}
                                 required 
-                                message="Please choose service" 
+                                message={t('Please choose service')}
                                 options={[
                                     {
                                         id: 1,
                                         name: 'Hair Cut'
                                     }
                                 ]}
-                                placeholder='Select service'
+                                placeholder={t('Select Service')}
                             />
                         </Col>
                         <Col span={24}>
                             <MyInput 
-                                label="Promo Code (if any)" 
+                                label={t('Promo Code (if any)')}
                                 name="promoCode"
-                                placeholder="Enter promo code" 
+                                placeholder={t('Enter promo code')}
                                 suffix={
-                                    <Tag className='cursor'>Check</Tag>
+                                    <Tag className='cursor'>{t('Check')}</Tag>
                                 }
                             />
                         </Col>
                         <Col span={24}>
                             <MySelect 
-                                label={'Service Provider'}
+                                label={t('Service Provider')}
                                 name={'serviceProvider'}
                                 required 
-                                message="Please choose service provider" 
+                                message={t('Please choose service provider')}
                                 options={[
                                     {
                                         id: 1,
                                         name: 'Manager'
                                     }
                                 ]}
-                                placeholder='Select service provider' 
+                                placeholder={t('Select Service Provider')} 
                             />
                         </Col>
                         <Col span={24}>
                             <MyDatepicker
                                 datePicker
-                                label='Booking Date'
+                                label={t('Booking Date')}
                                 name='bookingDate'
                                 required
-                                message={'Please enter booking date'}
-                                placeholder='Select date'
+                                message={t('Please enter booking date')}
+                                placeholder={t('Select date')}
                             />
                         </Col>
                         {
@@ -190,7 +192,7 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
                             <Col span={24}>
                                 <Flex vertical gap={5} className='my-3'>
                                     <Flex gap={10} align='center'>
-                                        <Text className='fs-12'>Available Slots :</Text>
+                                        <Text className='fs-12'>{t('Available Slots')} :</Text>
                                         <Flex gap={5} align='center'>
                                             {
                                                 ['08:00 - 10:30','12:00 - 02:00','05:00 - 07:00']?.map((items,i)=>
@@ -205,7 +207,7 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
                                         </Flex>
                                     </Flex>     
                                     <Flex className="offday pad bg-light-gray" gap={5} align="center" justify='space-between'>
-                                        <Text className="text-gray fs-13">{timeslotes ? timeslotes : 'Select time' }</Text>
+                                        <Text className="text-gray fs-13">{timeslotes ? timeslotes : t('Select time') }</Text>
                                         <img src="/assets/icons/clock.webp" width={16} alt='clock icon' fetchPriority="high" />
                                     </Flex>
                                 </Flex>
@@ -213,23 +215,23 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
                             :
                             <Col span={24}>
                                 <MyDatepicker
-                                    label="Booking Time"
+                                    label={t('Booking Time')}
                                     name="bookingTime"
                                     required
-                                    message="Please enter booking time"
-                                    placeholder="Select time"
+                                    message={t('Please enter booking time')}
+                                    placeholder={t('Select time')}
                                     format="HH:mm"
                                 />
                             </Col>
                         }
                         <Col span={24}>
                             <MyInput 
-                                label="Reminder (To notify before booking time)" 
+                                label={t('Reminder (To notify before booking time)')}
                                 name="reminder" 
-                                placeholder="Set reminder"
+                                placeholder={t('Set reminder')}
                                 suffix={<Flex gap={5} justify='end'>
                                     {
-                                        ['Minutes','Hour']?.map((items,i)=>
+                                        [t('Minutes'),t('Hour')]?.map((items,i)=>
                                             <Tag key={i} 
                                                 color={ischange === i ? '#07938F' : ''}
                                                 className='fs-10 m-0 cursor'
@@ -245,9 +247,9 @@ const AddEditBooking = ({visible,onClose,edititem}) => {
                         <Col span={24}>
                             <MyInput 
                                 textArea
-                                label="Note" 
+                                label={t('Note')}
                                 name="note" 
-                                placeholder="note..." 
+                                placeholder={t('Enter note.......')} 
                                 rows={8}
                             />
                         </Col>

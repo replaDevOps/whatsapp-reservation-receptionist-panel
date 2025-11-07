@@ -1,8 +1,8 @@
 import { Divider, Flex, Tooltip, Typography } from 'antd'
-
+import { useTranslation } from 'react-i18next'
 const { Text } = Typography
 const BookingDetailNote = ({data,colorstatus}) => {
-    console.log(data)
+   const {t} = useTranslation();
     return (
         <Flex vertical gap={8}>
             <Tooltip title='Service' 
@@ -51,9 +51,9 @@ const BookingDetailNote = ({data,colorstatus}) => {
                         <img src='/assets/icons/symbol.webp' width={14} alt='currency icon' fetchPriority="high" />
                     </Tooltip>
                     <Flex gap={5} align='center'>
-                        <Text className='text-gray fs-12'>{data?.amount}</Text>
+                        <Text className='text-gray fs-12'>{t('SAR')}{data?.amount}</Text>
                         {
-                            data?.off && <Text delete className='fs-10'>{data?.off}</Text>
+                            data?.off && <Text delete className='fs-10'>{t('SAR')}{data?.off}</Text>
                         }
                     </Flex>
                 </Flex>

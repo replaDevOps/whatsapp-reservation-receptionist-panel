@@ -2,48 +2,43 @@ import { useState } from 'react'
 import { Button, Card, Col, Flex, Form, Row, Typography } from 'antd'
 import { EditGeneralSettings, MyInput } from '../../../../components'
 import { useTranslation } from 'react-i18next'
-const { Title, Text} = Typography
+import { toArabicDigits } from '../../../../shared'
+const { Title, Text } = Typography
 const GeneralSetting = () => {
-    const {t} = useTranslation();
+    const { t, i18n } = useTranslation();
+    const isArabic = i18n.language === "ar";
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false)
     const [edititem, setEditItem] = useState(null)
     const [previewimage, setPreviewImage] = useState('/assets/images/setting.webp')
     const days = [
         {
-            key:1,
-            day:'Monday',
-            timing:'09:00am - 06:00pm'
+            key: 1,
+            day: 'Monday'
         },
         {
-            key:2,
-            day:'Tuesday',
-            timing:'09:00am - 06:00pm'
+            key: 2,
+            day: 'Tuesday'
         },
         {
-            key:3,
-            day:'Wednesday',
-            timing:'09:00am - 06:00pm'
+            key: 3,
+            day: 'Wednesday'
         },
         {
-            key:4,
-            day:'Thursday:',
-            timing:'09:00am - 06:00pm'
+            key: 4,
+            day: 'Thursday'
         },
         {
-            key:5,
-            day:'Friday',
-            timing:'Day Off'
+            key: 5,
+            day: 'Friday'
         },
         {
-            key:6,
-            day:'Saturday',
-            timing:'09:00am - 06:00pm'
+            key: 6,
+            day: 'Saturday'
         },
         {
-            key:7,
-            day:'Sunday',
-            timing:'09:00am - 06:00pm'
+            key: 7,
+            day: 'Sunday'
         },
     ]
     return (
@@ -100,7 +95,7 @@ const GeneralSetting = () => {
                                     required
                                     message={t('Please enter phone number')}
                                     placeholder={t('Enter phone number')}
-                                    prefix='+966 '
+                                    prefix={isArabic ? `+${toArabicDigits(966)}` : '+966'}
                                     disabled
                                 />
                             </Col>
@@ -117,14 +112,23 @@ const GeneralSetting = () => {
                             <Col span={24}>
                                 <Flex vertical gap={5}>
                                     <Title level={5} className="fw-500 m-0">{t('My Availbility')}</Title>
-                                {
-                                    days?.map((schedule, index) =>(
-                                         <Flex gap={4} key={index}>
-                                        <Text strong>{t(schedule?.day)}:</Text>
-                                        <Text className='fw-400'>{t(schedule?.timing)}</Text>
-                                    </Flex>
-                                    ))
-                                }
+                                    {
+                                        days?.map((schedule, index) => (
+                                            <Flex gap={4} key={index}>
+                                                <Text strong>{t(schedule?.day)}:</Text>
+                                                <Flex gap={5}>
+                                                    {schedule.key === 5 ? (
+                                                        <Text className="fs-16">{t('Day Off')}</Text>
+                                                    ) : (
+                                                        <Text className="fs-16">
+                                                            {isArabic ? toArabicDigits('09:00') : '09:00'} -
+                                                            {isArabic ? toArabicDigits('06:00') : '06:00'}
+                                                        </Text>
+                                                    )}
+                                                </Flex>
+                                            </Flex>
+                                        ))
+                                    }
                                 </Flex>
                             </Col>
                         </Row>

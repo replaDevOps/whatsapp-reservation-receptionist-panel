@@ -126,5 +126,22 @@
   "Please enter end date": "Please enter end date",
   "Confirm": "Confirm",
   "Are you sure?": "Are you sure?",
-  "This action cannot be undone. Are you sure you want to delete this vacation?": "This action cannot be undone. Are you sure you want to delete this vacation?"
+  "This action cannot be undone. Are you sure you want to delete this vacation?": "This action cannot be undone. Are you sure you want to delete this vacation?",
+  "Edit Booking": "Edit Booking",
+  "Please enter a valid phone number": "Please enter a valid phone number",
+  "Hair Cut": "Hair Cut",
+  "Receptionist": "Receptionist",
+  "Logout": "Logout",
+  "Cancelled": "Cancelled",
+  "Completed": "Completed",
+  "Pending": "Completed",
+  "No Show": "No Show",
+  "SAR": "SAR",
+  "In-progress":"In-progress",
+  "No-show":"No-show",
+  "Reschedule":"Reschedule",
+  "Search":"Search",
+  "Rejected": "Rejected",
+  "Accepted": "Accepted",
+  "Notification": "Notificatio"
 }

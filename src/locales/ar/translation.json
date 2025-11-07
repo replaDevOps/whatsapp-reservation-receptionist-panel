@@ -126,8 +126,23 @@
 "Please enter end date": "يرجى إدخال تاريخ الانتهاء",
 "Confirm": "تأكيد",
 "Are you sure?": "هل أنت متأكد؟",
-"This action cannot be undone. Are you sure you want to delete this vacation?": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف هذه الإجازة؟"
-
-
+"This action cannot be undone. Are you sure you want to delete this vacation?": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف هذه الإجازة؟",
+"Edit Booking": "تعديل الحجز",
+"Please enter a valid phone number": "يرجى إدخال رقم هاتف صالح",
+"Hair Cut": "قص الشعر",
+"Receptionist": "موظف الاستقبال",
+"Logout": "تسجيل الخروج",
+"Cancelled": "تم الإلغاء",
+"Completed": "مكتمل",
+"Pending": "قيد الانتظار",
+"No Show": "لم يحضر",
+"SAR": "ر.س",
+"In-progress": "قيد التنفيذ",
+"No-show": "لم يحضر",
+"Reschedule": "إعادة الجدولة",
+"Search": "بحث",
+"Rejected": "مرفوض",
+"Accepted": "مقبول",
+"Notification": "إشعار"
 
 }

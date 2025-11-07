@@ -3,9 +3,11 @@ import { CloseOutlined, EditFilled } from '@ant-design/icons'
 import { Button, Col, Divider, Flex, Form, Modal, Row, Typography } from 'antd'
 import { MyInput, SingleFileUpload } from '../../../Forms'
 import { useTranslation } from 'react-i18next'
+import { toArabicDigits } from '../../../../shared'
 const { Title } = Typography
 const EditGeneralSettings = ({visible,onClose,edititem}) => {
-const {t} = useTranslation();
+const {t, i18n} = useTranslation();
+ const isArabic = i18n.language === "ar";
     const [form] = Form.useForm();
         const [ previewimage, setPreviewImage ] = useState('/assets/images/setting.webp')
         useEffect(()=>{
@@ -106,7 +108,7 @@ const {t} = useTranslation();
                                 required 
                                 message={t('Please enter phone number')}
                                 placeholder={t('Enter phone number')} 
-                                prefix='+966 '
+                                prefix={isArabic ? `+${toArabicDigits(966)}` : '+966'}
                             />
                         </Col>
                         <Col span={24}>

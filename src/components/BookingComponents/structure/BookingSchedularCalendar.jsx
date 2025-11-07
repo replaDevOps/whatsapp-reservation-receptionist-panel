@@ -115,7 +115,7 @@ const BookingSchedularCalendar = () => {
                         </Col>
                         <Col span={24} md={12} lg={4}>
                             <MySelect
-                                placeholder={'Select Service'}
+                                placeholder={t('Select Service')}
                                 withoutForm
                                 value={selectedService}
                                 options={[
