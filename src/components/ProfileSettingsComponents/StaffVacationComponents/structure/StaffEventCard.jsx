@@ -20,7 +20,7 @@ const StaffEventCard = ({ event }) => {
                 style={{ color: statusColors[event.status]?.color }}
                 className="radius-20 fs-11"
             >
-                {t(event.status.charAt(0).toUpperCase() + event.status.slice(1))}
+                {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
             </Tag>
             <Flex 
                 gap={5}

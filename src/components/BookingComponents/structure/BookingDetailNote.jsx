@@ -5,7 +5,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
    const {t} = useTranslation();
     return (
         <Flex vertical gap={8}>
-            <Tooltip title='Service' 
+            <Tooltip title={t('Service' )}
                 color={colorstatus} 
                 styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px',color:'#fff'}}}
             >
@@ -14,7 +14,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
             <Divider variant="dashed" className='border-dark m-0' />
             <Flex vertical gap={5}>
                 <Flex gap={8} align='center'>
-                    <Tooltip title='User' 
+                    <Tooltip title={t('User' )}
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px',color:'#fff'}}}
                     >
@@ -23,7 +23,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     <Text className='text-gray fs-12'>{data?.name}</Text>
                 </Flex>
                 <Flex gap={8} align='center'>
-                    <Tooltip title='Phone' 
+                    <Tooltip title={t('Phone' )}
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                     >
@@ -35,7 +35,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
             <Divider variant="dashed" className='border-dark m-0' />
             <Flex vertical gap={5}>
                 <Flex gap={8} align='center'>
-                    <Tooltip title='Duration' 
+                    <Tooltip title={t('Duration')} 
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                     >
@@ -44,7 +44,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     <Text className='text-gray fs-12'>{data?.duration}</Text>
                 </Flex>
                 <Flex gap={8} align='center'>
-                    <Tooltip title='Currency' 
+                    <Tooltip title={t('Currency' )}
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                     >
@@ -60,7 +60,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                 {
                     data?.offer && 
                     <Flex gap={8} align='center'>
-                        <Tooltip title='Offer' 
+                        <Tooltip title={t('Offer')} 
                             color={colorstatus} 
                             styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                         >
@@ -74,7 +74,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
             <Flex vertical gap={5}>
                 <Flex gap={10}>
                     <Flex gap={8} align='center'>
-                        <Tooltip title='Calendar' 
+                        <Tooltip title={t('Calendar')} 
                             color={colorstatus} 
                             styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                         >
@@ -83,7 +83,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                         <Text className='text-gray fs-12'>{data?.date}</Text>
                     </Flex>
                     <Flex gap={8} align='center'>
-                        <Tooltip title='Clock' 
+                        <Tooltip title={t('Clock')}
                             color={colorstatus} 
                             styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                         >
@@ -95,7 +95,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                 {
                     data?.description &&
                     <Flex gap={8} align='center'>
-                        <Tooltip title='Note' 
+                        <Tooltip title={t('Note')} 
                             color={colorstatus} 
                             styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                         >
@@ -107,7 +107,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
             </Flex>
             <Divider variant="dashed" className='border-dark m-0' />
             <Flex gap={8} align='center'>
-                <Tooltip title='Status' 
+                <Tooltip title={t('Status')} 
                     color={colorstatus} 
                     styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                 >
@@ -120,7 +120,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
             {
                 data?.reason && 
                 <Flex gap={8} align='center'>
-                    <Tooltip title='Reason' 
+                    <Tooltip title={t('Reason')}
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                     >

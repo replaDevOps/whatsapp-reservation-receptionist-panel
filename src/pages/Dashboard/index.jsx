@@ -10,25 +10,25 @@ const {t}= useTranslation();
     {
       id: 1,
       icon: '/assets/icons/total-booking-w.webp',
-      title: t('104'),
+      title: '104',
       subtitle: t('Total Bookings'),
     },
     {
       id: 2,
       icon: '/assets/icons/manual-booking.webp',
-      title: t('50'),
+      title: '50',
       subtitle: t('Today’s  Manual Bookings'),
     },
     {
       id: 3,
       icon: '/assets/icons/whatsapp-booking.webp',
-      title: t('50'),
+      title: '50',
       subtitle: t('Today’s WhatsApp Bookings'),
     },
     {
       id: 4,
       icon: '/assets/icons/cancel-booking.webp',
-      title: t('4'),
+      title: '4',
       subtitle: t('Today’s Cancelled Bookings'),
     },
   ];

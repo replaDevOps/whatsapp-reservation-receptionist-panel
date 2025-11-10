@@ -143,6 +143,18 @@
 "Search": "بحث",
 "Rejected": "مرفوض",
 "Accepted": "مقبول",
-"Notification": "إشعار"
+"Notification": "إشعار",
+"Need to notify": "بحاجة إلى الإخطار",
+"User": "المستخدم",
+"Phone": "الهاتف",
+"Duration": "المدة",
+"Currency": "العملة",
+"Offer": "العرض",
+"Calendar": "التقويم",
+"Clock": "الساعة",
+"Status": "الحالة",
+"Reason": "السبب",
+"Pedicure": "باديكير",
+"Massage": "تدليك"
 
 }

@@ -89,7 +89,7 @@ const StaffVacationsSchedule = () => {
               <Flex vertical>
                   <Text className='text-gray fs-15'>{t('Total vacations (this month)')}</Text>
                   <Title className='fw-600 m-0' level={4}>
-                      {t('19')}
+                      19
                   </Title>
               </Flex>
             </Flex>

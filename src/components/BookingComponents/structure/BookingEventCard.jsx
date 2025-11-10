@@ -52,15 +52,15 @@ const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
                                 style={{ color: statusColors[booking.status]?.color }}
                                 className="radius-20 fs-11"
                             >
-                                {t(booking.status.charAt(0).toUpperCase() + booking.status.slice(1))}
+                                {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                             </Tag>
                             :
                             <Dropdown
                                 menu={{
                                     items: [
-                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation();setBookedEvent(true);setEditEvent(event)}}>{t('Reschedule')}</NavLink>, key: '1' },
-                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation(); setCancelledEvent(true)}}>{t('Cancelled')}</NavLink>, key: '2' },
-                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation();}}>{t('No Show')}</NavLink>, key: '3' },
+                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation();setBookedEvent(true);setEditEvent(event)}}>Reschedule</NavLink>, key: '1' },
+                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation(); setCancelledEvent(true)}}>Cancelled</NavLink>, key: '2' },
+                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation();}}>No Show</NavLink>, key: '3' },
                                     ],
                                 }}
                             >
@@ -83,7 +83,7 @@ const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
                         {
                             booking?.status === 'pending' &&
                             <Tooltip
-                                title='Need to notify'
+                                title={t('Need to notify')}
                                 styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px',}}}
                             >
                                 <img src="/assets/icons/notify-need.webp" alt="notify need icon" width={22} />

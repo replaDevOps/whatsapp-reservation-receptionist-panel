@@ -143,5 +143,17 @@
   "Search":"Search",
   "Rejected": "Rejected",
   "Accepted": "Accepted",
-  "Notification": "Notificatio"
+  "Notification": "Notificatio",
+  "Need to notify": "Need to notify",
+  "User": "User",
+  "Phone": "Phone",
+  "Duration":"Duration",
+  "Currency": "Currency",
+  "Offer": "Offer",
+  "Calendar": "Calendar",
+  "Clock": "Clock",
+  "Status": "Status",
+  "Reason": "Reason",
+  "Pedicure": "Pedicure",
+  "Massage": "Massage"
 }

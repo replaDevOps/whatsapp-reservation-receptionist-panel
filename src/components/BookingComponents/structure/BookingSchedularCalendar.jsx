@@ -119,9 +119,9 @@ const BookingSchedularCalendar = () => {
                                 withoutForm
                                 value={selectedService}
                                 options={[
-                                    { id: "Hair Cut", name: "Hair Cut" },
-                                    { id: "Pedicure", name: "Pedicure" },
-                                    { id: "Massage", name: "Massage" },
+                                    { id: "Hair Cut", name: t('Hair Cut') },
+                                    { id: "Pedicure", name: t('Pedicure') },
+                                    { id: "Massage", name: t('Massage') },
                                 ]}
                                 onChange={(value) => setSelectedService(value)}
                             />
