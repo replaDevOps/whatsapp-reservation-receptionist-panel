@@ -1045,7 +1045,7 @@
 }
 
 .rbc-header {
-  height: 90px !important;   /* apni requirement ke mutabiq */
+  height: 90px !important;
   display: flex;
   align-items: center;
   justify-content: center;
