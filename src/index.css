@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap');
 @font-face {
     font-family: Productsans;
     src: url('../assets/fonts/Product\ Sans\ Regular.ttf');
@@ -8,7 +8,6 @@
     padding: 0;
     margin: 0; 
     box-sizing: border-box;
-    font-family: var(--body-text) !important;
 }
 
 :root{
@@ -64,6 +63,16 @@
     --bg-drop-1: #F3E9CB;
     --drop-text: #D2A82B;
 }   
+
+.font-english,
+.font-english :where(.ant-*) {
+  font-family: "ProductSans", sans-serif !important;
+}
+
+.font-arabic,
+.font-arabic :where(.ant-*) {
+  font-family: "Vazirmatn", sans-serif !important;
+}
 
 .card-bg{
     background-color: var(--card-bg) !important;
@@ -379,9 +388,9 @@
     border-radius: 0px !important;
 }
 
-.table-cs .ant-table-container table>thead>tr:first-child >*:last-child{
+/* .table-cs .ant-table-container table>thead>tr:first-child >*:last-child{
     border-top-right-radius: 8px !important;
-}
+} */
 
 .table-dark .ant-table-thead{
     background: transparent !important;
@@ -1372,6 +1381,22 @@
 
 .shrink-0{
     flex-shrink: 0 !important;
+}
+
+.mx-8{
+    margin-inline: 8px !important;
+}
+
+.left-to-right .ant-table-container table>thead>tr:first-child >*:last-child{
+    border-top-right-radius: 8px !important;
+}
+
+.right-to-left .ant-table-container table>thead>tr:first-child >*:last-child{
+    border-top-left-radius: 8px !important;
+}
+
+.right-to-left  .ant-table-ping-right:not(.ant-table-has-fix-right) .ant-table-container::after {
+    box-shadow: none !important;
 }
 
 /* =================================================== media querry =============================================== */

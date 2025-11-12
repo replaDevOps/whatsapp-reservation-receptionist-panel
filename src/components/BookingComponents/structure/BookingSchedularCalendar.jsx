@@ -130,11 +130,12 @@ const BookingSchedularCalendar = () => {
                     <Calendar
                         localizer={localizer}
                         events={normalizedEvents}
+                        date={currentDate}
                         defaultView="day"
                         views={["day"]}
                         step={60}
                         timeslots={1}
-                        defaultDate={new Date(2025, 8, 15)}
+                        // defaultDate={new Date(2025, 10, 12)}
                         eventPropGetter={eventStyleGetter}
                         components={{
                             event: (props) => (

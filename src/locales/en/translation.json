@@ -155,5 +155,38 @@
   "Status": "Status",
   "Reason": "Reason",
   "Pedicure": "Pedicure",
-  "Massage": "Massage"
+  "Massage": "Massage",
+
+  "Forget Password":"Forget Password",
+  "Set a New Password":"Set a New Password",
+  "Enter the email address to send you the OTP code.":"Enter the email address to send you the OTP code.",
+  "Enter the 5 digit OTP code sent to your email abc****4@gmail.com":"Enter the 5 digit OTP code sent to your email abc****4@gmail.com",
+  "Your OTP has been verified. Please create a strong new password to secure your account.":"Your OTP has been verified. Please create a strong new password to secure your account.",
+  "Please enter Email Address":"Please enter Email Address",
+  "Enter Email Address":"Enter Email Address",
+  "OTP":"OTP",
+  "Please enter the OTP sent to your email":"Please enter the OTP sent to your email",
+  "Re-enter new password":"Re-enter new password",
+  "Update Password":"Update Password",
+  "Remember Password?":"Remember Password?",
+  "Sign In":"Sign In",
+  "Didn’t receive code?":"Didn’t receive code?",
+  "Resend":"Resend",
+  "Simplify Your Bookings,":"Simplify Your Bookings,",
+  "Streamline":"Streamline",
+  "Your Day.":"Your Day.",
+  "Welcome Admin.":"Welcome Admin.",
+  "Please sign in to access your system and manage platform activities.":"Please sign in to access your system and manage platform activities.",
+  "Remember Me":"Remember Me",
+  "Forget Password?":"Forget Password?",
+  "For tablet based self-booking?":"For tablet based self-booking?",
+  
+  "Welcome Receptionist Admin Panel.":"Welcome Receptionist Admin Panel",
+  "You’ve received a Requested Proposal for your service from":"You’ve received a Requested Proposal for your service from",
+  "Your service received a 5-star review from":"Your service received a 5-star review from",
+  "hour ago":"hour ago",
+  "AM":"AM",
+  "PM": "PM"
+
+
 }

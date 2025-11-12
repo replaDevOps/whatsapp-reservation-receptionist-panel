@@ -93,7 +93,7 @@ const StaffBookingDetailPop = ({data,colorstatus}) => {
                     <img src='/assets/icons/status.webp' width={14} alt='status icon' fetchPriority="high" />
                 </Tooltip>
                 <Text className='fs-12' style={{color: colorstatus}}>
-                    {data?.status?.charAt(0).toUpperCase() + data?.status?.slice(1)}
+                    {t(data?.status?.charAt(0).toUpperCase() + data?.status?.slice(1))}
                 </Text>
             </Flex>
         </Flex>

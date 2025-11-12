@@ -40,16 +40,16 @@ export const Notifications = () => {
 
     const data = [
         {
-            title: 'You’ve received a Requested Proposal for your service from CreativeBuyer93!',
+            title: {text:'You’ve received a Requested Proposal for your service from',name:'CreativeBuyer93!'},
         },
         {
-            title: 'Your service received a 5-star review from CreativeBuyer93!',
+            title: {text:'Your service received a 5-star review from',name:'CreativeBuyer93!'},
         },
         {
-            title: 'Your service received a 5-star review from CreativeBuyer93!',
+            title: {text:'Your service received a 5-star review from',name:'CreativeBuyer93!'}
         },
         {
-            title: 'Your service received a 5-star review from CreativeBuyer93!',
+            title: {text:'Your service received a 5-star review from',name:'CreativeBuyer93!'}
         },
     ];
 
@@ -65,10 +65,14 @@ export const Notifications = () => {
                 <List.Item key={index}>
                     <List.Item.Meta
                         avatar={<Avatar src={`/assets/icons/notify-ic.webp`} size={30} />}
-                        title={<NavLink to={''} className={'fw-500'}>{item.title}</NavLink>}
+                        title={<NavLink to={''} className={'fw-500'}>{t(item.title?.text)} {item?.title?.name}</NavLink>}
                         description={<Flex gap={5} align="center">
-                            <Text className="fs-12 text-gray">1 hour ago</Text>
-                            <Text className="fs-12 text-gray">12:24 AM</Text>
+                            <Text className="fs-12 text-gray">1 {t("hour ago")}</Text>
+                            <Text className="fs-12 text-gray">
+                                {
+                                    isArabic ? <>{t("AM")} 12:24 </> : <>12:24 {t("AM")}</>
+                                }
+                            </Text>
                         </Flex>}
                     />
                 </List.Item>

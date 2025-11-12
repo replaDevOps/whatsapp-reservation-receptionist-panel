@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 const { Text } = Typography;
 
 const CustomerTable = () => {
-    const { t } = useTranslation();
+    const { t,i18n} = useTranslation();
     const [form] = Form.useForm();
     const [pageSize, setPageSize] = useState(10);
     const [current, setCurrent] = useState(1);
@@ -56,7 +56,7 @@ const CustomerTable = () => {
                         size='large'
                         columns={customerColumn({ setAddModal })}
                         dataSource={customertableData}
-                        className='pagination table-cs table'
+                        className={ i18n?.language === 'ar' ? 'pagination table-cs table right-to-left' : 'pagination table-cs table left-to-right'}
                         showSorterTooltip={false}
                         scroll={{ x: 1000 }}
                         rowHoverable={false}

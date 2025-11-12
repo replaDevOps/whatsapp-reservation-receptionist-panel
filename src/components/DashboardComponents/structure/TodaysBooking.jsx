@@ -90,11 +90,12 @@ const {t} = useTranslation()
                         <Calendar
                             localizer={localizer}
                             events={normalizedEvents}
+                            date={new Date()}
                             defaultView="day"
                             views={["day"]}
                             step={60}
                             timeslots={1}
-                            defaultDate={new Date(2025, 8, 15)}
+                            // defaultDate={new Date(2025, 8, 15)}
                             eventPropGetter={eventStyleGetter}
                             components={{
                                 event: BookingEventCard,

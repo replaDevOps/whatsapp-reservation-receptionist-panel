@@ -155,6 +155,37 @@
 "Status": "الحالة",
 "Reason": "السبب",
 "Pedicure": "باديكير",
-"Massage": "تدليك"
+"Massage": "تدليك",
+
+"Forget Password": "نسيت كلمة المرور",
+"Set a New Password": "تعيين كلمة مرور جديدة",
+"Enter the email address to send you the OTP code.": "أدخل البريد الإلكتروني لإرسال رمز التحقق OTP إليك.",
+"Enter the 5 digit OTP code sent to your email abc****4@gmail.com": "أدخل رمز التحقق OTP المكون من 5 أرقام المرسل إلى بريدك abc****4@gmail.com",
+"Your OTP has been verified. Please create a strong new password to secure your account.": "تم التحقق من رمز OTP الخاص بك. يرجى إنشاء كلمة مرور جديدة قوية لتأمين حسابك.",
+"Please enter Email Address": "الرجاء إدخال البريد الإلكتروني",
+"Enter Email Address": "أدخل البريد الإلكتروني",
+"OTP": "رمز التحقق",
+"Please enter the OTP sent to your email": "الرجاء إدخال رمز التحقق المرسل إلى بريدك الإلكتروني",
+"Re-enter new password": "أعد إدخال كلمة المرور الجديدة",
+"Update Password": "تحديث كلمة المرور",
+"Remember Password?": "تذكر كلمة المرور؟",
+"Sign In": "تسجيل الدخول",
+"Didn’t receive code?": "لم تستلم الرمز؟",
+"Resend": "إعادة الإرسال",
+"Simplify Your Bookings,": "بسط حجوزاتك،",
+"Streamline": "نسّق",
+"Your Day.": "يومك.",
+"Welcome Admin.": "مرحباً بالمشرف.",
+"Please sign in to access your system and manage platform activities.": "يرجى تسجيل الدخول للوصول إلى نظامك وإدارة أنشطة المنصة.",
+"Remember Me": "تذكرني",
+"Forget Password?": "نسيت كلمة المرور؟",
+"For tablet based self-booking?": "لحجز ذاتي عبر الجهاز اللوحي؟",
+
+"Welcome Receptionist Admin Panel.": "مرحبًا بك في لوحة تحكم موظف الاستقبال",
+"You’ve received a Requested Proposal for your service from": "لقد تلقيت طلب عرض سعر لخدمتك من",
+"Your service received a 5-star review from": "حصلت خدمتك على تقييم 5 نجوم من",
+"hour ago": "منذ ساعة",
+"AM": "صباحًا",
+"PM": "مساءً"
 
 }
