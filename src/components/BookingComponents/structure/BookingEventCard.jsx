@@ -5,9 +5,10 @@ import { BookingDetailNote } from "./BookingDetailNote";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { CancelBooking } from "../modal";
-
+import { useTranslation } from "react-i18next";
 const { Text } = Typography
 const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
+    const {t} = useTranslation();
     const [ cancelledevent, setCancelledEvent ] = useState(false)
     const booking = event?.booking
     if (!booking) return null;
@@ -51,22 +52,23 @@ const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
                                 style={{ color: statusColors[booking.status]?.color }}
                                 className="radius-20 fs-11"
                             >
-                                {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                                
+                                {t(booking.status.charAt(0).toUpperCase() + booking.status.slice(1))}
                             </Tag>
                             :
                             <Dropdown
                                 menu={{
                                     items: [
-                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation();setBookedEvent(true);setEditEvent(event)}}>Reschedule</NavLink>, key: '1' },
-                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation(); setCancelledEvent(true)}}>Cancelled</NavLink>, key: '2' },
-                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation();}}>No Show</NavLink>, key: '3' },
+                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation();setBookedEvent(true);setEditEvent(event)}}>{t('Reschedule')}</NavLink>, key: '1' },
+                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation(); setCancelledEvent(true)}}>{t('Cancelled')}</NavLink>, key: '2' },
+                                        { label: <NavLink className='fs-12' onClick={(e) => {e.preventDefault();e.stopPropagation();}}>{t('No Show')}</NavLink>, key: '3' },
                                     ],
                                 }}
                             >
                                 <Button className="radius-20 border-0 sm-pill h-auto fs-10 pending-dropdown-color"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                                    {t(booking.status.charAt(0).toUpperCase() + booking.status.slice(1))}
                                     <DownOutlined className="fs-10" />
                                 </Button>
                             </Dropdown>
@@ -82,7 +84,7 @@ const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
                         {
                             booking?.status === 'pending' &&
                             <Tooltip
-                                title='Need to notify'
+                                title={t('Need to notify')}
                                 styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px',}}}
                             >
                                 <img src="/assets/icons/notify-need.webp" alt="notify need icon" width={22} />

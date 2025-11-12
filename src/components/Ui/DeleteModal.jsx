@@ -1,8 +1,8 @@
 import { Button, Divider, Flex, Modal, Typography } from 'antd'
-
+import { useTranslation } from 'react-i18next'
 const { Title, Text } = Typography
 const DeleteModal = ({visible,onClose,title,subtitle,onConfirm}) => {
-
+const {t} = useTranslation();
     
   return (
     <Modal
@@ -13,10 +13,10 @@ const DeleteModal = ({visible,onClose,title,subtitle,onConfirm}) => {
         footer={
             <Flex justify='center' gap={5}>
                 <Button type='button' onClick={onClose} className='btncancel text-black border-gray' >
-                    Cancel
+                    {t('Cancel')}
                 </Button>
                 <Button className={`btnsave border-0 text-white bg-red`} onClick={onConfirm} >
-                    Confirm
+                    {t('Confirm')}
                 </Button>
             </Flex>
         }
@@ -25,10 +25,10 @@ const DeleteModal = ({visible,onClose,title,subtitle,onConfirm}) => {
         <Flex vertical align='center' className='mt-3' gap={5}>
             <img src='/assets/icons/delete.svg' width={50} alt='bin icon' fetchPriority="high" />
             <Title level={5} className='m-0'>
-                {title}
+                {t(title)}
             </Title>
             <Text className='fs-14 text-center'>
-                {subtitle}
+                {t(subtitle)}
             </Text>
         </Flex>
         <Divider className='my-2 bg-light-brand' />

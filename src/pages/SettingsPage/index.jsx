@@ -1,13 +1,14 @@
 import { Flex } from 'antd'
 import { BreadCrumbCard, ChangePasswordSetting, GeneralSetting, LanguageSetting } from '../../components'
-
+import { useTranslation } from 'react-i18next'
 const SettingsPage = () => {
+    const {t} = useTranslation();
     return (
         <Flex vertical gap={10}>
             <BreadCrumbCard 
                 items={[
-                    {title:'Profile Settings'},
-                    {title:'Settings'}
+                    {title:t('Profile Settings')},
+                    {title:t('Settings')}
                 ]}
             />
             <GeneralSetting />

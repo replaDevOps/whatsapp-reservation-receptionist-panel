@@ -3,23 +3,22 @@ import { Button, Card, Col, Flex, Form, Row, Typography } from 'antd'
 import { languageopt } from '../../../../shared'
 import { EditLanguage } from '../modal'
 import { MySelect } from '../../../Forms'
-
+import { useTranslation } from 'react-i18next'
 const { Title } = Typography
 const LanguageSetting = () => {
-
+const {t} = useTranslation();
     const [form] = Form.useForm();
     const [ visible, setVisible ] = useState(false)
     const [ edititem, setEditItem ] = useState(null)
-
 
     return (
         <>
             <Card className='card-bg card-cs radius-12 border-gray'>
                 <Flex gap={10} vertical>
                     <Flex gap={10} justify='space-between' align='center'>
-                        <Title level={5} className="fw-500 m-0">Language Settings</Title>
+                        <Title level={5} className="fw-500 m-0">{t('Language Settings')}</Title>
                         <Button className='btncancel' onClick={()=>{setVisible(true);setEditItem(1)}}> 
-                            Change
+                            {t('Change')}
                         </Button>
                     </Flex>
                     <Form layout="vertical" 
@@ -30,9 +29,9 @@ const LanguageSetting = () => {
                         <Row gutter={16}>
                             <Col span={24}>
                                 <MySelect 
-                                    label="Select Language" 
+                                    label={t('Select Language')}
                                     name="language" 
-                                    placeholder="Select Language"
+                                    placeholder={t('Select Language')}
                                     options={languageopt}
                                     disabled 
                                 />

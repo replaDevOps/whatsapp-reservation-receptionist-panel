@@ -1,27 +1,32 @@
-import { Avatar, Button, Dropdown, Flex, Rate, Tag, Tooltip, Typography } from "antd";
+import { Button, Dropdown, Typography } from "antd";
 import { NavLink } from "react-router-dom";
-
 const { Text } = Typography
+import { useTranslation } from "react-i18next";
+import { toArabicDigits } from "../shared";
+const customerColumn = ( {setAddModal} ) =>  {
+    const {t,i18n} = useTranslation();
+    const isArabic = i18n.language === "ar";
 
-const customerColumn = ( {setAddModal} ) =>  [
+    return [
     {
-        title: 'Customer Name',
+        title: t('Customer Name'),
         dataIndex: 'customerName',
     },
     {
-        title: 'Phone Number',
+        title: t('Phone Number'),
         dataIndex: 'phoneNo',
     },
     {
-        title: 'Total Bookings',
+        title: t('Total Bookings'),
         dataIndex: 'totalBooking',
+        render:(totalBooking)=> isArabic ? toArabicDigits(totalBooking) : totalBooking
     },
     {
-        title: 'Last Bookings',
+        title: t('Last Bookings'),
         dataIndex: 'lastBooking',
     },
     {
-        title: 'Action',
+        title: t('Action'),
         key: "action",
         fixed: "right",
         width: 100,
@@ -29,7 +34,7 @@ const customerColumn = ( {setAddModal} ) =>  [
             <Dropdown
                 menu={{
                     items: [
-                        { label: <NavLink onClick={(e) => {e.preventDefault(); setAddModal(true)}}>Add Booking</NavLink>, key: '1' },
+                        { label: <NavLink onClick={(e) => {e.preventDefault(); setAddModal(true)}}>{t('Add Booking')}</NavLink>, key: '1' },
                     ],
                 }}
                 trigger={['click']}
@@ -41,6 +46,7 @@ const customerColumn = ( {setAddModal} ) =>  [
         ),
     },
 ];
+}
 
 export { 
     customerColumn

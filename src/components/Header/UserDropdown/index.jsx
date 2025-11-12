@@ -9,14 +9,14 @@ import { DownOutlined } from '@ant-design/icons';
 // import {ME} from '../../../graphql/query'
 
 // import { client } from '../../../config';
-
+import { useTranslation } from 'react-i18next';
 const UserDropdown = ()=> {
   // const userId = localStorage.getItem("userId"); 
   const [messageApi, contextHolder] = message.useMessage();
   const [user, setUser] = useState(null)
   const navigate = useNavigate()
   const [ loading, setLoaing ] = useState(false)
-
+const {t}= useTranslation();
   // const { data, loading:isLoading, refetch } = useQuery(ME, {
   //   variables: { getUserId:userId },
   //   skip: !userId,
@@ -63,7 +63,7 @@ const UserDropdown = ()=> {
           <Avatar size={44} src='/assets/images/logo.webp' />
           <Flex vertical gap={1}>
             <Typography.Text strong className='fs-13'>QLoop</Typography.Text>
-            <Typography.Text className='text-gray fs-13'>Receptionist</Typography.Text>
+            <Typography.Text className='text-gray fs-13'>{t('Receptionist')}</Typography.Text>
           </Flex>
         </Flex>
         <Button className='btnsave w-100'
@@ -71,7 +71,7 @@ const UserDropdown = ()=> {
           loading={loading}
           onClick={handleLogout}
           >
-            Logout
+            {t('Logout')}
         </Button>
       </Space>
     </Card>
@@ -90,7 +90,7 @@ const UserDropdown = ()=> {
           <Flex align='flex-start' gap={5}>
             <Flex vertical gap={0} align='end'>
               <Typography.Text strong className='fs-12'>QLoop</Typography.Text>
-              <Typography.Text className='text-gray fs-12'>Receptionist</Typography.Text>
+              <Typography.Text className='text-gray fs-12'>{t('Receptionist')}</Typography.Text>
             </Flex>
             <DownOutlined className='fs-12 py-1' />
           </Flex>

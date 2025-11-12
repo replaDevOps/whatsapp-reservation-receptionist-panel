@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 import { Avatar, Badge, Button, Card, Divider, Dropdown, Flex, Image, List, Typography } from "antd"
 import NotificationsDrawer from "./NotificationsDrawer"
-import { NavLink } from "react-router-dom"
-// import {GET_NOTIFICATIONS} from '../../../graphql/query'
-// import {NEW_NOTIFICATION_SUBSCRIPTION} from '../../../graphql/subscription'
-// import { useQuery,useSubscription } from '@apollo/client';
-
+import { NavLink, useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import { toArabicDigits } from "../../../shared"
 const { Text } = Typography
 export const Notifications = () => {
+    const {t,i18n} = useTranslation();
+    const isArabic = i18n.language === "ar";
     const userId = localStorage.getItem("userId"); 
 
      // State to keep track of notifications
@@ -55,7 +55,7 @@ export const Notifications = () => {
 
     const dropdownContent = (
         <Card className='radius-12 shadow-c card-cs size-notify'>
-            <Text>Notification (10)</Text>
+            <Text>{t('Notification')} {isArabic ? toArabicDigits(10):10}</Text>
             <Divider className="bg-divider my-3" />
             <List
                 itemLayout="horizontal"

@@ -8,7 +8,7 @@ import { myeventsData } from "../../../data";
 import { ModuleTopHeading } from "../../PageComponent";
 import { useNavigate } from "react-router-dom";
 import { BookingEventCard } from "../../BookingComponents";
-
+import { useTranslation } from "react-i18next";
 const localizer = momentLocalizer(moment);
 const users = [
     { id: 1, name: "John", avatar: "https://i.pravatar.cc/40?img=1" },
@@ -74,7 +74,7 @@ const TodaysBooking = () => {
     }));
 
     const naigate = useNavigate();
-
+const {t} = useTranslation()
     return (
         <>
             <Flex vertical gap={20}>
@@ -82,10 +82,10 @@ const TodaysBooking = () => {
                     <Flex vertical gap={20}>
                         <Flex justify="space-between" gap={30}>
                             <Flex vertical align="center">
-                                <ModuleTopHeading level={4} name="Today’s Bookings" />
-                                <Text className="text-gray fs-13">Today’s Incoming Bookings</Text>
+                                <ModuleTopHeading level={4} name={t("Today’s Bookings")} />
+                                <Text className="text-gray fs-13">{t('Today’s Incoming Bookings')}</Text>
                             </Flex>
-                            <Button onClick={() => naigate("/booking")}>View Calendar</Button>
+                            <Button onClick={() => naigate("/booking")}>{t('View Calendar')}</Button>
                         </Flex>
                         <Calendar
                             localizer={localizer}

@@ -3,12 +3,12 @@ import { Button, Col, Divider, Flex, Form, Modal, Row, Typography } from 'antd'
 import { useEffect } from 'react'
 import { MyDatepicker } from '../../../Forms'
 import moment from 'moment'
-
+import { useTranslation } from 'react-i18next'
 const { Title } = Typography
 const AddVacation = ({visible,onClose,edititem,setDeleteItem}) => {
-
+const {t} = useTranslation();
     const [form] = Form.useForm();
-
+    
     useEffect(()=>{
         if(visible && edititem){
             form.setFieldsValue({
@@ -33,14 +33,14 @@ const AddVacation = ({visible,onClose,edititem,setDeleteItem}) => {
             footer={
                 <Flex justify='space-between' align='center' gap={10}>
                     <Button type='button' className='btnsave border-0 bg-red text-white' onClick={()=>{setDeleteItem(true);onClose()}}>
-                        Delete
+                        {t('Delete')}
                     </Button>
                     <Flex justify='end' gap={5}>
                         <Button type='button' className='btncancel text-black border-gray' onClick={onClose}>
-                            Cancel
+                            {t('Cancel')}
                         </Button>
                         <Button type="primary" className='btnsave border0 text-white brand-bg' onClick={()=>{onClose()}}>
-                            {edititem?'Update':'Save'}
+                            {edititem?t('Update'):t('Save')}
                         </Button>
                     </Flex>
                 </Flex>
@@ -50,7 +50,7 @@ const AddVacation = ({visible,onClose,edititem,setDeleteItem}) => {
                 <Flex vertical gap={0}>
                     <Flex justify='space-between' gap={6}>
                         <Title level={5} className='m-0'>
-                            { edititem ? 'Edit Vacations' : 'Add Vacations' }
+                            { edititem ? t('Edit Vacations') : t('Add Vacations') }
                         </Title>
                         <Button type='button' onClick={onClose} className='p-0 border-0 bg-transparent'>
                             <CloseOutlined className='fs-18' />
@@ -66,21 +66,21 @@ const AddVacation = ({visible,onClose,edititem,setDeleteItem}) => {
                         <Col span={24}>
                             <MyDatepicker
                                 datePicker 
-                                label="Start Date" 
+                                label={t('Start Date')}
                                 name="startDate" 
                                 required 
-                                message="Please enter start date" 
-                                placeholder="Select date"
+                                message={t('Please enter start date')}
+                                placeholder={t('Select date')}
                             />
                         </Col>
                         <Col span={24}>
                             <MyDatepicker
                                 datePicker 
-                                label="End Date" 
+                                label={t('End Date')}
                                 name="endDate" 
                                 required 
-                                message="Please enter end date" 
-                                placeholder="Select date"
+                                message={t('Please enter end date')}
+                                placeholder={t('Select date')}
                             />
                         </Col>
                     </Row>

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-
+import { useTranslation } from "react-i18next";
 const getItem = (label, key, icon) => ({
     key,
     icon,
@@ -7,11 +7,12 @@ const getItem = (label, key, icon) => ({
 });
 
 const MenuItems = ({ currentTab }) => {
+    const {t,i18n} = useTranslation();
     const menuItems = useMemo(
     () => [
-        { type: "group", label: "DASHBOARD", key: "header", className: "heading-menu" },
+        { type: "group", label: t("DASHBOARD"), key: "header", className: "heading-menu" },
         getItem(
-            "Dashboard Overview",
+            t("Dashboard Overview"),
             "1",
             currentTab === "1" ? (
                 <img src="/assets/icons/side-icon/dashboard-a.webp" width="20px" alt="dashboard icon" fetchPriority="high" />
@@ -26,9 +27,9 @@ const MenuItems = ({ currentTab }) => {
         ),
 
         {type: 'divider', key: 'divider-3', className: 'bg-divider my-3'},
-        {type: 'group', label: 'BOOKING MANAGEMENT', key: 'header-3', className: 'heading-menu'},
+        {type: 'group', label: t('BOOKING MANAGEMENT'), key: 'header-3', className: 'heading-menu'},
         getItem(
-            "Bookings",
+            t("Bookings"),
             "2",
             currentTab === "2" ? (
                 <img src="/assets/icons/side-icon/booking-a.webp" width="20px" alt="booking icon" fetchPriority="high" />
@@ -43,9 +44,9 @@ const MenuItems = ({ currentTab }) => {
         ),
         
         { type: "divider", key: "divider-1", className: "bg-divider my-3" },
-        { type: "group", label: "CUSTOMER MANAGEMENT", key: "header-1", className: "heading-menu" },
+        { type: "group", label: t("CUSTOMER MANAGEMENT"), key: "header-1", className: "heading-menu" },
         getItem(
-            "Customers",
+            t("Customers"),
             "3",
             currentTab === "3" ? (
                 <img src="/assets/icons/side-icon/customer-a.webp" width="20px" alt="customer icon" fetchPriority="high" />
@@ -60,9 +61,9 @@ const MenuItems = ({ currentTab }) => {
         ),
 
         {type: 'divider', key: 'divider-4', className: 'bg-divider my-3'},
-        {type: 'group', label: 'PROFILE SETTINGS', key: 'header-4', className: 'heading-menu'},
+        {type: 'group', label: t('PROFILE SETTINGS'), key: 'header-4', className: 'heading-menu'},
         getItem(
-            "Staff Vacations",
+            t("Staff Vacations"),
             "4",
             currentTab === "4" ? (
                 <img src="/assets/icons/side-icon/vacation-a.webp" width="20px" alt="staff vacation icon" fetchPriority="high" />
@@ -76,7 +77,7 @@ const MenuItems = ({ currentTab }) => {
             )
         ),
          getItem(
-            "Setting",
+            t("Setting"),
             "5",
             currentTab === "5" ? (
                 <img src="/assets/icons/side-icon/setting-a.webp" width="20px" alt="setting icon" fetchPriority="high" />
@@ -90,7 +91,7 @@ const MenuItems = ({ currentTab }) => {
             )
         ),
     ],
-    [currentTab]
+    [currentTab,t, i18n.language]
   );
     return menuItems;
 };

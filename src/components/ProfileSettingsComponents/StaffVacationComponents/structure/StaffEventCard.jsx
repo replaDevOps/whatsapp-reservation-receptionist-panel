@@ -1,8 +1,9 @@
 import { Flex, Tag, Typography } from "antd";
 import moment from "moment";
-
+import { useTranslation } from "react-i18next";
 const { Text } = Typography
 const StaffEventCard = ({ event }) => {
+    const {t}= useTranslation();
     if (!event) return null;
     const statusColors = {
         accepted: { bg: "#C4E6C8",color:"#008F17" },

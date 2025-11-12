@@ -9,7 +9,7 @@ import { ModuleTopHeading } from "../../../PageComponent";
 import { PlusOutlined } from "@ant-design/icons";
 import { AddVacation } from "../modal";
 import { DeleteModal } from "../../../Ui";
-
+import { useTranslation } from "react-i18next";
 const localizer = momentLocalizer(moment);
 const getCellStatusColor = (date, events) => {
   const current = moment(date).startOf('day');
@@ -62,6 +62,7 @@ const eventStyleGetter = (event) => {
 };
 const { Title, Text } = Typography
 const StaffVacationsSchedule = () => {
+  const {t} = useTranslation();
     const [events] = useState(mystaffData);
     const [currentDate, setCurrentDate] = useState(new Date());
     const [ visible, setVisible ] = useState(false)
@@ -76,17 +77,17 @@ const StaffVacationsSchedule = () => {
           <Flex vertical gap={20}>
             <Flex justify="space-between" align="center" gap={10}>
               <Flex vertical>
-                <ModuleTopHeading level={4} name='Staff Vacations' />
-                <Text className='text-gray fs-13'>Manage your staff vacations.</Text>
+                <ModuleTopHeading level={4} name={t('Staff Vacations')} />
+                <Text className='text-gray fs-13'>{t('Manage your staff vacations.')}</Text>
               </Flex>
               <Button className='btncancel' onClick={()=>{setVisible(true)}}> 
-                <PlusOutlined /> Add Vacation
+                <PlusOutlined /> {t('Add Vacation')}
               </Button>
             </Flex>
             <Flex gap={15} align='center'>
               <Image src='/assets/icons/newcust-ar.webp' width={40} preview={false} alt='total vacations icon' fetchPriority="high" />
               <Flex vertical>
-                  <Text className='text-gray fs-15'>Total vacations  (this month)</Text>
+                  <Text className='text-gray fs-15'>{t('Total vacations (this month)')}</Text>
                   <Title className='fw-600 m-0' level={4}>
                       19
                   </Title>

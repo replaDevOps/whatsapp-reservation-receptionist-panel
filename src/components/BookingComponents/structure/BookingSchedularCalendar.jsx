@@ -9,7 +9,7 @@ import { CalendarCard } from "./CalendarCard";
 import { myeventsData } from "../../../data";
 import { BookingEventCard } from "./BookingEventCard";
 import { AddEditBooking } from "../modal";
-
+import { useTranslation } from "react-i18next";
 const localizer = momentLocalizer(moment);
 
 const users = [
@@ -73,7 +73,7 @@ const BookingSchedularCalendar = () => {
     const [selectedProvider, setSelectedProvider] = useState(1);
     const [selectedService, setSelectedService] = useState("Hair Cut");
     const [currentDate, setCurrentDate] = useState(new Date());
-
+    const {t} = useTranslation();
     const serviceProviders = [
         { id: 1, name: "Sameh Amin" },
         { id: 2, name: "Muhammad Ali" },
@@ -103,7 +103,7 @@ const BookingSchedularCalendar = () => {
                     <Row gutter={[12, 12]}>
                         <Col span={24} md={12} lg={4}>
                             <MySelect
-                                placeholder="Select Service Provider"
+                                placeholder={t('Select Service Provider')}
                                 withoutForm
                                 value={selectedProvider}
                                 options={serviceProviders.map((p) => ({
@@ -115,13 +115,13 @@ const BookingSchedularCalendar = () => {
                         </Col>
                         <Col span={24} md={12} lg={4}>
                             <MySelect
-                                placeholder="Select Service"
+                                placeholder={t('Select Service')}
                                 withoutForm
                                 value={selectedService}
                                 options={[
-                                    { id: "Hair Cut", name: "Hair Cut" },
-                                    { id: "Pedicure", name: "Pedicure" },
-                                    { id: "Massage", name: "Massage" },
+                                    { id: "Hair Cut", name: t('Hair Cut') },
+                                    { id: "Pedicure", name: t('Pedicure') },
+                                    { id: "Massage", name: t('Massage') },
                                 ]}
                                 onChange={(value) => setSelectedService(value)}
                             />
