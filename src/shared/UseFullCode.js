@@ -20,17 +20,11 @@ const toArabicDigits = (number) => {
     .join("");
 };
 
-const BusinessTitle = ({t}) => {
-  const title = t("BUSINESS MANAGEMENT");
+const CustomerTitle = ({t}) => {
+  const title = t("CUSTOMER MANAGEMENT");
   const formatted = title.charAt(0).toUpperCase() + title.slice(1).toLocaleLowerCase();
   return formatted;
 };
-
-const staffTitle = ({t}) => {
-  const title = t("STAFF MANAGEMENT");
-  const formatted = title.charAt(0).toUpperCase() + title.slice(1).toLocaleLowerCase();
-  return formatted;
-}
 
 const bookingTitle = ({t}) => {
   const title = t("BOOKING MANAGEMENT");
@@ -39,10 +33,10 @@ const bookingTitle = ({t}) => {
 }
 
 const settingTitle = ({t}) => {
-  const title = t("ACCOUNT SETTINGS");
+  const title = t("PROFILE SETTINGS");
   const formatted = title.charAt(0).toUpperCase() + title.slice(1).toLocaleLowerCase();
   return formatted;
 }
 
 
-export {toArabicDigits,BusinessTitle, staffTitle, bookingTitle, settingTitle}
+export {toArabicDigits,CustomerTitle, bookingTitle, settingTitle}

@@ -37,6 +37,11 @@ const {t}= useTranslation();
   const handleLogout = () => {
     setLoaing(true)
     localStorage.removeItem('email');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('branch');
     setInterval(() => {
       setLoaing(false)
       window.location.href = "/login";

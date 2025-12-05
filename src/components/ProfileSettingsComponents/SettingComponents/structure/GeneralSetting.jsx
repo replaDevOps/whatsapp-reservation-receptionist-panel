@@ -1,53 +1,45 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Card, Col, Flex, Form, Row, Typography } from 'antd'
 import { EditGeneralSettings, MyInput } from '../../../../components'
 import { useTranslation } from 'react-i18next'
-import { toArabicDigits } from '../../../../shared'
+import { formatTime24to12, toArabicDigits } from '../../../../shared'
+import { GET_USERS_BY_ID } from '../../../../graphql/query'
+import { useQuery } from '@apollo/client/react'
 const { Title, Text } = Typography
 const GeneralSetting = () => {
+    const userId = localStorage.getItem('userId');
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false)
     const [edititem, setEditItem] = useState(null)
-    const [previewimage, setPreviewImage] = useState('/assets/images/setting.webp')
-    const days = [
-        {
-            key: 1,
-            day: 'Monday'
-        },
-        {
-            key: 2,
-            day: 'Tuesday'
-        },
-        {
-            key: 3,
-            day: 'Wednesday'
-        },
-        {
-            key: 4,
-            day: 'Thursday'
-        },
-        {
-            key: 5,
-            day: 'Friday'
-        },
-        {
-            key: 6,
-            day: 'Saturday'
-        },
-        {
-            key: 7,
-            day: 'Sunday'
-        },
-    ]
+    const [previewimage, setPreviewImage] = useState(null)
+    const { data, loading,refetch } = useQuery(GET_USERS_BY_ID, {
+        variables: { getUserId: userId },
+        skip: !userId,
+    });
+    localStorage.setItem('branch',data?.getUser?.branch?.name || "")
+
+    useEffect(() => {
+            if (!loading && data) {
+                form.setFieldsValue({
+                    firstName: data?.getUser?.firstName,
+                    lastName: data?.getUser?.lastName,
+                    phone: data?.getUser?.phone,
+                    email: data?.getUser?.email
+                });
+                setPreviewImage(data?.getUser?.imageUrl)
+            }
+            console.log('setting data',data)
+        }, [loading, data]);
+
     return (
         <>
             <Card className='card-bg card-cs radius-12 border-gray'>
                 <Flex gap={10} vertical>
                     <Flex gap={10} justify='space-between' align='center'>
                         <Title level={5} className="fw-500 m-0">{t('General Settings')}</Title>
-                        <Button className='btncancel' onClick={() => { setVisible(true); setEditItem(1) }}>
+                        <Button className='btncancel' onClick={() => { setVisible(true); setEditItem(data) }}>
                             {t('Edit')}
                         </Button>
                     </Flex>
@@ -61,7 +53,7 @@ const GeneralSetting = () => {
                                 <Flex vertical gap={5} justify='center' align='center'>
                                     <img
                                         src={previewimage}
-                                        alt="Category"
+                                        alt="profile image"
                                         className='radius-12 mxw-mxh'
                                         fetchPriority="high"
                                     />
@@ -91,7 +83,7 @@ const GeneralSetting = () => {
                                 <MyInput
                                     type='number'
                                     label={t('Phone Number')}
-                                    name="phoneNo"
+                                    name="phone"
                                     required
                                     message={t('Please enter phone number')}
                                     placeholder={t('Enter phone number')}
@@ -112,23 +104,34 @@ const GeneralSetting = () => {
                             <Col span={24}>
                                 <Flex vertical gap={5}>
                                     <Title level={5} className="fw-500 m-0">{t('My Availbility')}</Title>
-                                    {
-                                        days?.map((schedule, index) => (
+                                    {data?.getUser?.scheduleHours?.length > 0 && (
+                                        data?.getUser?.scheduleHours.map((schedule, index) => {
+                                            const dayLabel =
+                                            t(schedule?.dayOfWeek).charAt(0)?.toUpperCase() +
+                                            t(schedule?.dayOfWeek).slice(1).toLowerCase();
+
+                                            const hasTimes = schedule?.openTime && schedule?.closeTime;
+
+                                            return (
                                             <Flex gap={4} key={index}>
-                                                <Text strong>{t(schedule?.day)}:</Text>
+                                                <Text strong>{dayLabel}:</Text>
                                                 <Flex gap={5}>
-                                                    {schedule.key === 5 ? (
-                                                        <Text className="fs-16">{t('Day Off')}</Text>
-                                                    ) : (
-                                                        <Text className="fs-16">
-                                                            {isArabic ? toArabicDigits('09:00') : '09:00'} -
-                                                            {isArabic ? toArabicDigits('06:00') : '06:00'}
-                                                        </Text>
-                                                    )}
+                                                {schedule?.isClosed ? (
+                                                    <Text>{t('Day Off')}</Text>
+                                                ) : hasTimes ? (
+                                                    <Text>
+                                                    {`${formatTime24to12(schedule?.openTime)} - ${formatTime24to12(
+                                                        schedule?.closeTime
+                                                    )}`}
+                                                    </Text>
+                                                ) : (
+                                                    <Text />
+                                                )}
                                                 </Flex>
                                             </Flex>
-                                        ))
-                                    }
+                                            );
+                                        })
+                                    )}
                                 </Flex>
                             </Col>
                         </Row>
@@ -138,8 +141,8 @@ const GeneralSetting = () => {
             <EditGeneralSettings
                 visible={visible}
                 edititem={edititem}
-                setEditItem={setEditItem}
                 onClose={() => { setVisible(false); setEditItem(null) }}
+                refetch={refetch}
             />
         </>
     )

@@ -1,20 +1,25 @@
-import { CloseOutlined, EditFilled } from '@ant-design/icons'
+import { CloseOutlined} from '@ant-design/icons'
 import { Button, Col, Divider, Flex, Form, Modal, Radio, Row, Select, Tag, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { MyDatepicker, MyInput, MySelect } from '../../Forms'
-import moment from 'moment'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import { toArabicDigits } from '../../../shared'
+import { notifySuccess, toArabicDigits } from '../../../shared'
+import { useMutation } from '@apollo/client/react'
+import { CREATE_BOOKING } from '../../../graphql/mutation/mutations'
+
 const { Title, Text } = Typography
 const AddEditBooking = ({visible,onClose,edititem}) => {
-const{t, i18n} = useTranslation();
-const isArabic = i18n.language === "ar";
+    const{t, i18n} = useTranslation();
+    const isArabic = i18n.language === "ar";
     const [form] = Form.useForm();
     const [isAccess, setIsAccess] = useState(1);
     const [ ischange, setIsChange ] = useState(0)
     const [ timeslotes, setTimeSlotes ] = useState('')
+    const [ createBooking, { loading:creating } ] = useMutation(CREATE_BOOKING,{
+        onCompleted: () => {notifySuccess(api,"Booking create","Booking created successfully",()=> {onClose()})},
+        onError: (error) => {notifyError(api, error);},
+    })
     const handleRadioChange = (e) => {
         setIsAccess(e.target.value === 1);
     };
@@ -31,8 +36,8 @@ const isArabic = i18n.language === "ar";
                 email: edititem?.booking?.email,
                 service: edititem?.booking?.service,
                 serviceProvider: edititem?.providerName,
-                bookingDate: moment(edititem?.booking?.date, 'DD/MM/YYYY'),
-                bookingTime: moment(edititem?.booking?.time, 'HH:mm'),
+                bookingDate: dayjs(edititem?.booking?.date, 'DD/MM/YYYY'),
+                bookingTime: dayjs(edititem?.booking?.time, 'HH:mm'),
                 reminder: edititem?.booking?.duration,
                 note: edititem?.booking?.description
             })
@@ -42,6 +47,28 @@ const isArabic = i18n.language === "ar";
         }
     },[visible,edititem])
 
+    const CreateBookingHandle = async () => {
+        const input = form.getFieldsValue();
+        try {
+            // if (edititem?.getUser?.id) {
+            //     await updateUser({
+            //         variables: { 
+            //             input: { id: userId, imageUrl: previewimage, ...input }
+            //         }
+            //     });
+            //     messageApi.success("User updated successfully!");
+            // } 
+            await createBooking({
+                variables: {
+                    input
+                }
+            })
+            onClose();
+        } catch (e) {
+            console.error(e);
+            message.error(e.message);
+        }
+    };
 
     return (
         <Modal

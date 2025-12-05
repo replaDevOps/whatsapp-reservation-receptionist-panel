@@ -28,7 +28,7 @@ const StaffBookingDetailPop = ({data,colorstatus}) => {
                 </Flex>
                 <Flex gap={3}>
                     {
-                        data?.status === 'pending' &&
+                        data?.status === 'PENDING' &&
                         <Dropdown
                             menu={{
                                 items: [

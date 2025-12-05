@@ -1,46 +1,36 @@
 import { Form, Button, Typography, Row, Col, Checkbox, Flex, Image } from "antd";
 import { NavLink } from "react-router-dom";
 import { message } from "antd";
-// import { useMutation } from "@apollo/client";
-// import { LOGIN } from "../../graphql/mutation/login";
 import { useNavigate } from "react-router-dom";
 import { MyInput } from "../../components";
 import { useTranslation } from "react-i18next";
 import { LanguageChange } from "../Sidebar/LanguageChange";
+import { LOGIN_USER } from "../../graphql/mutation/mutations";
+import { useMutation } from "@apollo/client/react";
 
 const { Title, Paragraph } = Typography;
 const LoginPage = () => {
     const navigate = useNavigate()
     const {t} = useTranslation()
     const [messageApi, contextHolder] = message.useMessage();
-    
-    // const [loginUser, { loading, error }] = useMutation(LOGIN);
+    const [loginUser, { loading, error }] = useMutation(LOGIN_USER)
     const [form] = Form.useForm();
 
-    const handleFinish = async () => {
+     const handleFinish = async () => {
+            const values = form.getFieldsValue()
              try {
-            //   const { email, password } = values;
-            const email = "test@gmail.com";
-            const password = "test@123";
-            //   const { data,error } = await loginUser({ variables: { email, password } });
-                localStorage.setItem("email", email);
-                localStorage.setItem("password", password);
-
+              const { email, password } = values;
+              const { data,error } = await loginUser({ variables: { email, password, role: 'RECEPTIONIST'} });
+              if (data) {
+                localStorage.setItem("accessToken", data.loginUser.token);
+                localStorage.setItem("userId", data.loginUser.user.id || "");
+                localStorage.setItem("email", data.loginUser.user.email || "");
+                localStorage.setItem("fullName",`${data.loginUser.user.firstName} ${data.loginUser.user.lastName}` || "");
                 messageApi.success("Login successful!");
                 navigate("/")
-            //   if (data) {
-                // store token/id
-                // localStorage.setItem("accessToken", data.login.token);
-                // localStorage.setItem("userId", data.login.user.id);
-                // localStorage.setItem("email", email);
-                // localStorage.setItem("password", password);
-
-                // messageApi.success("Login successful!");
-                // navigate("/")
-                // compute destination safely (it could be a string or Location object)
-            //   } else {
-            //     messageApi.error("Login failed: Invalid credentials");
-            //   }
+              } else {
+                messageApi.error("Login failed: Invalid credentials");
+              }
             } catch (error) {
             console.error("Login error:", error);
             messageApi.error("Login failed: Something went wrong");
@@ -67,8 +57,8 @@ const LoginPage = () => {
 
                         <Form layout="vertical" form={form} onFinish={handleFinish} requiredMark={false}
                             initialValues={{
-                                email: "test@gmail.com",
-                                password: "test@123",
+                                email:'receptionistpanel@gmail.com',
+                                password:'Repla@123'
                             }}
                         >
                             <MyInput 
@@ -93,7 +83,7 @@ const LoginPage = () => {
                                 </NavLink>
                             </Flex>
                             <Button htmlType="submit" type="primary" className="btnsave bg-dark-blue fs-16" block 
-                                // loading={loading}
+                                loading={loading}
                             >
                                 {t("Sign In")}
                             </Button>

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { mystaffData } from "../../../../data";
-import { Button, Card, Flex, Image, Typography } from "antd";
+import { Button, Card, Flex, Image, notification, Typography } from "antd";
 import { StaffEventCard } from "./StaffEventCard";
 import { NavigationControl } from "./NavigationControl";
 import { ModuleTopHeading } from "../../../PageComponent";
@@ -10,23 +10,29 @@ import { PlusOutlined } from "@ant-design/icons";
 import { AddVacation } from "../modal";
 import { DeleteModal } from "../../../Ui";
 import { useTranslation } from "react-i18next";
+import { useLazyQuery, useMutation } from "@apollo/client/react";
+import { GET_VACATIONS } from "../../../../graphql/query";
+import { DELETE_VACATION } from "../../../../graphql/mutation/mutations";
+import { notifyError, notifySuccess } from "../../../../shared";
+import dayjs from "dayjs";
 const localizer = momentLocalizer(moment);
+
 const getCellStatusColor = (date, events) => {
   const current = moment(date).startOf('day');
   const matchedEvent = events.find((ev) => {
     const start = moment(ev.start).startOf('day');
     const end = moment(ev.end).startOf('day');
-    return current.isBetween(start, end, null, '[]'); // supports multi-day
+    return current.isBetween(start, end, null, '[]');
   });
 
   if (!matchedEvent) return {};
 
   switch (matchedEvent.status) {
-    case "accepted":
+    case "APPROVED":
       return { backgroundColor: "rgba(0,143,23,0.08)" };
-    case "rejected":
+    case "REJECTED":
       return { backgroundColor: "rgba(255,59,48,0.08)" };
-    case "pending":
+    case "PENDING":
       return { backgroundColor: "rgba(219,110,0,0.08)" };
     default:
       return {};
@@ -36,13 +42,13 @@ const getCellStatusColor = (date, events) => {
 const eventStyleGetter = (event) => {
     let backgroundColor = "";
     switch (event.status) {
-        case "accepted":
+        case "APPROVED":
             backgroundColor = "#E6F4E8";
             break;
-        case "rejected":
+        case "REJECTED":
             backgroundColor = "#FFECEB";
             break;
-        case "pending":
+        case "PENDING":
             backgroundColor = "#FCF1E6";
             break;
         default:
@@ -53,26 +59,66 @@ const eventStyleGetter = (event) => {
         style: {
           backgroundColor,
           borderRadius: "6px",
-          padding: "2px 6px",
+          padding: "2px 3px",
           fontSize: "13px",
           cursor: "pointer",
-          width:'100%'
+          width:'auto'
         },
     };
 };
 const { Title, Text } = Typography
 const StaffVacationsSchedule = () => {
-  const {t} = useTranslation();
-    const [events] = useState(mystaffData);
+    const {t} = useTranslation();
+    const userId = localStorage.getItem('userId');
+    const [ vacationdata, setVactionData ] = useState([])
+    const [api, contextHolder] = notification.useNotification();
+    const [events, setEvents] = useState([]);
+    const [ getVacation, {data,loading, refetch} ] = useLazyQuery(GET_VACATIONS,{
+       fetchPolicy:'network-only'
+    })
+    const [deleteVacation, { loading: deleting }] = useMutation(DELETE_VACATION,{
+      onCompleted: () => {
+        notifySuccess(
+          api,
+          "Event Delete",
+          "Event Deleted successfully",
+          ()=> {refetch();setDeleteItem(null);}
+        )
+      },
+      onError: (error) => {
+        notifyError(api, error);
+      },
+    });
     const [currentDate, setCurrentDate] = useState(new Date());
     const [ visible, setVisible ] = useState(false)
     const [ editevent, setEditEvent ] = useState(null)
-    const [ deleteitem, setDeleteItem ] = useState(false)
+    const [ deleteitem, setDeleteItem ] = useState(null)
 
     const formattedDate = currentDate.toDateString();
     
+    useEffect(() => {
+      if (!userId) return;
+      getVacation({ variables: { staffId: userId } });
+    }, [userId]);
+
+    useEffect(() => {
+      if (data?.getVacations) {
+        setVactionData(data.getVacations);
+
+        const mapped = data.getVacations.vacations?.map(v => ({
+          id: v.id,
+          start: dayjs(v.startDate).startOf('day').toDate(),
+          end: dayjs(v.endDate).endOf('day').toDate(),
+          title: v.status,
+          status: v.status
+        })) || [];
+        setEvents(mapped);
+      }
+    }, [data]);
+
     return (
       <>
+        {contextHolder}
         <Card className='card-bg radius-12 border-gray card-cs'>
           <Flex vertical gap={20}>
             <Flex justify="space-between" align="center" gap={10}>
@@ -89,7 +135,7 @@ const StaffVacationsSchedule = () => {
               <Flex vertical>
                   <Text className='text-gray fs-15'>{t('Total vacations (this month)')}</Text>
                   <Title className='fw-600 m-0' level={4}>
-                      19
+                    {vacationdata?.totalVacation}
                   </Title>
               </Flex>
             </Flex>
@@ -125,7 +171,7 @@ const StaffVacationsSchedule = () => {
               toolbar={false}
               selectable={false}  
               onSelectEvent={(event) => {
-                if (event.status === "pending") {
+                if (event.status === "PENDING") {
                   setEditEvent(event);
                   setVisible(true);
                 }
@@ -138,12 +184,17 @@ const StaffVacationsSchedule = () => {
           edititem={editevent}
           setDeleteItem={setDeleteItem}
           onClose={()=>{setVisible(false);setEditEvent(null)}}
+          refetch={refetch}
         />
         <DeleteModal 
           visible={deleteitem}
           title={'Are you sure?'}
           subtitle={'This action cannot be undone. Are you sure you want to delete this vacation?'}
-          onClose={()=>setDeleteItem(false)}
+          onClose={()=>setDeleteItem(null)}
+          onConfirm= {async (deleteVacationId )=>{
+            await deleteVacation({ variables: {deleteVacationId}  })
+          }}
+          loading={deleting}
         />
       </>
     );
