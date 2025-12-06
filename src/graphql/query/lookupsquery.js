@@ -18,4 +18,14 @@ const GET_SERVICES_LOOKUPS = gql`
     }
 `
 
-export { GET_BRANCHES_LOOKUP, GET_SERVICES_LOOKUPS }
+const GET_SERVICE_PROVIDER_BY_BRANCH = gql`
+    query GetServiceProvidersByBranch($branchId: ID!) {
+        getServiceProvidersByBranch(branchId: $branchId) {
+            id
+            firstName
+            lastName
+        }
+    }
+`
+
+export { GET_BRANCHES_LOOKUP, GET_SERVICES_LOOKUPS, GET_SERVICE_PROVIDER_BY_BRANCH }

@@ -9,9 +9,12 @@ const LOGIN_USER = gql`
         email
         firstName
         lastName
-        branch{
+        branch {
           id
           name
+          business {
+            id
+          }
         }
       }
     }

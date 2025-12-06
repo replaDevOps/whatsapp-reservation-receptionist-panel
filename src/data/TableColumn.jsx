@@ -2,7 +2,7 @@ import { Button, Dropdown, Typography } from "antd";
 import { NavLink } from "react-router-dom";
 const { Text } = Typography
 import { useTranslation } from "react-i18next";
-import { toArabicDigits } from "../shared";
+import { toArabicDigits, utcDateTimeToLocal, utcDateToLocal } from "../shared";
 const customerColumn = ( {setAddModal} ) =>  {
     const {t,i18n} = useTranslation();
     const isArabic = i18n.language === "ar";
@@ -11,19 +11,22 @@ const customerColumn = ( {setAddModal} ) =>  {
     {
         title: t('Customer Name'),
         dataIndex: 'customerName',
+        render: (_,row)=> `${row?.firstName} ${row?.lastName}`
+        
     },
     {
         title: t('Phone Number'),
-        dataIndex: 'phoneNo',
+        dataIndex: 'phone',
     },
     {
         title: t('Total Bookings'),
-        dataIndex: 'totalBooking',
+        dataIndex: 'totalBookings',
         render:(totalBooking)=> isArabic ? toArabicDigits(totalBooking) : totalBooking
     },
     {
         title: t('Last Bookings'),
-        dataIndex: 'lastBooking',
+        dataIndex: 'lastBookingDate',
+        render: (lastBookingDate)=> lastBookingDate ? utcDateTimeToLocal(lastBookingDate) : '-'
     },
     {
         title: t('Action'),

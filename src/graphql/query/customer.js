@@ -8,6 +8,9 @@ const GET_CUSTOMERS = gql`
                 id
                 firstName
                 lastName
+                phone
+                totalBookings
+                lastBookingDate
             }
         }
     }

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Avatar, Card, Typography, Flex, Row, Col } from "antd";
+import { Avatar, Card, Typography, Flex, Row, Col, notification } from "antd";
 import "antd/dist/reset.css";
 import { MySelect } from "../../Forms";
 import { CalendarCard } from "./CalendarCard";
@@ -10,6 +10,9 @@ import { myeventsData } from "../../../data";
 import { BookingEventCard } from "./BookingEventCard";
 import { AddEditBooking } from "../modal";
 import { useTranslation } from "react-i18next";
+import { GET_BOOKINGS } from "../../../graphql/query/booking";
+import { useLazyQuery } from "@apollo/client/react";
+import { getBranchId } from "../../../utils/auth";
 const localizer = momentLocalizer(moment);
 
 const users = [
@@ -25,19 +28,19 @@ const eventStyleGetter = (event) => {
     let backgroundColor = "";
     let borderColor = "";
     switch (event.status) {
-        case "completed":
+        case "COMPLETED":
             backgroundColor = "#E5F6E4";
             borderColor = "#17BA05";
             break;
-        case "cancelled":
+        case "CANCELLED":
             backgroundColor = "#F6E3E5";
             borderColor = "#BA0508";
             break;
-        case "in-progress":
+        case "SCHEDULED":
             backgroundColor = "#E3EBF7";
             borderColor = "#054DBA";
             break;
-        case "pending":
+        case "PENDING":
             backgroundColor = "#F8F4E8";
             borderColor = "#D2A82B";
             break;
@@ -67,12 +70,15 @@ const ResourceHeader = ({ resource }) => (
 );
 
 const BookingSchedularCalendar = () => {
-    const [events] = useState(myeventsData);
+    // const [events] = useState(myeventsData);
     const [bookedevent, setBookedEvent] = useState(false);
     const [editevent, setEditEvent] = useState(null);
     const [selectedProvider, setSelectedProvider] = useState(1);
     const [selectedService, setSelectedService] = useState("Hair Cut");
     const [currentDate, setCurrentDate] = useState(new Date());
+    const [api, contextHolder] = notification.useNotification();
+    const [getAppointments, { data: appointData, loading: appointLoading,refetch }] =
+    useLazyQuery(GET_BOOKINGS, { fetchPolicy: "network-only" });
     const {t} = useTranslation();
     const serviceProviders = [
         { id: 1, name: "Sameh Amin" },
@@ -84,14 +90,55 @@ const BookingSchedularCalendar = () => {
 
     const formattedDate = currentDate.toDateString();
 
-    const normalizedEvents = events.map((ev) => ({
-        ...ev,
-        booking: ev.booking[0],
-        status: ev.booking[0]?.status,
-    }));
+    const [appointments, setAppointments] = useState([]);
+
+    useEffect(() => {
+        getAppointments({
+            variables: {
+                consumerId: null,
+                serviceId: null,
+                branchId: getBranchId()
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        if (appointData?.getAppointments) {
+            setAppointments(appointData.getAppointments);
+        }
+    }, [appointData]);
+
+
+    const normalizedEvents = appointments
+    .map((ev) => {
+        if (!ev.appointmentTime) return null;
+        const startDate = new Date(ev.appointmentTime);
+        const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+
+        return {
+            id: ev.id,
+            start: startDate,
+            end: endDate,
+            resourceId: 1,
+            status: ev.status || "PENDING",
+            firstName: ev.consumer?.firstName,
+            lastName: ev.consumer?.lastName,
+            phone: ev.consumer?.phone,
+            consumer: ev.consumer,
+            service: ev.service?.name,
+            note: ev.note,
+            promoCode: ev.promoCode,
+            appointmentTimeSlot: ev.appointmentTimeSlot,
+            appointmentDate: ev.appointmentDate,
+            appointmentTime: ev.appointmentTime
+        };
+    })
+    .filter(Boolean);
+
 
     return (
         <>
+            {contextHolder}
             <Card className="radius-12 card-cs border-gray h-100">
                 <Flex vertical gap={20}>
                     <CalendarCard
@@ -138,9 +185,9 @@ const BookingSchedularCalendar = () => {
                         // defaultDate={new Date(2025, 10, 12)}
                         eventPropGetter={eventStyleGetter}
                         components={{
-                            event: (props) => (
+                            event: ({ event }) => (
                                 <BookingEventCard
-                                    {...props}
+                                    event={event}
                                     setBookedEvent={setBookedEvent}
                                     setEditEvent={setEditEvent}
                                 />
@@ -171,6 +218,8 @@ const BookingSchedularCalendar = () => {
                     setBookedEvent(false);
                     setEditEvent(null);
                 }}
+                loading={appointLoading}
+                refetch={refetch}
             />
         </>
     );

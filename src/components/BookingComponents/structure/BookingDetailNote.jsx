@@ -1,5 +1,6 @@
 import { Divider, Flex, Tooltip, Typography } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { capitalizeTranslated, utcDateToLocal, utcTimeToLocal } from '../../../shared';
 const { Text } = Typography
 const BookingDetailNote = ({data,colorstatus}) => {
    const {t} = useTranslation();
@@ -20,7 +21,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     >
                         <img src='/assets/icons/user.webp' width={14} alt='user icon' fetchPriority="high" />
                     </Tooltip>
-                    <Text className='text-gray fs-12'>{data?.name}</Text>
+                    <Text className='text-gray fs-12'>{data?.firstName} {data?.lastName}</Text>
                 </Flex>
                 <Flex gap={8} align='center'>
                     <Tooltip title={t('Phone' )}
@@ -29,7 +30,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     >
                         <img src='/assets/icons/call.webp' width={14} alt='call icon' fetchPriority="high" />
                     </Tooltip>
-                    <Text className='text-gray fs-12'>{data?.phoneno}</Text>
+                    <Text className='text-gray fs-12'>{data?.phone}</Text>
                 </Flex>
             </Flex>
             <Divider variant="dashed" className='border-dark m-0' />
@@ -80,7 +81,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                         >
                             <img src='/assets/icons/calendar.webp' width={14} alt='calendar icon' fetchPriority="high" />
                         </Tooltip>
-                        <Text className='text-gray fs-12'>{data?.date}</Text>
+                        <Text className='text-gray fs-12'>{utcDateToLocal(data?.appointmentDate)}</Text>
                     </Flex>
                     <Flex gap={8} align='center'>
                         <Tooltip title={t('Clock')}
@@ -89,7 +90,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                         >
                             <img src='/assets/icons/clock.webp' width={14} alt='clock icon' fetchPriority="high" />
                         </Tooltip>
-                        <Text className='text-gray fs-12'>{data?.time}</Text>
+                        <Text className='text-gray fs-12'>{utcTimeToLocal(data?.appointmentTime)}</Text>
                     </Flex>
                 </Flex>
                 {
@@ -114,7 +115,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     <img src='/assets/icons/status.webp' width={14} alt='status icon' fetchPriority="high" />
                 </Tooltip>
                 <Text className='fs-12' style={{color: colorstatus}}>
-                    {t(data?.status?.charAt(0).toUpperCase() + data?.status?.slice(1))}
+                    {capitalizeTranslated(t(data?.status))}
                 </Text>
             </Flex>
             {

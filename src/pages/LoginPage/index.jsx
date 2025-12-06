@@ -26,6 +26,9 @@ const LoginPage = () => {
                 localStorage.setItem("userId", data.loginUser.user.id || "");
                 localStorage.setItem("email", data.loginUser.user.email || "");
                 localStorage.setItem("fullName",`${data.loginUser.user.firstName} ${data.loginUser.user.lastName}` || "");
+                localStorage.setItem("branch", data?.loginUser?.user?.branch?.name || "");
+                localStorage.setItem("branchId", data?.loginUser?.user?.branch?.id || "");
+                localStorage.setItem("businessId", data?.loginUser?.user?.branch?.business?.id || "");
                 messageApi.success("Login successful!");
                 navigate("/")
               } else {

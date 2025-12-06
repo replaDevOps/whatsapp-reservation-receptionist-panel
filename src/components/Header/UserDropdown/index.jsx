@@ -39,9 +39,10 @@ const {t}= useTranslation();
     localStorage.removeItem('email');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userId');
-    localStorage.removeItem('firstName');
-    localStorage.removeItem('lastName');
+    localStorage.removeItem('fullName');
     localStorage.removeItem('branch');
+    localStorage.removeItem('branchId');
+    localStorage.removeItem('businessId');
     setInterval(() => {
       setLoaing(false)
       window.location.href = "/login";

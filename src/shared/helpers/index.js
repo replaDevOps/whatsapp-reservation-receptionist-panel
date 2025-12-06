@@ -1,8 +1,14 @@
 import dayjs from "dayjs"
 import { useEffect, useState } from "react";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 const utcDateTimeToLocal= (dateTime)=>{
     return dayjs.utc(dateTime).local().format("YYYY-MM-DD hh:mm A")
+}
+const utcTimeToLocal= (dateTime)=>{
+    return dayjs.utc(dateTime).local().format("hh:mm A")
 }
 const utcDateToLocal = (dateTime) => {
     return dayjs.utc(dateTime).local().format("YYYY-MM-DD");
@@ -111,5 +117,5 @@ const FieldMerger = ({ object, fields = [], separator = " " }) => {
 };
 
 
-export {utcDateTimeToLocal, greaterThanEqualTo, handleApolloError, capitalizeTranslated, formatTime24to12, useDebounce, notifySuccess, notifyError,FieldMerger,utcDateToLocal}
+export {utcDateTimeToLocal, greaterThanEqualTo, handleApolloError, capitalizeTranslated, formatTime24to12, useDebounce, notifySuccess, notifyError,FieldMerger,utcDateToLocal,utcTimeToLocal}
 export * from "./TableLoader"

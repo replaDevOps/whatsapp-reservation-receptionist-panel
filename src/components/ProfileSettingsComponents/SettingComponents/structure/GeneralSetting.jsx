@@ -18,20 +18,19 @@ const GeneralSetting = () => {
         variables: { getUserId: userId },
         skip: !userId,
     });
-    localStorage.setItem('branch',data?.getUser?.branch?.name || "")
 
     useEffect(() => {
-            if (!loading && data) {
-                form.setFieldsValue({
-                    firstName: data?.getUser?.firstName,
-                    lastName: data?.getUser?.lastName,
-                    phone: data?.getUser?.phone,
-                    email: data?.getUser?.email
-                });
-                setPreviewImage(data?.getUser?.imageUrl)
-            }
-            console.log('setting data',data)
-        }, [loading, data]);
+        if (!loading && data) {
+            form.setFieldsValue({
+                firstName: data?.getUser?.firstName,
+                lastName: data?.getUser?.lastName,
+                phone: data?.getUser?.phone,
+                email: data?.getUser?.email
+            });
+            setPreviewImage(data?.getUser?.imageUrl)
+        }
+        console.log('setting data',data)
+    }, [loading, data]);
 
     return (
         <>
