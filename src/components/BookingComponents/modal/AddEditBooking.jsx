@@ -165,6 +165,7 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
             appointmentTime: mergeDateAndTime(input?.appointmentDate, timeslotes),
             reminderMinutesBefore: Number(input?.reminderMinutesBefore) || null,
             note: input?.note || null,
+            status:'PENDING',
         }
         try {
             await createBooking({

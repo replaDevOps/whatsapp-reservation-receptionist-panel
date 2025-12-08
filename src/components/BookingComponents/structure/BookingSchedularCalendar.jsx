@@ -96,9 +96,9 @@ const BookingSchedularCalendar = () => {
             setAppointments(appointData.getAppointments)
             const result =  appointData?.getAppointments?.map(item => (
                         {
-                            id: item.serviceProvider.id,
-                            name: `${item.serviceProvider.firstName} ${item.serviceProvider.lastName}`,
-                            avatar: item.serviceProvider.imageUrl
+                            id: item.serviceProvider?.id,
+                            name: `${item.serviceProvider?.firstName} ${item.serviceProvider?.lastName}`,
+                            avatar: item.serviceProvider?.imageUrl
                         }
                     ))
             setServiceProviders(removeDuplicates(result))

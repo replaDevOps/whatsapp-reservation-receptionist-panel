@@ -38,6 +38,7 @@ const GET_BOOKINGS = gql`
                 firstName
                 lastName
             }
+            status
         }
     }
 `

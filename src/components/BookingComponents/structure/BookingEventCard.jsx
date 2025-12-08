@@ -78,7 +78,7 @@ console.log("event:", event)
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         e.stopPropagation();
-                                                        setCancelledEvent(true);
+                                                        setCancelledEvent(event?.id)
                                                     }}
                                                 >
                                                     {t("Cancelled")}

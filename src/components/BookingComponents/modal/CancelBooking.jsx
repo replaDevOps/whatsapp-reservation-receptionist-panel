@@ -1,15 +1,31 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { Button, Col, Divider, Flex, Form, Modal, Radio, Row, Select, Tag, Typography } from 'antd'
-import { useNavigate } from 'react-router-dom'
-import { MyDatepicker, MyInput, MySelect } from '../../Forms'
+import { Button, Col, Divider, Flex, Form, Modal, Row, Typography, notification} from 'antd'
+import {MyInput } from '../../Forms'
+import { CANCEL_APPOINTMENT } from '../../../graphql/mutation'
+import { useState } from 'react'
+import { useMutation } from '@apollo/client/react'
+import { notifySuccess } from '../../../shared'
 const { Title, Text } = Typography
 const CancelBooking = ({visible,onClose}) => {
 
-    const navigate = useNavigate()
-    const [form] = Form.useForm();
+    const [form] = Form.useForm()
+     const [api, contextHolder] = notification.useNotification();
+    const [cancelAppointment, { loading } ] = useMutation(CANCEL_APPOINTMENT,{
+        onCompleted: () => {notifySuccess(api,"Booking create","Booking created successfully",()=> {onClose()})},
+        onError: (error) => {notifyError(api, error);},
+    })
+    const [reason, setReason] = useState(null)
 
-
+    const handleCancelAppointment = () => {
+        const input = {
+            id: visible,
+            status: "CANCELLED",
+        }
+        cancelAppointment({variables: {input}})
+    }
     return (
+        <>
+        {contextHolder}
         <Modal
             title={null}
             open={visible}
@@ -21,7 +37,12 @@ const CancelBooking = ({visible,onClose}) => {
                     <Button type='button' className='btncancel text-black border-gray' onClick={onClose}>
                         Skip
                     </Button>
-                    <Button type="primary" className='btnsave border0 text-white brand-bg' onClick={()=>{onClose()}}>
+                    <Button 
+                        type="primary" 
+                        className='btnsave border0 text-white brand-bg' 
+                        onClick={handleCancelAppointment}
+                        loading={loading}
+                    >
                         Send
                     </Button>
                 </Flex>
@@ -51,9 +72,10 @@ const CancelBooking = ({visible,onClose}) => {
                             <MyInput 
                                 textArea
                                 label="Reason" 
-                                name="reason" 
                                 placeholder="Write reason here..." 
                                 rows={5}
+                                value={reason}
+                                onChange={(e) => setReason(e.target.value)}
                             />
                         </Col>
                     </Row>
@@ -61,6 +83,7 @@ const CancelBooking = ({visible,onClose}) => {
             </Flex>
             <Divider className='my-2 bg-light-brand' />
         </Modal>
+        </>
     )
 }
 
