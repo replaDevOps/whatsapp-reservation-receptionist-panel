@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { CancelBooking } from "../modal";
 import { useTranslation } from "react-i18next";
+import { onlyTime } from "../../../utils";
 
 const { Text } = Typography
 const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
@@ -21,10 +22,10 @@ const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
         NO_SHOW: { bg: "#bdf1f1", color: "#05BAB5" }
     };
 
-    const startTime = moment(event.start).format("hh:mm A");
-    const endTime = moment(event.end).format("hh:mm A");
+    const startTime = onlyTime(event.start);
+    const endTime = onlyTime(event.end);
     const statusStyle = statusColors[event.status] || {};
-
+console.log("event:", event)
     return (
         <>
             <Popover

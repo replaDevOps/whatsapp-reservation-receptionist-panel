@@ -9,11 +9,13 @@ const GET_BRANCHES_LOOKUP = gql`
     }
 `
 
-const GET_SERVICES_LOOKUPS = gql`
-    query GetServicesByBusinessid($businessId: ID!) {
-        getServicesByBusinessid(businessId: $businessId) {
+const GET_SERVICES_BY_BRANCH_LOOKUP = gql`
+    query GetServicesBybranchid($branchId: ID!) {
+        getServicesBybranchid(branchId: $branchId) {
             id
             name
+            duration
+            bufferTime
         }
     }
 `
@@ -28,4 +30,4 @@ const GET_SERVICE_PROVIDER_BY_BRANCH = gql`
     }
 `
 
-export { GET_BRANCHES_LOOKUP, GET_SERVICES_LOOKUPS, GET_SERVICE_PROVIDER_BY_BRANCH }
+export { GET_BRANCHES_LOOKUP, GET_SERVICES_BY_BRANCH_LOOKUP, GET_SERVICE_PROVIDER_BY_BRANCH }

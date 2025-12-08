@@ -7,11 +7,14 @@ import { useTranslation } from 'react-i18next'
 import { notifyError, notifySuccess, toArabicDigits } from '../../../shared'
 import { useLazyQuery, useMutation } from '@apollo/client/react'
 import { CREATE_BOOKING } from '../../../graphql/mutation/mutations'
-import { GET_SERVICE_PROVIDER_BY_BRANCH, GET_SERVICES_LOOKUPS } from '../../../graphql/query/lookupsquery'
+import { GET_SERVICE_PROVIDER_BY_BRANCH, GET_SERVICES_BY_BRANCH_LOOKUP } from '../../../graphql/query/lookupsquery'
 import { getBranchId, getBusinessId } from '../../../utils/auth'
+import { GET_APPOINTMENTS_BY_SERVICE_PROVIDER } from '../../../graphql/query'
+import { mergeDateAndTime } from '../../../utils'
 
 const { Title, Text } = Typography
 const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
+
     const{t, i18n} = useTranslation();
     const isArabic = i18n.language === "ar";
     const [form] = Form.useForm();
@@ -19,29 +22,105 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
     const [ ischange, setIsChange ] = useState(0)
     const [ timeslotes, setTimeSlotes ] = useState('')
     const [api, contextHolder] = notification.useNotification();
-    const [getServicesLookup, { data: servicelookups }] = useLazyQuery(GET_SERVICES_LOOKUPS)
-    const [getServiceProviderLookup, { data: serviceproviderlookups } ] = useLazyQuery(GET_SERVICE_PROVIDER_BY_BRANCH)
+    const [getServicesByBranchLookup, { data: servicesByBranchLookup }] = useLazyQuery(GET_SERVICES_BY_BRANCH_LOOKUP)
+    const [getServiceProvidersByBranchLookup, { data: serviceProvidersByBranchLookup } ] = useLazyQuery(GET_SERVICE_PROVIDER_BY_BRANCH)
+    const [getAppointmentsByServiceProvider, { data: appointmentsByServiceProvider }] = useLazyQuery(GET_APPOINTMENTS_BY_SERVICE_PROVIDER)
+
+    const [bookings, setBookings] = useState([])
+    const [availableTimeSlots, setAvailableTimeSlots] = useState([])
+
     const [ createBooking, { loading:creating } ] = useMutation(CREATE_BOOKING,{
         onCompleted: () => {notifySuccess(api,"Booking create","Booking created successfully",()=> {onClose();refetch()})},
         onError: (error) => {notifyError(api, error);},
     })
     const handleRadioChange = (e) => {
-        setIsAccess(e.target.value);
+        setIsAccess(e.target.value)
         console.log('radio event',e.target.value)
-    };
-
-    const handleValue = (value) => {
-        setTimeSlotes(value)
-    };
+    }
     useEffect(()=>{
-        if(getServicesLookup && getBusinessId && visible)
-            getServicesLookup({variables:{businessId: getBusinessId()}})
-    }, [getServicesLookup, getBusinessId, visible])
+        if(getServicesByBranchLookup && getBranchId && visible)
+            getServicesByBranchLookup({variables:{branchId: getBranchId()}})
+    }, [getServicesByBranchLookup, getBranchId, visible])
     useEffect(()=>{
-        if(getServiceProviderLookup && getBranchId && visible)
-            getServiceProviderLookup({variables:{branchId: getBranchId()}})
-    }, [getServiceProviderLookup, getBranchId, visible])
+        if(getServiceProvidersByBranchLookup && getBranchId && visible)
+            getServiceProvidersByBranchLookup({variables:{branchId: getBranchId()}})
+    }, [getServiceProvidersByBranchLookup, getBranchId, visible])
 
+    useEffect(()=>{
+        if(appointmentsByServiceProvider?.getAppointmentsByServiceProvider){
+            const bookings = appointmentsByServiceProvider?.getAppointmentsByServiceProvider
+            setBookings(bookings)
+            const serviceId = form.getFieldValue('serviceId')
+            if(!serviceId) return
+            const service = servicesByBranchLookup?.getServicesBybranchid?.find(s => s.id === serviceId)
+            const slots=getAvailableTimeSlots(
+                bookings,
+                service?.duration || 0,
+                service?.bufferTime || 0
+            )
+            setAvailableTimeSlots([...slots])
+        }
+    }, [appointmentsByServiceProvider])
+
+    console.log('availableTimeSlots:',availableTimeSlots)
+    function getAvailableTimeSlots(reservedSlots, serviceDuration, serviceBufferTime) {
+    const workingStart = "09:00";
+    const workingEnd = "18:00";
+
+    function toMinutes(time) {
+        const [h, m] = time.split(":").map(Number);
+        return h * 60 + m;
+    }
+
+    function toTime(minutes) {
+        const h = Math.floor(minutes / 60).toString().padStart(2, "0");
+        const m = (minutes % 60).toString().padStart(2, "0");
+        return `${h}:${m}`;
+    }
+
+    const workStart = toMinutes(workingStart);
+    const workEnd = toMinutes(workingEnd);
+
+    // Build reserved blocks
+    const blocks = reservedSlots.map(item => {
+        const start = toMinutes(item.appointmentTimeSlot);
+        const end = start + item.service.duration + item.service.bufferTime;
+        return { start, end };
+    }).sort((a,b) => a.start - b.start);
+
+    const available = [];
+    const slotDuration = serviceDuration;
+    const slotBlock = serviceDuration + serviceBufferTime;
+
+    let slotStart = workStart;
+
+    while (slotStart + slotDuration <= workEnd) {
+        const slotEnd = slotStart + slotDuration;
+        const slotComplete = slotStart + slotBlock;
+
+        // find reservation overlap
+        const overlapBlock = blocks.find(b =>
+        slotStart < b.end && slotComplete > b.start
+        );
+
+        if (overlapBlock) {
+        // jump to the end of the reservation
+        slotStart = overlapBlock.end;
+        continue;
+        }
+
+        if (slotComplete <= workEnd) {
+        available.push({
+            start: toTime(slotStart),
+            end: toTime(slotEnd)
+        });
+        }
+
+        slotStart += slotBlock;
+    }
+    console.log('available slots',serviceDuration,": ", serviceBufferTime)
+    return available;
+    }
     useEffect(() => {
         if (visible && edititem) {
             form.setFieldsValue({
@@ -69,28 +148,29 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
         const input = form.getFieldsValue();
 
         const payload = {
-            serviceId: input.serviceId,
-            appointmentDate: input.appointmentDate?.toISOString(),
-            appointmentTime: input.appointmentTime ? input.appointmentTime.format("HH:mm") : timeslotes,
             bookingType: isAccess,
+            isManual: true,
             branchId: getBranchId(),
             consumer: {
-                email: input.email || null,
-                firstName: input.firstName,
-                lastName: input.lastName,
-                phone: input.phone
+                phone: input?.phone,
+                firstName: input?.firstName,
+                lastName: input?.lastName,
+                email: input?.email || null,
             },
-            reminderMinutesBefore: Number(input.reminderMinutesBefore) || null,
-            isManual: true,
-            promoCode: input.promoCode || null,
-            serviceProviderId: input.serviceProviderId || null,
-            note: input.note || null
-        };
+            serviceId: input?.serviceId,
+            // promoCode: "cmimyyt2f0000i77crw058u67",
+            serviceProviderId: input?.serviceProviderId || null,
+            appointmentDate: input?.appointmentDate,
+            appointmentTimeSlot: isAccess === "BY_SERVICE_PROVIDER" ? timeslotes : null,
+            appointmentTime: mergeDateAndTime(input?.appointmentDate, timeslotes),
+            reminderMinutesBefore: Number(input?.reminderMinutesBefore) || null,
+            note: input?.note || null,
+        }
         try {
             await createBooking({
                 variables: { input: payload }
             });
-        } catch (e) {
+        } catch (e) {   
             console.error(e);
             notifyError(api, e);
         }
@@ -209,7 +289,7 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     name={'serviceId'}
                                     required 
                                     message={t('Please choose service')}
-                                    options={servicelookups?.getServicesByBusinessid}
+                                    options={servicesByBranchLookup?.getServicesBybranchid}
                                     placeholder={t('Select Service')}
                                 />
                             </Col>
@@ -230,12 +310,14 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     required 
                                     message={t('Please choose service provider')}
                                     options={
-                                        serviceproviderlookups?.getServiceProvidersByBranch?.map((list) => ({
-                                            id: list?.id,
-                                            name: `${list?.firstName || ""} ${list?.lastName || ""}`
-                                        }))
+                                        serviceProvidersByBranchLookup?.getServiceProvidersByBranch?.map(({id, firstName, lastName}) => ({  id, name: `${firstName || ""} ${lastName || ""}`}))
                                     }
                                     placeholder={t('Select Service Provider')} 
+                                    onChange={(serviceProviderId) => {
+                                        const appointmentDate = form.getFieldValue('appointmentDate');
+                                        if(appointmentDate)
+                                            getAppointmentsByServiceProvider({variables: {serviceProviderId, date: appointmentDate}})
+                                    }}
                                 />
                             </Col>
                             <Col span={24}>
@@ -246,6 +328,11 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     required
                                     message={t('Please enter booking date')}
                                     placeholder={t('Select date')}
+                                    onChange={(date) => {
+                                        const serviceProviderId = form.getFieldValue('serviceProviderId')
+                                        if(serviceProviderId)
+                                            getAppointmentsByServiceProvider({variables: {serviceProviderId, date}})
+                                    }}
                                 />
                             </Col>
                             {
@@ -254,14 +341,14 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     <Flex vertical gap={5} className='my-3'>
                                         <Flex gap={10} align='center'>
                                             <Text className='fs-12'>{t('Available Slots')} :</Text>
-                                            <Flex gap={5} align='center'>
+                                            <Flex gap={5} align='center' wrap='wrap'>
                                                 {
-                                                    ['08:00 - 10:30','12:00 - 02:00','05:00 - 07:00']?.map((items,i)=>
-                                                        <Tag key={i} 
+                                                    availableTimeSlots?.map((slot, index)=>
+                                                        <Tag key={index} 
                                                             className='fs-10 m-0 radius-20 cursor'
-                                                            onClick={()=>handleValue(items)}
+                                                            onClick={()=>setTimeSlotes(slot?.start)}
                                                         >
-                                                            {items}
+                                                            {slot?.start + ' - ' +slot?.end}
                                                         </Tag>
                                                     )
                                                 }
@@ -272,6 +359,27 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                             <img src="/assets/icons/clock.webp" width={16} alt='clock icon' fetchPriority="high" />
                                         </Flex>
                                     </Flex>
+                                    {/* <Flex vertical gap={5} className='my-3'>
+                                        <Flex gap={10} align='center'>
+                                            <Text className='fs-12'>{t('Reserved Slots')} :</Text>
+                                            <Flex gap={5} align='center' wrap='wrap'>
+                                                {
+                                                    bookings?.map((booking, index)=>
+                                                        <Tag key={index} 
+                                                            className='fs-10 m-0 radius-20 cursor'
+                                                            onClick={()=>setTimeSlotes(slot?.start)}
+                                                        >
+                                                            {booking?.start + ' - ' +slot?.end}
+                                                        </Tag>
+                                                    )
+                                                }
+                                            </Flex>
+                                        </Flex>     
+                                        <Flex className="offday pad bg-light-gray" gap={5} align="center" justify='space-between'>
+                                            <Text className="text-gray fs-13">{timeslotes ? timeslotes : t('Select time') }</Text>
+                                            <img src="/assets/icons/clock.webp" width={16} alt='clock icon' fetchPriority="high" />
+                                        </Flex>
+                                    </Flex> */}
                                 </Col>
                                 :
                                 <Col span={24}>

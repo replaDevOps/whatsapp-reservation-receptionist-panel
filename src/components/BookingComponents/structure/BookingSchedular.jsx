@@ -200,7 +200,7 @@ const BookingSchedular = () => {
                 edititem={edititem}
                 setEditItem={setEditItem}
             />
-            <Card className="card-bg card-cs radius-12 border-gray">
+            <Card className="card-bg card-cs radius-12 border-gray" style={{border:'3px solid red'}}>
                 <Flex vertical gap={20}>
                     <Row gutter={[12, 12]}>
                         <Col span={24} md={12} lg={4}>

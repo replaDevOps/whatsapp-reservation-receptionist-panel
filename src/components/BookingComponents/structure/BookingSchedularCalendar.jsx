@@ -13,16 +13,10 @@ import { useTranslation } from "react-i18next";
 import { GET_BOOKINGS } from "../../../graphql/query/booking";
 import { useLazyQuery } from "@apollo/client/react";
 import { getBranchId } from "../../../utils/auth";
+import { formatDateTime } from "../../../utils";
+import dayjs from "dayjs";
 const localizer = momentLocalizer(moment);
 
-const users = [
-    { id: 1, name: "John", avatar: "https://i.pravatar.cc/40?img=1" },
-    { id: 2, name: "Mark", avatar: "https://i.pravatar.cc/40?img=2" },
-    { id: 3, name: "Emma", avatar: "https://i.pravatar.cc/40?img=3" },
-    { id: 4, name: "Ali", avatar: "https://i.pravatar.cc/40?img=1" },
-    { id: 5, name: "Arbaz", avatar: "https://i.pravatar.cc/40?img=2" },
-    { id: 6, name: "Ahmad", avatar: "https://i.pravatar.cc/40?img=3" },
-];
 
 const eventStyleGetter = (event) => {
     let backgroundColor = "";
@@ -80,13 +74,8 @@ const BookingSchedularCalendar = () => {
     const [getAppointments, { data: appointData, loading: appointLoading,refetch }] =
     useLazyQuery(GET_BOOKINGS, { fetchPolicy: "network-only" });
     const {t} = useTranslation();
-    const serviceProviders = [
-        { id: 1, name: "Sameh Amin" },
-        { id: 2, name: "Muhammad Ali" },
-        { id: 3, name: "Mahmdul Hasan" },
-        { id: 4, name: "Ali Shaan" },
-        { id: 5, name: "Ajit" },
-    ];
+    
+    const[serviceProviders,setServiceProviders]= useState([])
 
     const formattedDate = currentDate.toDateString();
 
@@ -104,24 +93,35 @@ const BookingSchedularCalendar = () => {
 
     useEffect(() => {
         if (appointData?.getAppointments) {
-            setAppointments(appointData.getAppointments);
+            setAppointments(appointData.getAppointments)
+            const result =  appointData?.getAppointments?.map(item => (
+                        {
+                            id: item.serviceProvider.id,
+                            name: `${item.serviceProvider.firstName} ${item.serviceProvider.lastName}`,
+                            avatar: item.serviceProvider.imageUrl
+                        }
+                    ))
+            setServiceProviders(removeDuplicates(result))
         }
-    }, [appointData]);
+    }, [appointData])
+    function removeDuplicates(arr) {
+        return [...new Map(arr.map(item => [item.id, item])).values()];
+    }
+    
 
-
+ 
     const normalizedEvents = appointments
     .map((ev) => {
         if (!ev.appointmentTime) return null;
-        const startDate = new Date(ev.appointmentTime);
-        const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+        const startDate = new Date(formatDateTime(ev?.appointmentTime))
+        const endDate = new Date(dayjs(startDate).add(ev?.service?.duration, 'minutes').format('YYYY-MM-DDTHH:mm'))
 
         return {
             id: ev.id,
             start: startDate,
             end: endDate,
-            resourceId: 1,
             status: ev.status || "PENDING",
-            firstName: ev.consumer?.firstName,
+            firstName: ev.consumer?.firstName, 
             lastName: ev.consumer?.lastName,
             phone: ev.consumer?.phone,
             consumer: ev.consumer,
@@ -130,7 +130,8 @@ const BookingSchedularCalendar = () => {
             promoCode: ev.promoCode,
             appointmentTimeSlot: ev.appointmentTimeSlot,
             appointmentDate: ev.appointmentDate,
-            appointmentTime: ev.appointmentTime
+            appointmentTime: ev.appointmentTime,
+            resourceId: ev.serviceProvider?.id
         };
     })
     .filter(Boolean);
@@ -180,8 +181,8 @@ const BookingSchedularCalendar = () => {
                         date={currentDate}
                         defaultView="day"
                         views={["day"]}
-                        step={60}
-                        timeslots={1}
+                        step={60} //each slot is 60 mins
+                        timeslots={1} //1 hr gap between slots
                         // defaultDate={new Date(2025, 10, 12)}
                         eventPropGetter={eventStyleGetter}
                         components={{
@@ -194,7 +195,7 @@ const BookingSchedularCalendar = () => {
                             ),
                             resourceHeader: ResourceHeader,
                         }}
-                        resources={users}
+                        resources={serviceProviders}
                         resourceIdAccessor="id"
                         resourceTitleAccessor="name"
                         formats={{
