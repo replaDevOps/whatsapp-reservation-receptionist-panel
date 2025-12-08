@@ -3,7 +3,8 @@ import { StatisticsCommonCards } from '../../components';
 import { TodaysBooking } from '../../components';
 import { useTranslation } from 'react-i18next';
 import { useLazyQuery } from '@apollo/client/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { GET_DASHBOARD_STATS } from '../../graphql/query';
 
 const { Title } = Typography
 const Dashboard = () => {
@@ -11,49 +12,48 @@ const Dashboard = () => {
   const fullName = localStorage.getItem("fullName");
   const branch = localStorage.getItem("branch")
   const [dashboardStats, setDashboardStats]= useState(null)
-  // const [getDashboardStats, { data,loading }] = useLazyQuery(GET_DASHBOARD_STATS, {
-  //   fetchPolicy: "network-only",
-  // })
-  // useEffect(()=>{
-  //   if(getDashboardStats)
-  //     getDashboardStats()
-  // }, [getDashboardStats])
-  // useEffect(()=>{
-  //   if(data?.getDashboardCountApi){
-  //     const {basicPlanBusinesses, enterprisePlanBusinesses, proPlanBusinesses, standardPlanBusinesses, totalBusinesses}= data?.getDashboardCountApi
-  //     setDashboardStats({
-  //       basicPlanBusinesses,
-  //       enterprisePlanBusinesses,
-  //       proPlanBusinesses,
-  //       standardPlanBusinesses,
-  //       totalBusinesses
-  //     })
-  //   }
-  // }, [data])
-  
+  const [getDashboardStats, { data,loading }] = useLazyQuery(GET_DASHBOARD_STATS, {
+    fetchPolicy: "network-only",
+  })
+  useEffect(()=>{
+    if(getDashboardStats)
+      getDashboardStats()
+  }, [getDashboardStats])
+  useEffect(()=>{
+    if(data?.getTodayAppointments){
+      const {todayAppoimtemtCount, todayManualAppointmentCount, todaywhatsappAppointmentCount, todaycanecledAppointments}= data?.getTodayAppointments
+      setDashboardStats({
+        todayAppoimtemtCount,
+        todayManualAppointmentCount,
+        todaywhatsappAppointmentCount,
+        todaycanecledAppointments,
+      })
+    }
+  }, [data])
+  console.log('dashboard', dashboardStats)
   const cardsData = [
     {
       id: 1,
       icon: '/assets/icons/total-booking-w.webp',
-      title: '104',
+      title: dashboardStats?.todayAppoimtemtCount,
       subtitle: t('Total Bookings'),
     },
     {
       id: 2,
       icon: '/assets/icons/manual-booking.webp',
-      title: '50',
+      title: dashboardStats?.todayManualAppointmentCount,
       subtitle: t('Today’s  Manual Bookings'),
     },
     {
       id: 3,
       icon: '/assets/icons/whatsapp-booking.webp',
-      title: '50',
+      title: dashboardStats?.todaywhatsappAppointmentCount,
       subtitle: t('Today’s WhatsApp Bookings'),
     },
     {
       id: 4,
       icon: '/assets/icons/cancel-booking.webp',
-      title: '4',
+      title: dashboardStats?.todaycanecledAppointments,
       subtitle: t('Today’s Cancelled Bookings'),
     },
   ];
@@ -67,7 +67,7 @@ const Dashboard = () => {
             {branch}
           </Button>
         </Flex>
-        <StatisticsCommonCards data={cardsData} />
+        <StatisticsCommonCards loading={loading} data={cardsData} />
         <TodaysBooking/>
       </Flex>
     </div>

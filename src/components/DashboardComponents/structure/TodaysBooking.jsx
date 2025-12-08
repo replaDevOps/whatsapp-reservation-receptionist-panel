@@ -74,7 +74,7 @@ const TodaysBooking = () => {
     }));
 
     const naigate = useNavigate();
-const {t} = useTranslation()
+    const {t} = useTranslation()
     return (
         <>
             <Flex vertical gap={20}>

@@ -10,6 +10,7 @@ const GET_VACATIONS = gql`
                 startDate
                 endDate
             }
+            totalCount
         }
     }
 `
