@@ -290,7 +290,15 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     name={'serviceId'}
                                     required 
                                     message={t('Please choose service')}
-                                    options={servicesByBranchLookup?.getServicesBybranchid}
+                                    // options={servicesByBranchLookup?.getServicesBybranchid}
+                                    options={[
+{id: "6b6e5b25-3839-4410-a06a-0c887c864c02", name: "branch 33"},
+{id:"7116f18c-e531-4633-89a3-38a0435d13b9", name: "Service 02"},
+{
+      "id": "cf0a78a2-bfdc-4048-bbd5-7908e4d9f15d",
+      "name": "Service 04"
+    }
+                                    ]}
                                     placeholder={t('Select Service')}
                                 />
                             </Col>
@@ -314,11 +322,11 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                         serviceProvidersByBranchLookup?.getServiceProvidersByBranch?.map(({id, firstName, lastName}) => ({  id, name: `${firstName || ""} ${lastName || ""}`}))
                                     }
                                     placeholder={t('Select Service Provider')} 
-                                    onChange={(serviceProviderId) => {
-                                        const appointmentDate = form.getFieldValue('appointmentDate');
-                                        if(appointmentDate)
-                                            getAppointmentsByServiceProvider({variables: {serviceProviderId, date: appointmentDate}})
-                                    }}
+                                    // onChange={(serviceProviderId) => {
+                                    //     const appointmentDate = form.getFieldValue('appointmentDate');
+                                    //     if(appointmentDate)
+                                    //         getAppointmentsByServiceProvider({variables: {serviceProviderId, date: appointmentDate}})
+                                    // }}
                                 />
                             </Col>
                             <Col span={24}>
@@ -331,8 +339,21 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     placeholder={t('Select date')}
                                     onChange={(date) => {
                                         const serviceProviderId = form.getFieldValue('serviceProviderId')
-                                        if(serviceProviderId)
-                                            getAppointmentsByServiceProvider({variables: {serviceProviderId, date}})
+                                        // if(serviceProviderId)
+                                        //     getAppointmentsByServiceProvider({variables: {serviceProviderId, date}})
+                                        setAvailableTimeSlots([
+  { "start": "09:00", "end": "09:45" },
+  { "start": "09:55", "end": "10:40" },
+  { "start": "10:50", "end": "11:35" },
+  { "start": "11:45", "end": "12:30" },
+  { "start": "12:40", "end": "13:25" },
+  { "start": "13:35", "end": "14:20" },
+  { "start": "14:30", "end": "15:15" },
+  { "start": "15:25", "end": "16:10" },
+  { "start": "16:20", "end": "17:05" },
+  { "start": "17:15", "end": "18:00" }
+]
+)
                                     }}
                                 />
                             </Col>
