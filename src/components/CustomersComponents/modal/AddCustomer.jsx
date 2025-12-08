@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CloseOutlined } from '@ant-design/icons'
 import { Button, Col, Divider, Flex, Form, Modal, Row, Tag, Typography, Radio } from 'antd'
 import { MyDatepicker, MyInput, MySelect } from '../../Forms'
 import { serviceProvider, serviceType } from '../../../shared'
 import { useTranslation } from 'react-i18next'
 const { Title, Text } = Typography
-const AddCustomer = ({ visible, onClose }) => {
+const AddCustomer = ({ visible, onClose,edititem }) => {
 const {t} = useTranslation();
     const [form] = Form.useForm();
     const [isAccess, setIsAccess] = useState(1);
@@ -14,6 +14,15 @@ const {t} = useTranslation();
     const handleRadioChange = (e) => {
         setIsAccess(e.target.value === 1);
     };
+
+    useEffect(()=>{
+        if(visible && edititem){
+            form.setFieldsValue({
+                phone: edititem?.phone,
+                
+            })
+        }
+    },[visible,edititem])
 
     const handleValue = (value) => {
         setTimeSlotes(value)
@@ -71,7 +80,7 @@ const {t} = useTranslation();
                             <MyInput
                                 type='number'
                                 label={t('Phone Number')}
-                                name="phoneNo"
+                                name="phone"
                                 required
                                 message={t('Please enter phone number')}
                                 placeholder={t('Enter phone number')}
@@ -80,10 +89,19 @@ const {t} = useTranslation();
                         </Col>
                         <Col span={24}>
                             <MyInput
-                                label={t('Customer Name')}
+                                label={t('Customer First Name')}
                                 name="customerName"
                                 required
-                                message={t('Please enter customer name')}
+                                message={t('Please enter customer first name')}
+                                placeholder={t('Enter customer name')}
+                            />
+                        </Col>
+                        <Col span={24}>
+                            <MyInput
+                                label={t('Customer Last Name')}
+                                name="customerName"
+                                required
+                                message={t('Please enter customer first name')}
                                 placeholder={t('Enter customer name')}
                             />
                         </Col>

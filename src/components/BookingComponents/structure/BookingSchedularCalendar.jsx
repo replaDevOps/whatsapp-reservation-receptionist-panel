@@ -89,7 +89,7 @@ const BookingSchedularCalendar = () => {
                 branchId: getBranchId()
             }
         });
-    }, []);
+    }, [getAppointments,refetch]);
 
     useEffect(() => {
         if (appointData?.getAppointments) {
@@ -148,7 +148,7 @@ const BookingSchedularCalendar = () => {
                         formattedDate={formattedDate}
                         setBookedEvent={setBookedEvent}
                     />
-                    <Row gutter={[12, 12]}>
+                    {/* <Row gutter={[12, 12]}>
                         <Col span={24} md={12} lg={4}>
                             <MySelect
                                 placeholder={t('Select Service Provider')}
@@ -174,7 +174,7 @@ const BookingSchedularCalendar = () => {
                                 onChange={(value) => setSelectedService(value)}
                             />
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Calendar
                         localizer={localizer}
                         events={normalizedEvents}
@@ -191,6 +191,7 @@ const BookingSchedularCalendar = () => {
                                     event={event}
                                     setBookedEvent={setBookedEvent}
                                     setEditEvent={setEditEvent}
+                                    refetch={refetch}
                                 />
                             ),
                             resourceHeader: ResourceHeader,

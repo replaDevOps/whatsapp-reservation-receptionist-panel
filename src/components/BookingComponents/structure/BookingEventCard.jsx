@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { onlyTime } from "../../../utils";
 
 const { Text } = Typography
-const BookingEventCard = ({ event, setBookedEvent, setEditEvent }) => {
+const BookingEventCard = ({ event, setBookedEvent, setEditEvent, refetch }) => {
     const { t } = useTranslation();
     const [cancelledevent, setCancelledEvent] = useState(false);
 
@@ -55,22 +55,22 @@ console.log("event:", event)
                             <Dropdown
                                 menu={{
                                     items: [
-                                        {
-                                            label: (
-                                                <NavLink
-                                                    className="fs-12"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        setBookedEvent(true);
-                                                        setEditEvent(event);
-                                                    }}
-                                                >
-                                                    {t("Reschedule")}
-                                                </NavLink>
-                                            ),
-                                            key: "1",
-                                        },
+                                        // {
+                                        //     label: (
+                                        //         <NavLink
+                                        //             className="fs-12"
+                                        //             onClick={(e) => {
+                                        //                 e.preventDefault();
+                                        //                 e.stopPropagation();
+                                        //                 setBookedEvent(true);
+                                        //                 setEditEvent(event);
+                                        //             }}
+                                        //         >
+                                        //             {t("Reschedule")}
+                                        //         </NavLink>
+                                        //     ),
+                                        //     key: "1",
+                                        // },
                                         {
                                             label: (
                                                 <NavLink
@@ -86,17 +86,17 @@ console.log("event:", event)
                                             ),
                                             key: "2",
                                         },
-                                        {
-                                            label: (
-                                                <NavLink
-                                                    className="fs-12"
-                                                    onClick={(e) => e.preventDefault()}
-                                                >
-                                                    {t("No Show")}
-                                                </NavLink>
-                                            ),
-                                            key: "3",
-                                        },
+                                        // {
+                                        //     label: (
+                                        //         <NavLink
+                                        //             className="fs-12"
+                                        //             onClick={(e) => e.preventDefault()}
+                                        //         >
+                                        //             {t("No Show")}
+                                        //         </NavLink>
+                                        //     ),
+                                        //     key: "3",
+                                        // },
                                     ],
                                 }}
                             >
@@ -123,6 +123,7 @@ console.log("event:", event)
             <CancelBooking
                 visible={cancelledevent}
                 onClose={() => setCancelledEvent(false)}
+                refetch={refetch}
             />
         </>
     );

@@ -20,6 +20,7 @@ const CustomerTable = () => {
     const [ customerData, setCustomerData ] = useState([])
     const [ search, setSearch ] = useState('')
     const debouncedSearch = useDebounce(search, 500);
+    const [ edititem, setEditItem ] = useState(null)
     const [getCustomers, { data, loading}] = useLazyQuery(GET_CUSTOMERS, {
         fetchPolicy: "network-only",
     })
@@ -79,7 +80,7 @@ const CustomerTable = () => {
                 <Flex vertical gap={20}>
                     <Table
                         size='large'
-                        columns={customerColumn({ setAddModal })}
+                        columns={customerColumn({ setAddModal, setEditItem })}
                         dataSource={customerData}
                         className={ i18n?.language === 'ar' ? 'pagination table-cs table right-to-left' : 'pagination table-cs table left-to-right'}
                         showSorterTooltip={false}
@@ -103,6 +104,7 @@ const CustomerTable = () => {
 
             <AddCustomer
                 visible={addmodal}
+                edititem={edititem}
                 onClose={() => setAddModal(false)}
             />
         </>

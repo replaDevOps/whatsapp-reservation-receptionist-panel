@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/client/react'
 import { notifySuccess } from '../../../shared'
 const { Title, Text } = Typography
-const CancelBooking = ({visible,onClose}) => {
+const CancelBooking = ({visible,onClose,refetch}) => {
 
     const [form] = Form.useForm()
      const [api, contextHolder] = notification.useNotification();
@@ -16,12 +16,15 @@ const CancelBooking = ({visible,onClose}) => {
     })
     const [reason, setReason] = useState(null)
 
-    const handleCancelAppointment = () => {
+    const handleCancelAppointment = async() => {
         const input = {
             id: visible,
             status: "CANCELLED",
         }
-        cancelAppointment({variables: {input}})
+        await cancelAppointment(
+            {variables: {input}
+        })
+        await refetch()
     }
     return (
         <>

@@ -171,6 +171,7 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
             await createBooking({
                 variables: { input: payload }
             });
+            refetch()
         } catch (e) {   
             console.error(e);
             notifyError(api, e);
