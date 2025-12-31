@@ -45,31 +45,45 @@ const capitalizeTranslated = (value, t) => {
 };
 
 
-function formatTime24to12(timeStr) {
-    if (!timeStr) return "";
+// function formatTime24to12(timeStr) {
+//     if (!timeStr) return "";
 
-    // Example input: "09:00 am" or "05:00 pm"
-    const [time, modifier] = timeStr.toLowerCase().split(" ");
-    if (!time || !modifier) return "";
+//     // Example input: "09:00 am" or "05:00 pm"
+//     const [time, modifier] = timeStr.toLowerCase().split(" ");
+//     if (!time || !modifier) return "";
 
-    let [hours, minutes] = time.split(":");
-    hours = Number(hours);
-    minutes = Number(minutes);
+//     let [hours, minutes] = time.split(":");
+//     hours = Number(hours);
+//     minutes = Number(minutes);
 
-    if (modifier === "pm" && hours !== 12) {
-        hours += 12;
-    }
-    if (modifier === "am" && hours === 12) {
-        hours = 0;
-    }
+//     if (modifier === "pm" && hours !== 12) {
+//         hours += 12;
+//     }
+//     if (modifier === "am" && hours === 12) {
+//         hours = 0;
+//     }
 
-    // Now convert back to 12-hour display format
-    const period = hours >= 12 ? "PM" : "AM";
-    const hour12 = hours % 12 === 0 ? 12 : hours % 12;
+//     // Now convert back to 12-hour display format
+//     const period = hours >= 12 ? "PM" : "AM";
+//     const hour12 = hours % 12 === 0 ? 12 : hours % 12;
 
-    return `${hour12.toString().padStart(2, "0")}:${minutes
-        .toString()
-        .padStart(2, "0")} ${period}`;
+//     return `${hour12.toString().padStart(2, "0")}:${minutes
+//         .toString()
+//         .padStart(2, "0")} ${period}`;
+// }
+
+function formatTime24to12(isoString) {
+  if (!isoString) return '';
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) return ''; // invalid date check
+
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12; // convert 0 to 12
+  const minutesStr = minutes.toString().padStart(2, '0');
+
+  return hours + ':' + minutesStr + ' ' + ampm;
 }
 
 const useDebounce = (value, delay = 500)=> {
@@ -116,6 +130,13 @@ const FieldMerger = ({ object, fields = [], separator = " " }) => {
         .join(separator);                  // join with separator
 };
 
+const getInitials = (name) => {
+  if (typeof name !== "string" || !name.trim()) return "";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
 
-export {utcDateTimeToLocal, greaterThanEqualTo, handleApolloError, capitalizeTranslated, formatTime24to12, useDebounce, notifySuccess, notifyError,FieldMerger,utcDateToLocal,utcTimeToLocal}
+
+export {utcDateTimeToLocal, greaterThanEqualTo, handleApolloError, capitalizeTranslated, formatTime24to12, useDebounce, notifySuccess, notifyError,FieldMerger,utcDateToLocal,utcTimeToLocal,getInitials}
 export * from "./TableLoader"

@@ -1082,7 +1082,7 @@
 
 .rbc-event{
     width: 80% !important;
-    /* height: 70px !important; */
+    height: 70px !important;
     align-items: center !important;
     text-align: center;
     margin-left: 30px !important;
@@ -1397,6 +1397,17 @@
 
 .right-to-left  .ant-table-ping-right:not(.ant-table-has-fix-right) .ant-table-container::after {
     box-shadow: none !important;
+}
+
+.loading{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 111;
+    border-radius: 10px;
+    backdrop-filter: blur(2px);
 }
 
 /* =================================================== media querry =============================================== */

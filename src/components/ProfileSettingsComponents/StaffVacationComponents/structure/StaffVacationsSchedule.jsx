@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { mystaffData } from "../../../../data";
-import { Button, Card, Flex, Image, notification, Typography } from "antd";
+import { Button, Card, Flex, Image, notification, Spin, Typography } from "antd";
 import { StaffEventCard } from "./StaffEventCard";
 import { NavigationControl } from "./NavigationControl";
 import { ModuleTopHeading } from "../../../PageComponent";
@@ -13,8 +13,9 @@ import { useTranslation } from "react-i18next";
 import { useLazyQuery, useMutation } from "@apollo/client/react";
 import { GET_VACATIONS } from "../../../../graphql/query";
 import { DELETE_VACATION } from "../../../../graphql/mutation/mutations";
-import { notifyError, notifySuccess } from "../../../../shared";
+import { notifyError, notifySuccess, TableLoader } from "../../../../shared";
 import dayjs from "dayjs";
+import { getUserId } from "../../../../utils/auth";
 const localizer = momentLocalizer(moment);
 
 const getCellStatusColor = (date, events) => {
@@ -69,7 +70,6 @@ const eventStyleGetter = (event) => {
 const { Title, Text } = Typography
 const StaffVacationsSchedule = () => {
     const {t} = useTranslation();
-    const userId = localStorage.getItem('userId');
     const [ vacationdata, setVactionData ] = useState([])
     const [api, contextHolder] = notification.useNotification();
     const [events, setEvents] = useState([]);
@@ -78,16 +78,9 @@ const StaffVacationsSchedule = () => {
     })
     const [deleteVacation, { loading: deleting }] = useMutation(DELETE_VACATION,{
       onCompleted: () => {
-        notifySuccess(
-          api,
-          "Event Delete",
-          "Event Deleted successfully",
-          ()=> {refetch();setDeleteItem(null);}
-        )
+        notifySuccess(api,"Vacation Event Delete","Vacation event deleted successfully", ()=> {refetch();setDeleteItem(null);})
       },
-      onError: (error) => {
-        notifyError(api, error);
-      },
+      onError: (error) => {notifyError(api, error);},
     });
     const [currentDate, setCurrentDate] = useState(new Date());
     const [ visible, setVisible ] = useState(false)
@@ -97,9 +90,10 @@ const StaffVacationsSchedule = () => {
     const formattedDate = currentDate.toDateString();
     
     useEffect(() => {
+      const userId = getUserId();
       if (!userId) return;
       getVacation({ variables: { staffId: userId } });
-    }, [userId]);
+    }, [getVacation]);
 
     useEffect(() => {
       if (data?.getVacations) {
@@ -133,10 +127,10 @@ const StaffVacationsSchedule = () => {
             <Flex gap={15} align='center'>
               <Image src='/assets/icons/newcust-ar.webp' width={40} preview={false} alt='total vacations icon' fetchPriority="high" />
               <Flex vertical>
-                  <Text className='text-gray fs-15'>{t('Total vacations (this month)')}</Text>
-                  <Title className='fw-600 m-0' level={4}>
-                    {vacationdata?.totalVacation}
-                  </Title>
+                <Text className='text-gray fs-15'>{t('Total vacations (this month)')}</Text>
+                <Title className='fw-600 m-0' level={4}>
+                  {vacationdata?.totalVacation}
+                </Title>
               </Flex>
             </Flex>
             <NavigationControl
@@ -144,39 +138,47 @@ const StaffVacationsSchedule = () => {
               setCurrentDate={setCurrentDate}
               formattedDate={formattedDate}
             />
-            <Calendar
-              localizer={localizer}
-              events={events}
-              date={currentDate}
-              onNavigate={setCurrentDate}
-              defaultView="month"
-              views={["month"]}
-              step={60}
-              timeslots={1}
-              eventPropGetter={eventStyleGetter}
-              dayPropGetter={(date) => {
-                return {
-                  style: {
-                    ...getCellStatusColor(date, events),
-                    borderRadius: "6px",
-                  },
-                };
-              }}
-              popup
-              components={{
-                event: StaffEventCard
-              }}
-              showMultiDayTimes={false}
-              className="h-700 vacation-calendar"
-              toolbar={false}
-              selectable={false}  
-              onSelectEvent={(event) => {
-                if (event.status === "PENDING") {
-                  setEditEvent(event);
-                  setVisible(true);
-                }
-              }}
-            />
+            <div className="position-relative">
+              {/* {(loading || deleting) && (
+                <Flex justify="center" align="center" className="h-100 w-100 loading">
+                  <Spin {...TableLoader} size="large" />
+                </Flex>
+              )} */}
+
+              <Calendar
+                localizer={localizer}
+                events={events}
+                date={currentDate}
+                onNavigate={setCurrentDate}
+                defaultView="month"
+                views={["month"]}
+                step={60}
+                timeslots={1}
+                eventPropGetter={eventStyleGetter}
+                dayPropGetter={(date) => {
+                  return {
+                    style: {
+                      ...getCellStatusColor(date, events),
+                      borderRadius: "6px",
+                    },
+                  };
+                }}
+                popup
+                components={{
+                  event: StaffEventCard
+                }}
+                showMultiDayTimes={false}
+                className="h-700 vacation-calendar"
+                toolbar={false}
+                selectable={false}  
+                onSelectEvent={(event) => {
+                  if (event.status === "PENDING") {
+                    setEditEvent(event);
+                    setVisible(true);
+                  }
+                }}
+              />
+            </div>
           </Flex>
         </Card>
         <AddVacation 

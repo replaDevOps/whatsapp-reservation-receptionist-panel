@@ -14,6 +14,8 @@ const LOGIN_USER = gql`
           name
           business {
             id
+            name
+            image
           }
         }
       }
@@ -67,6 +69,20 @@ const CREATE_BOOKING = gql`
   }
 `
 
+const MARK_AS_READ = gql`
+  mutation MarkAlertAsRead($markAlertAsReadId: ID!) {
+    markAlertAsRead(id: $markAlertAsReadId) {
+      id
+    }
+  }
+`
+
+const MARK_AS_ALLREAD = gql`
+  mutation Mutation {
+    markAllAlertsAsRead
+  }
+`
+
 export {
   LOGIN_USER,
   UPDATE_USER,
@@ -75,4 +91,6 @@ export {
   DELETE_VACATION,
   UPDATE_VACATION,
   CREATE_BOOKING,
+  MARK_AS_READ,
+  MARK_AS_ALLREAD,
 }

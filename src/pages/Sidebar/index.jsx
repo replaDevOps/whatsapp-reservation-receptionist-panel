@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Route, Routes, useLocation } from 'react-router-dom';
 import './index.css';
-import { Layout, Menu, Image, Space, Divider, Flex, Button, Typography } from 'antd';
+import { Layout, Menu, Image, Space, Divider, Flex, Button, Typography, Avatar } from 'antd';
 import { Notifications, UserDropdown } from '../../components/Header';
 import { Dashboard } from '../Dashboard';
 import { SearchInput } from '../../components/Forms';
@@ -12,6 +12,8 @@ import { MenuItems } from './MenuItems';
 import { StaffVacationPage } from '../StaffVacationPage';
 import { useTranslation } from 'react-i18next';
 import { LanguageChange } from './LanguageChange';
+import { getBusinessImage, getBusinessName } from '../../utils/auth';
+import { getInitials } from '../../shared';
 
 const { Header, Sider, Content } = Layout;
 const {Text} = Typography
@@ -74,15 +76,15 @@ const Sidebar = () => {
           setCollapsed(broken)
         }} trigger={null} collapsible collapsed={collapsed} className={collapsed ? 'addclass overflowstyle h-100vh overflowy-auto border-right-side' : 'overflowstyle h-100vh overflowy-auto border-right-side'}>
         <Flex className="logo" align='center' gap={10}>
-          <Image
-            style={{ width: collapsed ? "40px" : '40px' }}
-            height={'auto'}
-            src="/assets/images/logo.webp"
-            alt='logo image'
-            preview={false}
-            fetchPriority="high"
-          />
-          <Text strong className='fs-14'>Receptionist Panel</Text>
+          {
+            getBusinessImage() ?
+            <Avatar size={collapsed ? 40 : 40} src={getBusinessImage()} alt='logo image' fetchPriority="high" />
+            :
+            <Avatar size={40} className='fs-14 text-white fw-bold brand-bg'>
+              {getInitials(getBusinessName())}
+            </Avatar>
+          }
+          <Text strong className='fs-14'>{getBusinessName()}</Text>
         </Flex>
         <Divider className='m-0 bg-divider' />
         <Menu
@@ -148,4 +150,4 @@ const Sidebar = () => {
   );
 };
 
-export { Sidebar };
+export default Sidebar;

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Avatar, Card, Typography, Flex, Row, Col, notification } from "antd";
+import { Avatar, Card, Typography, Flex, Row, Col, notification, Spin } from "antd";
 import "antd/dist/reset.css";
 import { MySelect } from "../../Forms";
 import { CalendarCard } from "./CalendarCard";
@@ -15,6 +15,8 @@ import { useLazyQuery } from "@apollo/client/react";
 import { getBranchId } from "../../../utils/auth";
 import { formatDateTime } from "../../../utils";
 import dayjs from "dayjs";
+import { TableLoader } from "../../../shared";
+import { GET_SERVICE_BY_SERVICE_PROVIDER } from "../../../graphql/query/lookupsquery";
 const localizer = momentLocalizer(moment);
 
 
@@ -64,15 +66,16 @@ const ResourceHeader = ({ resource }) => (
 );
 
 const BookingSchedularCalendar = () => {
-    // const [events] = useState(myeventsData);
     const [bookedevent, setBookedEvent] = useState(false);
     const [editevent, setEditEvent] = useState(null);
-    const [selectedProvider, setSelectedProvider] = useState(1);
-    const [selectedService, setSelectedService] = useState("Hair Cut");
+    const [ selectedProvider, setSelectedProvider ] = useState(null)
+    const [ selectedService, setSelectedService ] = useState(null)
     const [currentDate, setCurrentDate] = useState(new Date());
     const [api, contextHolder] = notification.useNotification();
-    const [getAppointments, { data: appointData, loading: appointLoading,refetch }] =
-    useLazyQuery(GET_BOOKINGS, { fetchPolicy: "network-only" });
+    const [getAppointments, { data: appointData, loading: appointLoading,refetch }] = useLazyQuery(GET_BOOKINGS, 
+        { fetchPolicy: "network-only" }
+    );
+    const [ getServiceLookups, {data: lookupService} ] = useLazyQuery(GET_SERVICE_BY_SERVICE_PROVIDER)
     const {t} = useTranslation();
     
     const[serviceProviders,setServiceProviders]= useState([])
@@ -84,31 +87,37 @@ const BookingSchedularCalendar = () => {
     useEffect(() => {
         getAppointments({
             variables: {
-                consumerId: null,
-                serviceId: null,
+                serviceProviderId: selectedProvider,
+                serviceId: selectedService,
                 branchId: getBranchId()
             }
         });
-    }, [getAppointments,refetch]);
-
+    }, [getAppointments,refetch,selectedProvider,selectedService]);
+    
     useEffect(() => {
         if (appointData?.getAppointments) {
-            setAppointments(appointData.getAppointments)
-            const result =  appointData?.getAppointments?.map(item => (
-                        {
-                            id: item.serviceProvider?.id,
-                            name: `${item.serviceProvider?.firstName} ${item.serviceProvider?.lastName}`,
-                            avatar: item.serviceProvider?.imageUrl
-                        }
-                    ))
+            setAppointments(appointData.getAppointments?.appointments)
+            const result =  appointData?.getAppointments?.appointments?.map(item => (
+                {
+                    id: item.serviceProvider?.id,
+                    name: `${item.serviceProvider?.firstName} ${item.serviceProvider?.lastName}`,
+                    avatar: item.serviceProvider?.imageUrl
+                }
+            ))
             setServiceProviders(removeDuplicates(result))
         }
     }, [appointData])
+
     function removeDuplicates(arr) {
         return [...new Map(arr.map(item => [item.id, item])).values()];
     }
     
-
+    useEffect(() => {
+        if (!selectedProvider) return;
+        getServiceLookups({
+            variables: { providerId: selectedProvider }
+        });
+    }, [selectedProvider, getServiceLookups]);
  
     const normalizedEvents = appointments
     .map((ev) => {
@@ -126,6 +135,8 @@ const BookingSchedularCalendar = () => {
             phone: ev.consumer?.phone,
             consumer: ev.consumer,
             service: ev.service?.name,
+            duration: ev.service?.duration,
+            amount: ev.service?.price,
             note: ev.note,
             promoCode: ev.promoCode,
             appointmentTimeSlot: ev.appointmentTimeSlot,
@@ -148,7 +159,7 @@ const BookingSchedularCalendar = () => {
                         formattedDate={formattedDate}
                         setBookedEvent={setBookedEvent}
                     />
-                    {/* <Row gutter={[12, 12]}>
+                    <Row gutter={[12, 12]}>
                         <Col span={24} md={12} lg={4}>
                             <MySelect
                                 placeholder={t('Select Service Provider')}
@@ -159,6 +170,7 @@ const BookingSchedularCalendar = () => {
                                     name: p.name,
                                 }))}
                                 onChange={(value) => setSelectedProvider(value)}
+                                allowClear
                             />
                         </Col>
                         <Col span={24} md={12} lg={4}>
@@ -166,50 +178,56 @@ const BookingSchedularCalendar = () => {
                                 placeholder={t('Select Service')}
                                 withoutForm
                                 value={selectedService}
-                                options={[
-                                    { id: "Hair Cut", name: t('Hair Cut') },
-                                    { id: "Pedicure", name: t('Pedicure') },
-                                    { id: "Massage", name: t('Massage') },
-                                ]}
+                                options={lookupService?.getServicesByProvider?.services}
                                 onChange={(value) => setSelectedService(value)}
+                                allowClear
                             />
                         </Col>
-                    </Row> */}
-                    <Calendar
-                        localizer={localizer}
-                        events={normalizedEvents}
-                        date={currentDate}
-                        defaultView="day"
-                        views={["day"]}
-                        step={60} //each slot is 60 mins
-                        timeslots={1} //1 hr gap between slots
-                        // defaultDate={new Date(2025, 10, 12)}
-                        eventPropGetter={eventStyleGetter}
-                        components={{
-                            event: ({ event }) => (
-                                <BookingEventCard
-                                    event={event}
-                                    setBookedEvent={setBookedEvent}
-                                    setEditEvent={setEditEvent}
-                                    refetch={refetch}
-                                />
-                            ),
-                            resourceHeader: ResourceHeader,
-                        }}
-                        resources={serviceProviders}
-                        resourceIdAccessor="id"
-                        resourceTitleAccessor="name"
-                        formats={{
-                            eventTimeRangeFormat: () => "",
-                        }}
-                        showMultiDayTimes={false}
-                        toolbar={false}
-                        selectable
-                        onSelectSlot={() => {
-                            setBookedEvent(true);
-                        }}
-                        className="booking-calendar"
-                    />
+                    </Row>
+                    <div className="position-relative">
+                        {/* {appointLoading && (
+                            <Flex justify="center" align="center" className="h-100 w-100 loading">
+                                <Spin {...TableLoader} size="large" />
+                            </Flex>
+                        )} */}
+                        <Calendar
+                            localizer={localizer}
+                            events={normalizedEvents}
+                            date={currentDate}
+                            defaultView="day"
+                            views={["day"]}
+                            step={60} //each slot is 60 mins
+                            timeslots={1} //1 hr gap between slots
+                            // defaultDate={new Date(2025, 10, 12)}
+                            eventPropGetter={eventStyleGetter}
+                            dayLayoutAlgorithm="overlap"
+                            popup={true}
+                            components={{
+                                event: ({ event }) => (
+                                    <BookingEventCard
+                                        event={event}
+                                        setBookedEvent={setBookedEvent}
+                                        setEditEvent={setEditEvent}
+                                        refetch={refetch}
+                                    />
+                                ),
+                                resourceHeader: ResourceHeader,
+                            }}
+                            resources={serviceProviders}
+                            resourceIdAccessor="id"
+                            resourceTitleAccessor="name"
+                            formats={{
+                                eventTimeRangeFormat: () => "",
+                            }}
+                            showMultiDayTimes={false}
+                            toolbar={false}
+                            selectable
+                            onSelectSlot={() => {
+                                setBookedEvent(true);
+                            }}
+                            className="booking-calendar"
+                        />
+                    </div>
                 </Flex>
             </Card>
 

@@ -7,24 +7,19 @@ import { notifyError, notifySuccess, toArabicDigits } from '../../../../shared'
 import { UPDATE_USER } from '../../../../graphql/mutation/mutations'
 import { useMutation } from '@apollo/client/react'
 import imageCompression from 'browser-image-compression';
+import { getUserId } from '../../../../utils/auth'
 
 const { Title } = Typography
 const EditGeneralSettings = ({visible,onClose,edititem,refetch}) => {
     const {t, i18n} = useTranslation();
     const isArabic = i18n.language === "ar";
     const [form] = Form.useForm();
-    const userId = localStorage.getItem('userId');
     const [previewimage, setPreviewImage] = useState(null)
-    const [ messageApi ] = message.useMessage()
+    const userId = getUserId()
     const [api, contextHolder] = notification.useNotification();
     const [ updateUser,  { loading: updaing } ] = useMutation(UPDATE_USER,{
         onCompleted: () => {
-            notifySuccess(
-                api,
-                "Setting update",
-                "Setting updated successfully",
-                ()=> {onClose()}
-            )
+            notifySuccess(api,"Setting update","Setting updated successfully",()=> {refetch();onClose()})
         },
         onError: (error) => {
             notifyError(api, error);
@@ -78,7 +73,7 @@ const EditGeneralSettings = ({visible,onClose,edititem,refetch}) => {
     
         } catch (err) {
             console.error("Upload error:", err);
-            message.error("Failed to upload file");
+            notifyError(api,"Failed to upload file")
             throw err;
         }
     };
@@ -86,19 +81,15 @@ const EditGeneralSettings = ({visible,onClose,edititem,refetch}) => {
     const EditGeneralInfo = async () => {
         const input = form.getFieldsValue();
         try {
-            if (edititem?.getUser?.id) {
+            if (userId) {
                 await updateUser({
                     variables: { 
                         input: { id: userId, imageUrl: previewimage, ...input }
                     }
                 });
-                messageApi.success("User updated successfully!");
             } 
-            await refetch();
-            onClose();
         } catch (e) {
             console.error(e);
-            message.error(e.message);
         }
     };
 

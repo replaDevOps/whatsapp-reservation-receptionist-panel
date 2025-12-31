@@ -6,7 +6,7 @@ export const MySelect = ({withoutForm, placeholder, name,label,mode,disabled,req
       <Select 
         maxTagCount= 'responsive'
         className={`select without-form-select w-100 ${className}`}
-        value={value || ''} 
+        value={value} 
         mode={mode || ''} 
         disabled={disabled || false} 
         {...props}

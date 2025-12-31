@@ -10,13 +10,18 @@ import { DownOutlined } from '@ant-design/icons';
 
 // import { client } from '../../../config';
 import { useTranslation } from 'react-i18next';
+import { getBusinessImage, getBusinessName } from '../../../utils/auth';
+import { useAuth } from '../../../context';
+import { getInitials } from '../../../shared';
 const UserDropdown = ()=> {
   // const userId = localStorage.getItem("userId"); 
   const [messageApi, contextHolder] = message.useMessage();
   const [user, setUser] = useState(null)
   const navigate = useNavigate()
   const [ loading, setLoaing ] = useState(false)
-const {t}= useTranslation();
+  const {t}= useTranslation();
+  const { logout } = useAuth();
+
   // const { data, loading:isLoading, refetch } = useQuery(ME, {
   //   variables: { getUserId:userId },
   //   skip: !userId,
@@ -36,17 +41,10 @@ const {t}= useTranslation();
   
   const handleLogout = () => {
     setLoaing(true)
-    localStorage.removeItem('email');
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('fullName');
-    localStorage.removeItem('branch');
-    localStorage.removeItem('branchId');
-    localStorage.removeItem('businessId');
-    setInterval(() => {
-      setLoaing(false)
-      window.location.href = "/login";
-    }, 2000);
+    localStorage.removeItem('user');
+    logout();
+    window.location.href = "/login";
   };
 
   // const items = [
@@ -66,9 +64,16 @@ const {t}= useTranslation();
     <Card className='radius-12 shadow-c card-cs'>
       <Space direction='vertical'> 
         <Flex align='center' gap={10}>
-          <Avatar size={44} src='/assets/images/logo.webp' />
+          {
+            getBusinessImage() ?
+            <Avatar size={44} src={getBusinessImage()} alt='business image' fetchPriority="high" />
+            :
+            <Avatar size={40} className='fs-14 text-white fw-bold brand-bg'>
+              {getInitials(getBusinessName())}
+            </Avatar>
+          }
           <Flex vertical gap={1}>
-            <Typography.Text strong className='fs-13'>QLoop</Typography.Text>
+            <Typography.Text strong className='fs-13'>{getBusinessName() ? getBusinessName() : ''}</Typography.Text>
             <Typography.Text className='text-gray fs-13'>{t('Receptionist')}</Typography.Text>
           </Flex>
         </Flex>
@@ -92,10 +97,17 @@ const {t}= useTranslation();
           className='p-0'
       >
         <Flex align='center' gap={5} className='cursor'>
-          <Avatar size={44} src='/assets/images/logo.webp' />
+          {
+            getBusinessImage() ?
+            <Avatar size={44} src={getBusinessImage()} alt='business image' fetchPriority="high" />
+            :
+            <Avatar size={40} className='fs-14 text-white fw-bold brand-bg'>
+              {getInitials(getBusinessName()) || "?"}
+            </Avatar>
+          }
           <Flex align='flex-start' gap={5}>
             <Flex vertical gap={0} align='end'>
-              <Typography.Text strong className='fs-12'>QLoop</Typography.Text>
+              <Typography.Text strong className='fs-12'>{getBusinessName() ? getBusinessName() : ''}</Typography.Text>
               <Typography.Text className='text-gray fs-12'>{t('Receptionist')}</Typography.Text>
             </Flex>
             <DownOutlined className='fs-12 py-1' />

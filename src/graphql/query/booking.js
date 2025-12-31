@@ -12,33 +12,37 @@ const GET_APPOINTMENTS_BY_SERVICE_PROVIDER = gql `
     }
 `
 const GET_BOOKINGS = gql`
-    query GetAppointments($consumerId: String, $serviceId: String, $branchId: String) {
-        getAppointments(consumerId: $consumerId, serviceId: $serviceId, branchId: $branchId) {
-            id
-            consumer {
+    query GetAppointments($serviceId: String, $branchId: String, $serviceProviderId: String) {
+        getAppointments(serviceId: $serviceId, branchId: $branchId, serviceProviderId: $serviceProviderId) {
+            totalCount
+            appointments {
                 id
-                firstName
-                lastName
-                email
-                phone
+                consumer {
+                    id
+                    firstName
+                    lastName
+                    email
+                    phone
+                }
+                appointmentDate
+                appointmentTime
+                appointmentTimeSlot
+                note
+                promoCode
+                service {
+                    id
+                    name
+                    duration
+                    price
+                }
+                serviceProvider {
+                    id
+                    imageUrl
+                    firstName
+                    lastName
+                }
+                status
             }
-            appointmentDate
-            appointmentTime
-            appointmentTimeSlot
-            note
-            promoCode
-            service {
-                id
-                name
-                duration
-            }
-            serviceProvider {
-                id
-                imageUrl
-                firstName
-                lastName
-            }
-            status
         }
     }
 `

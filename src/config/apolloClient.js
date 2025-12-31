@@ -1,14 +1,14 @@
 import { ApolloClient, InMemoryCache, createHttpLink, from, split } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
-import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { getAccessToken, clearAuthTokens } from "../shared/tokenManager";
 import { refreshAccessToken } from "../shared/tokenRefreshService";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
 
 const API_URL = "https://backend.qloop.me/graphql";
-
-const token = localStorage.getItem('accessToken')
+const WS_URL = "wss://backend.qloop.me/graphql";
 
 let isRefreshing = false;
 let pendingRequests = [];
@@ -23,7 +23,8 @@ const httpLink = createHttpLink({
 const authLink = setContext((_, { headers }) => {
 //   const token = getAccessToken();
 // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxZWI1ZjAxNy05MjQ1LTQyNTgtOGM4Zi05NGY2MTNhNGRiMTUiLCJlbWFpbCI6InN1cGVyYWRtaW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiU1VQRVJfQURNSU4iLCJmaXJzdE5hbWUiOiJEZWZhdWx0IiwibGFzdE5hbWUiOiJTdXBlckFkbWluIiwiaWF0IjoxNzYzOTA3NDAwLCJleHAiOjE3NjY0OTk0MDB9.7KOutW2mRbVHhdjNpxf7_8dA6aJ0uPdaZ_p1XNTZFO8'
-  return {
+const token = localStorage.getItem('accessToken')  
+return {
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : "",
@@ -32,18 +33,15 @@ const authLink = setContext((_, { headers }) => {
 });
 
 // WebSocket link for subscriptions
-const wsLink = new WebSocketLink({
-  uri: "wss://verify.jusoor-sa.co/subscriptions",
-  options: {
-    reconnect: true,
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: WS_URL,
     connectionParams: () => {
-      const token = getAccessToken();
-      return {
-        authorization: token ? `Bearer ${token}` : "",
-      };
+      const token = localStorage.getItem('accessToken');
+      return { authorization: token ? `Bearer ${token}` : "" };
     },
-  },
-});
+  })
+);
 
 // Split links: send subscriptions to wsLink, others to httpLink
 const splitLink = split(

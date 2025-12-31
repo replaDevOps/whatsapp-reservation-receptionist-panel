@@ -7,19 +7,19 @@ import { useMutation } from '@apollo/client/react'
 import { ADD_VACATION, UPDATE_VACATION } from '../../../../graphql/mutation/mutations'
 import { notifyError, notifySuccess } from '../../../../shared'
 import dayjs from 'dayjs'
+import { getUserId } from '../../../../utils/auth'
 
 const { Title } = Typography
 const AddVacation = ({visible,onClose,edititem,setDeleteItem,refetch}) => {
 const {t} = useTranslation();
     const [form] = Form.useForm();
-    const userId = localStorage.getItem('userId');
     const [api, contextHolder] = notification.useNotification();
     const [ createVacation, { loading: creating } ] = useMutation(ADD_VACATION,{
-        onCompleted: () => { notifySuccess(api,"Event create", "Event created successfully",()=> {onClose()})},
+        onCompleted: () => { notifySuccess(api,"Vacation Event Create", "Vacation event created successfully",()=> {refetch();onClose()})},
         onError: (error) => {notifyError(api, error);},
     })
     const [ updateVacation, { loading: updating } ] = useMutation(UPDATE_VACATION,{
-        onCompleted: () => {notifySuccess(api,"Event update","Event updated successfully",()=> {onClose()})},
+        onCompleted: () => {notifySuccess(api,"Vacation Event Update","Vacation event updated successfully",()=> {refetch();onClose()})},
         onError: (error) => {notifyError(api, error);},
     })
     useEffect(()=>{
@@ -39,27 +39,23 @@ const {t} = useTranslation();
         const input = form.getFieldsValue();
         const startDate = dayjs(input.startDate).format('YYYY-MM-DD');
         const endDate = dayjs(input.endDate).format('YYYY-MM-DD');
-
+        const userId = getUserId();
         try {
             if (edititem?.id) {
-            await updateVacation({
-                variables: { 
-                input: { id: edititem?.id, startDate, endDate }
-                }
-            });
-            } else {
-            await createVacation({
-                variables: { 
-                input: { staffId: userId, startDate, endDate }
-                }
-            });
+                await updateVacation({
+                    variables: { 
+                        input: { id: edititem?.id, startDate, endDate }
+                    }
+                });
+                } else {
+                await createVacation({
+                    variables: { 
+                        input: { staffId: userId, startDate, endDate }
+                    }
+                });
             }
-
-            await refetch();
-            onClose();
         } catch (e) {
             console.error(e);
-            message.error(e.message);
         }
     }
 

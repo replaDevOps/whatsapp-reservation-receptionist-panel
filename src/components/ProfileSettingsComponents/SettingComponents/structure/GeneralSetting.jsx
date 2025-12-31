@@ -5,15 +5,16 @@ import { useTranslation } from 'react-i18next'
 import { formatTime24to12, toArabicDigits } from '../../../../shared'
 import { GET_USERS_BY_ID } from '../../../../graphql/query'
 import { useQuery } from '@apollo/client/react'
+import { getUserId } from '../../../../utils/auth'
 const { Title, Text } = Typography
 const GeneralSetting = () => {
-    const userId = localStorage.getItem('userId');
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === "ar";
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false)
     const [edititem, setEditItem] = useState(null)
     const [previewimage, setPreviewImage] = useState(null)
+    const userId = getUserId();
     const { data, loading,refetch } = useQuery(GET_USERS_BY_ID, {
         variables: { getUserId: userId },
         skip: !userId,
@@ -29,7 +30,6 @@ const GeneralSetting = () => {
             });
             setPreviewImage(data?.getUser?.imageUrl)
         }
-        console.log('setting data',data)
     }, [loading, data]);
 
     return (
@@ -103,7 +103,7 @@ const GeneralSetting = () => {
                             <Col span={24}>
                                 <Flex vertical gap={5}>
                                     <Title level={5} className="fw-500 m-0">{t('My Availbility')}</Title>
-                                    {data?.getUser?.scheduleHours?.length > 0 && (
+                                    {/* {data?.getUser?.scheduleHours?.length > 0 && (
                                         data?.getUser?.scheduleHours.map((schedule, index) => {
                                             const dayLabel =
                                             t(schedule?.dayOfWeek).charAt(0)?.toUpperCase() +
@@ -130,7 +130,37 @@ const GeneralSetting = () => {
                                             </Flex>
                                             );
                                         })
-                                    )}
+                                    )} */}
+
+
+                                     {data?.getUser?.scheduleHours.length > 0 && (
+                    data?.getUser?.scheduleHours.map((schedule, index) => {
+                        const dayLabel =
+                        t(schedule?.dayOfWeek).charAt(0)?.toUpperCase() +
+                        t(schedule?.dayOfWeek).slice(1).toLowerCase();
+
+                        const hasTimes = schedule?.openTime && schedule?.closeTime;
+
+                        return (
+                        <Flex gap={4} key={index}>
+                            <Text strong>{dayLabel}:</Text>
+                            <Flex gap={5}>
+                            {!schedule?.isClosed ? (
+                                <Text>{t('Day Off')}</Text>
+                            ) : hasTimes ? (
+                                <Text>
+                                {`${formatTime24to12(schedule?.openTime)} - ${formatTime24to12(
+                                    schedule?.closeTime
+                                )}`}
+                                </Text>
+                            ) : (
+                                <Text />
+                            )}
+                            </Flex>
+                        </Flex>
+                        );
+                    })
+                )}
                                 </Flex>
                             </Col>
                         </Row>

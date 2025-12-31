@@ -23,11 +23,24 @@ const GET_SERVICES_BY_BRANCH_LOOKUP = gql`
 const GET_SERVICE_PROVIDER_BY_BRANCH = gql`
     query GetServiceProvidersByBranch($branchId: ID!) {
         getServiceProvidersByBranch(branchId: $branchId) {
-            id
-            firstName
-            lastName
+            users {
+                id
+                firstName
+                lastName
+            }
         }
     }
 `
 
-export { GET_BRANCHES_LOOKUP, GET_SERVICES_BY_BRANCH_LOOKUP, GET_SERVICE_PROVIDER_BY_BRANCH }
+const GET_SERVICE_BY_SERVICE_PROVIDER = gql`
+    query GetServicesByProvider($providerId: ID!) {
+        getServicesByProvider(providerId: $providerId) {
+            services {
+                id
+                name
+            }
+        }
+    }
+`
+
+export { GET_BRANCHES_LOOKUP, GET_SERVICES_BY_BRANCH_LOOKUP, GET_SERVICE_PROVIDER_BY_BRANCH, GET_SERVICE_BY_SERVICE_PROVIDER }

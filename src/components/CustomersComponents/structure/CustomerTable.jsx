@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useLazyQuery } from '@apollo/client/react';
 import { GET_CUSTOMERS } from '../../../graphql/query';
 import { TableLoader, useDebounce } from '../../../shared';
+import { getBranchId } from '../../../utils/auth';
 const { Text } = Typography;
 
 const CustomerTable = () => {
@@ -18,7 +19,7 @@ const CustomerTable = () => {
     const [current, setCurrent] = useState(1);
     const [addmodal, setAddModal] = useState(false)
     const [ customerData, setCustomerData ] = useState([])
-    const [ search, setSearch ] = useState('')
+    const [ search, setSearch ] = useState(null)
     const debouncedSearch = useDebounce(search, 500);
     const [ edititem, setEditItem ] = useState(null)
     const [getCustomers, { data, loading}] = useLazyQuery(GET_CUSTOMERS, {
@@ -36,6 +37,7 @@ const CustomerTable = () => {
                     limit: pageSize,
                     offSet: (current - 1) * pageSize,
                     search: debouncedSearch?.trim() || null,
+                    branchId: getBranchId(),
                 }
             })
         }

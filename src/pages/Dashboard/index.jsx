@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useLazyQuery } from '@apollo/client/react';
 import { useEffect, useState } from 'react';
 import { GET_DASHBOARD_STATS } from '../../graphql/query';
+import { getBranchName, getUserName } from '../../utils/auth';
 
 const { Title } = Typography
 const Dashboard = () => {
   const {t}= useTranslation();
-  const fullName = localStorage.getItem("fullName");
-  const branch = localStorage.getItem("branch")
   const [dashboardStats, setDashboardStats]= useState(null)
   const [getDashboardStats, { data,loading }] = useLazyQuery(GET_DASHBOARD_STATS, {
     fetchPolicy: "network-only",
@@ -62,9 +61,9 @@ const Dashboard = () => {
     <div>
       <Flex vertical gap={24}>
         <Flex justify='space-between' align='center'>
-          <Title level={4} className='m-0'>{fullName}</Title>
+          <Title level={4} className='m-0'>{getUserName()}</Title>
           <Button className='btncancel'>
-            {branch}
+            {getBranchName()}
           </Button>
         </Flex>
         <StatisticsCommonCards loading={loading} data={cardsData} />

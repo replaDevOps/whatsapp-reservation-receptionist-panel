@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 const GET_DASHBOARD_STATS = gql`
-    query Appointments {
+    query GetTodayAppointments {
         getTodayAppointments {
             todayAppoimtemtCount
             todayManualAppointmentCount

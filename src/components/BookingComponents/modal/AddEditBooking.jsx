@@ -45,7 +45,6 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
         if(getServiceProvidersByBranchLookup && getBranchId && visible)
             getServiceProvidersByBranchLookup({variables:{branchId: getBranchId()}})
     }, [getServiceProvidersByBranchLookup, getBranchId, visible])
-
     useEffect(()=>{
         if(appointmentsByServiceProvider?.getAppointmentsByServiceProvider){
             const bookings = appointmentsByServiceProvider?.getAppointmentsByServiceProvider
@@ -60,6 +59,8 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
             )
             setAvailableTimeSlots([...slots])
         }
+
+        console.log('appointments by service provider',appointmentsByServiceProvider?.getAppointmentsByServiceProvider)
     }, [appointmentsByServiceProvider])
 
     console.log('availableTimeSlots:',availableTimeSlots)
@@ -146,6 +147,40 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
 
     const CreateBookingHandle = async () => {
         const input = form.getFieldsValue();
+        // const formattedDate = input?.appointmentDate ? dayjs(input.appointmentDate).format('YYYY-MM-DD') : null;
+        // let finalTime = null;
+        // if (isAccess === "BY_TIME" && input?.appointmentTime) {
+        //     finalTime = dayjs(input.appointmentTime).format('HH:mm');
+        // } else {
+        //     finalTime = timeslotes;
+        // }
+
+        let appointmentDate = null;
+        if (input?.appointmentDate) {
+            appointmentDate = dayjs(input.appointmentDate).format("YYYY-MM-DD");
+        } else if (timeslotes) {
+            appointmentDate = dayjs().format("YYYY-MM-DD");
+        }
+        let appointmentTime = null;
+
+        if (appointmentDate) {
+            if (isAccess === "BY_TIME" && input?.appointmentTime && appointmentDate) {
+                const t = input.appointmentTime;
+
+                const localDateTime = dayjs(appointmentDate)
+                    .hour(t.hour())
+                    .minute(t.minute())
+                    .second(0);
+
+                appointmentTime = localDateTime.utc().format();
+            }
+            if (isAccess === "BY_SERVICE_PROVIDER" && timeslotes) {
+                appointmentTime = dayjs(`${appointmentDate} ${timeslotes}`, 'YYYY-MM-DD HH:mm')
+                    .utc()
+                    .format();
+            }
+        }
+
 
         const payload = {
             bookingType: isAccess,
@@ -158,23 +193,25 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                 email: input?.email || null,
             },
             serviceId: input?.serviceId,
-            // promoCode: "cmimyyt2f0000i77crw058u67",
+            promoCode: input?.promoCode,
             serviceProviderId: input?.serviceProviderId || null,
-            appointmentDate: input?.appointmentDate,
+            // appointmentDate: formattedDate,
+            appointmentDate: appointmentDate,
+            appointmentTime: appointmentTime,
             appointmentTimeSlot: isAccess === "BY_SERVICE_PROVIDER" ? timeslotes : null,
-            appointmentTime: mergeDateAndTime(input?.appointmentDate, timeslotes),
+            // appointmentTime: mergeDateAndTime(input?.appointmentDate, finalTime),
             reminderMinutesBefore: Number(input?.reminderMinutesBefore) || null,
             note: input?.note || null,
-            status:'PENDING',
+            status:'SCHEDULED',
         }
+        console.log('appoint inputs',payload)
+        // return;
         try {
             await createBooking({
                 variables: { input: payload }
             });
-            refetch()
         } catch (e) {   
             console.error(e);
-            notifyError(api, e);
         }
     };
 
@@ -291,15 +328,7 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     name={'serviceId'}
                                     required 
                                     message={t('Please choose service')}
-                                    // options={servicesByBranchLookup?.getServicesBybranchid}
-                                    options={[
-{id: "6b6e5b25-3839-4410-a06a-0c887c864c02", name: "branch 33"},
-{id:"7116f18c-e531-4633-89a3-38a0435d13b9", name: "Service 02"},
-{
-      "id": "cf0a78a2-bfdc-4048-bbd5-7908e4d9f15d",
-      "name": "Service 04"
-    }
-                                    ]}
+                                    options={servicesByBranchLookup?.getServicesBybranchid}
                                     placeholder={t('Select Service')}
                                 />
                             </Col>
@@ -320,7 +349,7 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     required 
                                     message={t('Please choose service provider')}
                                     options={
-                                        serviceProvidersByBranchLookup?.getServiceProvidersByBranch?.map(({id, firstName, lastName}) => ({  id, name: `${firstName || ""} ${lastName || ""}`}))
+                                       serviceProvidersByBranchLookup?.getServiceProvidersByBranch?.users?.map(({id, firstName, lastName}) => ({  id, name: `${firstName || ""} ${lastName || ""}`}))
                                     }
                                     placeholder={t('Select Service Provider')} 
                                     // onChange={(serviceProviderId) => {
@@ -340,21 +369,21 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     placeholder={t('Select date')}
                                     onChange={(date) => {
                                         const serviceProviderId = form.getFieldValue('serviceProviderId')
-                                        // if(serviceProviderId)
-                                        //     getAppointmentsByServiceProvider({variables: {serviceProviderId, date}})
-                                        setAvailableTimeSlots([
-  { "start": "09:00", "end": "09:45" },
-  { "start": "09:55", "end": "10:40" },
-  { "start": "10:50", "end": "11:35" },
-  { "start": "11:45", "end": "12:30" },
-  { "start": "12:40", "end": "13:25" },
-  { "start": "13:35", "end": "14:20" },
-  { "start": "14:30", "end": "15:15" },
-  { "start": "15:25", "end": "16:10" },
-  { "start": "16:20", "end": "17:05" },
-  { "start": "17:15", "end": "18:00" }
-]
-)
+                                        if(serviceProviderId)
+                                            getAppointmentsByServiceProvider({variables: {serviceProviderId, date}})
+                                        // setAvailableTimeSlots([
+//   { "start": "09:00", "end": "09:45" },
+//   { "start": "09:55", "end": "10:40" },
+//   { "start": "10:50", "end": "11:35" },
+//   { "start": "11:45", "end": "12:30" },
+//   { "start": "12:40", "end": "13:25" },
+//   { "start": "13:35", "end": "14:20" },
+//   { "start": "14:30", "end": "15:15" },
+//   { "start": "15:25", "end": "16:10" },
+//   { "start": "16:20", "end": "17:05" },
+//   { "start": "17:15", "end": "18:00" }
+// ]
+// )
                                     }}
                                 />
                             </Col>

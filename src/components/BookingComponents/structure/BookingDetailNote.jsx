@@ -94,7 +94,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     </Flex>
                 </Flex>
                 {
-                    data?.description &&
+                    data?.note &&
                     <Flex gap={8} align='center'>
                         <Tooltip title={t('Note')} 
                             color={colorstatus} 
@@ -102,7 +102,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                         >
                             <img src='/assets/icons/note.webp' width={14} alt='doc icon' fetchPriority="high" />
                         </Tooltip>
-                        <Text className='text-gray fs-12'>{data?.description}</Text>
+                        <Text className='text-gray fs-12'>{data?.note}</Text>
                     </Flex>
                 }
             </Flex>

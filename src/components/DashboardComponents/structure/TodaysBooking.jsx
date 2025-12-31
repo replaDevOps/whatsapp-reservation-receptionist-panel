@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Avatar, Card, Typography, Flex, Button } from "antd";
+import { Avatar, Card, Typography, Flex, Button, Spin } from "antd";
 import "antd/dist/reset.css";
 import { ModuleTopHeading } from "../../PageComponent";
 import { BookingEventCard } from "../../BookingComponents";
@@ -13,6 +13,7 @@ import { useLazyQuery } from "@apollo/client/react";
 import { GET_BOOKINGS } from "../../../graphql/query";
 import { getBranchId } from "../../../utils/auth";
 import { useNavigate } from "react-router-dom";
+import { TableLoader } from "../../../shared";
 const localizer = momentLocalizer(moment);
 
 const eventStyleGetter = (event) => {
@@ -61,7 +62,6 @@ const ResourceHeader = ({ resource }) => (
 );
 
 const TodaysBooking = () => {
-    // const [events] = useState(myeventsData);
     const navigate = useNavigate()
     const [bookedevent, setBookedEvent] = useState(false);
     const [editevent, setEditEvent] = useState(null);
@@ -71,8 +71,6 @@ const TodaysBooking = () => {
     const {t} = useTranslation();
     
     const[serviceProviders,setServiceProviders]= useState([])
-
-
     const [appointments, setAppointments] = useState([]);
 
     useEffect(() => {
@@ -87,17 +85,18 @@ const TodaysBooking = () => {
 
     useEffect(() => {
         if (appointData?.getAppointments) {
-            setAppointments(appointData.getAppointments)
-            const result =  appointData?.getAppointments?.map(item => (
-                        {
-                            id: item.serviceProvider?.id,
-                            name: `${item.serviceProvider?.firstName} ${item.serviceProvider?.lastName}`,
-                            avatar: item.serviceProvider?.imageUrl
-                        }
-                    ))
+            setAppointments(appointData?.getAppointments?.appointments)
+            const result =  appointData?.getAppointments?.appointments?.map(item => (
+                {
+                    id: item.serviceProvider?.id,
+                    name: `${item.serviceProvider?.firstName} ${item.serviceProvider?.lastName}`,
+                    avatar: item.serviceProvider?.imageUrl
+                }
+            ))
             setServiceProviders(removeDuplicates(result))
         }
     }, [appointData])
+
     function removeDuplicates(arr) {
         return [...new Map(arr.map(item => [item.id, item])).values()];
     }
@@ -130,7 +129,7 @@ const TodaysBooking = () => {
     return (
         <>
             <Flex vertical gap={20}>
-                <Card className="radius-12 card-cs border-gray h-100">
+                <Card className="radius-12 card-cs border-gray h-100 position-relative">
                     <Flex vertical gap={20}>
                         <Flex justify="space-between" gap={30}>
                             <Flex vertical align="center">
@@ -139,6 +138,11 @@ const TodaysBooking = () => {
                             </Flex>
                             <Button onClick={() => navigate("/booking")}>{t('View Calendar')}</Button>
                         </Flex>
+                        {/* {appointLoading && (
+                            <Flex justify="center" align="center" className="h-100 w-100 loading">
+                                <Spin {...TableLoader} size="large" />
+                            </Flex>
+                        )} */}
                         <Calendar
                             localizer={localizer}
                             events={normalizedEvents}
@@ -147,7 +151,6 @@ const TodaysBooking = () => {
                             views={["day"]}
                             step={60} //each slot is 60 mins
                             timeslots={1} //1 hr gap between slots
-                            // defaultDate={new Date(2025, 10, 12)}
                             eventPropGetter={eventStyleGetter}
                             components={{
                                 event: ({ event }) => (
