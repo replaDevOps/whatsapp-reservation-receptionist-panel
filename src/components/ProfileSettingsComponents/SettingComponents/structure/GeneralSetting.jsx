@@ -133,34 +133,34 @@ const GeneralSetting = () => {
                                     )} */}
 
 
-                                     {data?.getUser?.scheduleHours.length > 0 && (
-                    data?.getUser?.scheduleHours.map((schedule, index) => {
-                        const dayLabel =
-                        t(schedule?.dayOfWeek).charAt(0)?.toUpperCase() +
-                        t(schedule?.dayOfWeek).slice(1).toLowerCase();
+                                    {data?.getUser?.scheduleHours.length > 0 && (
+                                        data?.getUser?.scheduleHours.map((schedule, index) => {
+                                            const dayLabel =
+                                            t(schedule?.dayOfWeek).charAt(0)?.toUpperCase() +
+                                            t(schedule?.dayOfWeek).slice(1).toLowerCase();
 
-                        const hasTimes = schedule?.openTime && schedule?.closeTime;
+                                            const hasTimes = schedule?.openTime && schedule?.closeTime;
 
-                        return (
-                        <Flex gap={4} key={index}>
-                            <Text strong>{dayLabel}:</Text>
-                            <Flex gap={5}>
-                            {!schedule?.isClosed ? (
-                                <Text>{t('Day Off')}</Text>
-                            ) : hasTimes ? (
-                                <Text>
-                                {`${formatTime24to12(schedule?.openTime)} - ${formatTime24to12(
-                                    schedule?.closeTime
-                                )}`}
-                                </Text>
-                            ) : (
-                                <Text />
-                            )}
-                            </Flex>
-                        </Flex>
-                        );
-                    })
-                )}
+                                            return (
+                                            <Flex gap={4} key={index}>
+                                                <Text strong>{dayLabel}:</Text>
+                                                <Flex gap={5}>
+                                                {!schedule?.isClosed ? (
+                                                    <Text>{t('Day Off')}</Text>
+                                                ) : hasTimes ? (
+                                                    <Text>
+                                                    {`${formatTime24to12(schedule?.openTime)} - ${formatTime24to12(
+                                                        schedule?.closeTime
+                                                    )}`}
+                                                    </Text>
+                                                ) : (
+                                                    <Text />
+                                                )}
+                                                </Flex>
+                                            </Flex>
+                                            );
+                                        })
+                                    )}
                                 </Flex>
                             </Col>
                         </Row>

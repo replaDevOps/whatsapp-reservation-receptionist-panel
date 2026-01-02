@@ -1,10 +1,9 @@
 import { Form, Button, Typography, Row, Col, Image, Flex } from "antd";
-import { MyInput } from "../../components";
+import { LanguageChange, MyInput } from "../../components";
 import { NavLink } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { LanguageChange } from "../Sidebar/LanguageChange";
 
 const { Title, Paragraph } = Typography;
 

@@ -1,16 +1,16 @@
 import { CloseOutlined} from '@ant-design/icons'
-import { Button, Col, Divider, Flex, Form, Modal, notification, Radio, Row, Select, Tag, Typography } from 'antd'
+import { Button, Col, Divider, Flex, Form, Modal, notification, Radio, Row, Select, Spin, Tag, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { MyDatepicker, MyInput, MySelect } from '../../Forms'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import { notifyError, notifySuccess, toArabicDigits } from '../../../shared'
+import { notifyError, notifySuccess, SmLoader, toArabicDigits } from '../../../shared'
 import { useLazyQuery, useMutation } from '@apollo/client/react'
 import { CREATE_BOOKING } from '../../../graphql/mutation/mutations'
 import { GET_SERVICE_PROVIDER_BY_BRANCH, GET_SERVICES_BY_BRANCH_LOOKUP } from '../../../graphql/query/lookupsquery'
-import { getBranchId, getBusinessId } from '../../../utils/auth'
-import { GET_APPOINTMENTS_BY_SERVICE_PROVIDER } from '../../../graphql/query'
-import { mergeDateAndTime } from '../../../utils'
+import { getBranchId } from '../../../utils/auth'
+import { GET_APPOINTMENTS_BY_SERVICE_PROVIDER, VERIFY_PROMOTION_CODE } from '../../../graphql/query'
+import { UPDATE_APPOINTMENT } from '../../../graphql/mutation/booking'
 
 const { Title, Text } = Typography
 const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
@@ -21,16 +21,22 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
     const [isAccess, setIsAccess] = useState('BY_TIME');
     const [ ischange, setIsChange ] = useState(0)
     const [ timeslotes, setTimeSlotes ] = useState('')
+    const [promoStatus, setPromoStatus] = useState(null);
+    const [ promoId, setPromoId ] = useState(null)
     const [api, contextHolder] = notification.useNotification();
     const [getServicesByBranchLookup, { data: servicesByBranchLookup }] = useLazyQuery(GET_SERVICES_BY_BRANCH_LOOKUP)
     const [getServiceProvidersByBranchLookup, { data: serviceProvidersByBranchLookup } ] = useLazyQuery(GET_SERVICE_PROVIDER_BY_BRANCH)
     const [getAppointmentsByServiceProvider, { data: appointmentsByServiceProvider }] = useLazyQuery(GET_APPOINTMENTS_BY_SERVICE_PROVIDER)
-
+    const [ getVerifyPromotion, { data: verifyPromotionData, loading:verifyingPromotion } ] = useLazyQuery(VERIFY_PROMOTION_CODE);
     const [bookings, setBookings] = useState([])
     const [availableTimeSlots, setAvailableTimeSlots] = useState([])
 
     const [ createBooking, { loading:creating } ] = useMutation(CREATE_BOOKING,{
         onCompleted: () => {notifySuccess(api,"Booking create","Booking created successfully",()=> {onClose();refetch()})},
+        onError: (error) => {notifyError(api, error);},
+    })
+    const [updateBooking, { loading:updating } ] = useMutation(UPDATE_APPOINTMENT,{
+        onCompleted: () => {notifySuccess(api,"Booking Update","Booking updated successfully",()=> {onClose();refetch()})},
         onError: (error) => {notifyError(api, error);},
     })
     const handleRadioChange = (e) => {
@@ -65,79 +71,81 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
 
     console.log('availableTimeSlots:',availableTimeSlots)
     function getAvailableTimeSlots(reservedSlots, serviceDuration, serviceBufferTime) {
-    const workingStart = "09:00";
-    const workingEnd = "18:00";
+        const workingStart = "09:00";
+        const workingEnd = "18:00";
 
-    function toMinutes(time) {
-        const [h, m] = time.split(":").map(Number);
-        return h * 60 + m;
-    }
-
-    function toTime(minutes) {
-        const h = Math.floor(minutes / 60).toString().padStart(2, "0");
-        const m = (minutes % 60).toString().padStart(2, "0");
-        return `${h}:${m}`;
-    }
-
-    const workStart = toMinutes(workingStart);
-    const workEnd = toMinutes(workingEnd);
-
-    // Build reserved blocks
-    const blocks = reservedSlots.map(item => {
-        const start = toMinutes(item.appointmentTimeSlot);
-        const end = start + item.service.duration + item.service.bufferTime;
-        return { start, end };
-    }).sort((a,b) => a.start - b.start);
-
-    const available = [];
-    const slotDuration = serviceDuration;
-    const slotBlock = serviceDuration + serviceBufferTime;
-
-    let slotStart = workStart;
-
-    while (slotStart + slotDuration <= workEnd) {
-        const slotEnd = slotStart + slotDuration;
-        const slotComplete = slotStart + slotBlock;
-
-        // find reservation overlap
-        const overlapBlock = blocks.find(b =>
-        slotStart < b.end && slotComplete > b.start
-        );
-
-        if (overlapBlock) {
-        // jump to the end of the reservation
-        slotStart = overlapBlock.end;
-        continue;
+        function toMinutes(time) {
+            const [h, m] = time.split(":").map(Number);
+            return h * 60 + m;
         }
 
-        if (slotComplete <= workEnd) {
-        available.push({
-            start: toTime(slotStart),
-            end: toTime(slotEnd)
-        });
+        function toTime(minutes) {
+            const h = Math.floor(minutes / 60).toString().padStart(2, "0");
+            const m = (minutes % 60).toString().padStart(2, "0");
+            return `${h}:${m}`;
         }
 
-        slotStart += slotBlock;
-    }
-    console.log('available slots',serviceDuration,": ", serviceBufferTime)
-    return available;
+        const workStart = toMinutes(workingStart);
+        const workEnd = toMinutes(workingEnd);
+
+        // Build reserved blocks
+        const blocks = reservedSlots.map(item => {
+            const start = toMinutes(item.appointmentTimeSlot);
+            const end = start + item.service.duration + item.service.bufferTime;
+            return { start, end };
+        }).sort((a,b) => a.start - b.start);
+
+        const available = [];
+        const slotDuration = serviceDuration;
+        const slotBlock = serviceDuration + serviceBufferTime;
+
+        let slotStart = workStart;
+
+        while (slotStart + slotDuration <= workEnd) {
+            const slotEnd = slotStart + slotDuration;
+            const slotComplete = slotStart + slotBlock;
+
+            // find reservation overlap
+            const overlapBlock = blocks.find(b =>
+            slotStart < b.end && slotComplete > b.start
+            );
+
+            if (overlapBlock) {
+            // jump to the end of the reservation
+            slotStart = overlapBlock.end;
+            continue;
+            }
+
+            if (slotComplete <= workEnd) {
+            available.push({
+                start: toTime(slotStart),
+                end: toTime(slotEnd)
+            });
+            }
+
+            slotStart += slotBlock;
+        }
+        console.log('available slots',serviceDuration,": ", serviceBufferTime)
+        return available;
     }
     useEffect(() => {
         if (visible && edititem) {
+            const serviceprovider = edititem?.serviceProviders?.id
             form.setFieldsValue({
-                phone: edititem?.booking?.consumer?.phone,
-                firstName: edititem?.booking?.consumer?.firstName,
-                lastName: edititem?.booking?.consumer?.lastName,
-                email: edititem?.booking?.consumer?.email,
-                serviceId: edititem?.booking?.serviceId,
-                serviceProviderId: edititem?.booking?.serviceProviderId,
-                appointmentDate: dayjs(edititem?.booking?.appointmentDate),
-                appointmentTime: edititem?.booking?.appointmentTime ? dayjs(edititem.booking.appointmentTime, "HH:mm") : null,
-                reminderMinutesBefore: edititem?.booking?.reminderMinutesBefore,
-                promoCode: edititem?.booking?.promoCode,
-                note: edititem?.booking?.note,
+                phone: edititem?.consumer?.phone,
+                firstName: edititem?.consumer?.firstName,
+                lastName: edititem?.consumer?.lastName,
+                email: edititem?.consumer?.email,
+                serviceId: edititem?.service?.id,
+                serviceProviderId: serviceprovider,
+                appointmentDate: dayjs(edititem?.appointmentDate),
+                appointmentTime: edititem?.appointmentTime ? dayjs(edititem?.appointmentTime, "HH:mm") : null,
+                reminderMinutesBefore: edititem?.reminderMinutesBefore,
+                promoCode: edititem?.promoCode?.name,
+                note: edititem?.note,
             });
-            setIsAccess(edititem?.booking?.bookingType);
+            setIsAccess(edititem?.bookingType);
+            console.log('edit', edititem)
         } else {
             form.resetFields();
             setIsAccess("BY_TIME");
@@ -186,32 +194,66 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
             bookingType: isAccess,
             isManual: true,
             branchId: getBranchId(),
-            consumer: {
-                phone: input?.phone,
-                firstName: input?.firstName,
-                lastName: input?.lastName,
-                email: input?.email || null,
-            },
             serviceId: input?.serviceId,
-            promoCode: input?.promoCode,
+            promotionId: promoId?.id,
             serviceProviderId: input?.serviceProviderId || null,
             // appointmentDate: formattedDate,
             appointmentDate: appointmentDate,
             appointmentTime: appointmentTime,
-            appointmentTimeSlot: isAccess === "BY_SERVICE_PROVIDER" ? timeslotes : null,
+            appointmentTimeSlot: isAccess === "BY_SERVICE_PROVIDER" ? timeslotes : appointmentTime,
             // appointmentTime: mergeDateAndTime(input?.appointmentDate, finalTime),
             reminderMinutesBefore: Number(input?.reminderMinutesBefore) || null,
             note: input?.note || null,
-            status:'SCHEDULED',
         }
         console.log('appoint inputs',payload)
         // return;
         try {
-            await createBooking({
-                variables: { input: payload }
+            if(edititem?.id){
+                await updateBooking({
+                    variables:{
+                        input:{
+                            id: edititem?.id,
+                            consumerId: edititem?.consumer?.id,
+                            status:'PENDING',
+                            ...payload,
+                        }
+                    }
+                })
+            }
+            else{ await createBooking({
+                variables: { 
+                    input: {
+                        ...payload, 
+                        status:'SCHEDULED',
+                        consumer: {
+                            phone: input?.phone,
+                            firstName: input?.firstName,
+                            lastName: input?.lastName,
+                            email: input?.email || null,
+                        },
+                    },  
+                }
             });
+            }
         } catch (e) {   
             console.error(e);
+        }
+    };
+
+    const checkPromoCode = async () => {
+        const input = form.getFieldValue('promoCode')?.trim();
+
+        if (!input) {
+            setPromoStatus(null);
+            form.setFields([{ name: 'promoCode', errors: [] }]);
+            return;
+        }
+        try {
+            const res = await getVerifyPromotion({ variables: { name: input } });
+            setPromoStatus(res?.data?.verifyPromotion?.status === true);
+            setPromoId(res?.data?.verifyPromotion)
+        } catch {
+            setPromoStatus(false);
         }
     };
 
@@ -231,7 +273,7 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                         <Button type='button' className='btncancel text-black border-gray' onClick={onClose}>
                             {t('Cancel')}
                         </Button>
-                        <Button type="primary" loading={creating} className='btnsave border0 text-white brand-bg' onClick={()=>{form.submit()}}>
+                        <Button type="primary" loading={creating || updating} className='btnsave border0 text-white brand-bg' onClick={()=>{form.submit()}}>
                             {edititem?t('Update'):t('Save')}
                         </Button>
                     </Flex>
@@ -337,8 +379,21 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
                                     label={t('Promo Code (if any)')}
                                     name="promoCode"
                                     placeholder={t('Enter promo code')}
+                                    onChange={() => setPromoStatus(null)}
                                     suffix={
-                                        <Tag className='cursor'>{t('Check')}</Tag>
+                                        <Flex align='center' gap={2}>
+                                            {verifyingPromotion && <Spin {...SmLoader} size="small" />}
+
+                                            {promoStatus !== null && !verifyingPromotion && (
+                                            promoStatus ? (
+                                                <Text className="text-green fs-12">{t("Valid")}</Text>
+                                            ) : (
+                                                <Text className="text-red fs-12">{t("Invalid")}</Text>
+                                            )
+                                            )}
+
+                                            <Tag onClick={checkPromoCode} className='cursor'>{t('Check')}</Tag>
+                                        </Flex>
                                     }
                                 />
                             </Col>

@@ -50,7 +50,7 @@ const eventStyleGetter = (event) => {
             borderRadius: "8px",
             border: "none",
             fontSize: "14px",
-            padding: "10px",
+            padding: "4px 6px",
             borderLeft: "4px solid",
             borderColor,
         },
@@ -72,7 +72,7 @@ const BookingSchedularCalendar = () => {
     const [ selectedService, setSelectedService ] = useState(null)
     const [currentDate, setCurrentDate] = useState(new Date());
     const [api, contextHolder] = notification.useNotification();
-    const [getAppointments, { data: appointData, loading: appointLoading,refetch }] = useLazyQuery(GET_BOOKINGS, 
+    const [getAppointments, { data: appointData, loading: appointLoading }] = useLazyQuery(GET_BOOKINGS, 
         { fetchPolicy: "network-only" }
     );
     const [ getServiceLookups, {data: lookupService} ] = useLazyQuery(GET_SERVICE_BY_SERVICE_PROVIDER)
@@ -84,15 +84,21 @@ const BookingSchedularCalendar = () => {
 
     const [appointments, setAppointments] = useState([]);
 
+    const fetchBooking = () =>{
+        return(
+            getAppointments({
+                variables: {
+                    serviceProviderId: selectedProvider,
+                    serviceId: selectedService,
+                    branchId: getBranchId()
+                }
+            })
+        )
+    }
+
     useEffect(() => {
-        getAppointments({
-            variables: {
-                serviceProviderId: selectedProvider,
-                serviceId: selectedService,
-                branchId: getBranchId()
-            }
-        });
-    }, [getAppointments,refetch,selectedProvider,selectedService]);
+        fetchBooking()
+    }, [fetchBooking,selectedProvider,selectedService]);
     
     useEffect(() => {
         if (appointData?.getAppointments) {
@@ -130,19 +136,18 @@ const BookingSchedularCalendar = () => {
             start: startDate,
             end: endDate,
             status: ev.status || "PENDING",
-            firstName: ev.consumer?.firstName, 
-            lastName: ev.consumer?.lastName,
-            phone: ev.consumer?.phone,
-            consumer: ev.consumer,
-            service: ev.service?.name,
-            duration: ev.service?.duration,
-            amount: ev.service?.price,
+            consumer: ev.consumer, 
+            service: ev.service,
             note: ev.note,
-            promoCode: ev.promoCode,
+            reason: ev.cancelReason,
+            promoCode: ev.promotion,
             appointmentTimeSlot: ev.appointmentTimeSlot,
             appointmentDate: ev.appointmentDate,
             appointmentTime: ev.appointmentTime,
-            resourceId: ev.serviceProvider?.id
+            resourceId: ev.serviceProvider?.id,
+            serviceProviders: ev.serviceProvider,
+            reminderMinutesBefore: ev.reminderMinutesBefore,
+            bookingType: ev.bookingType,
         };
     })
     .filter(Boolean);
@@ -198,9 +203,8 @@ const BookingSchedularCalendar = () => {
                             views={["day"]}
                             step={60} //each slot is 60 mins
                             timeslots={1} //1 hr gap between slots
-                            // defaultDate={new Date(2025, 10, 12)}
                             eventPropGetter={eventStyleGetter}
-                            dayLayoutAlgorithm="overlap"
+                            dayLayoutAlgorithm="no-overlap"
                             popup={true}
                             components={{
                                 event: ({ event }) => (
@@ -208,7 +212,8 @@ const BookingSchedularCalendar = () => {
                                         event={event}
                                         setBookedEvent={setBookedEvent}
                                         setEditEvent={setEditEvent}
-                                        refetch={refetch}
+                                        refetch={()=>fetchBooking()}
+                                        api={api}
                                     />
                                 ),
                                 resourceHeader: ResourceHeader,
@@ -239,7 +244,7 @@ const BookingSchedularCalendar = () => {
                     setEditEvent(null);
                 }}
                 loading={appointLoading}
-                refetch={refetch}
+                refetch={()=>fetchBooking()}
             />
         </>
     );

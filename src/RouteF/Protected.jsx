@@ -1,30 +1,28 @@
-// import { useEffect } from "react"
-// import { isUnAuthorize } from "../shared"
-// import { LoginPage } from "../pages/LoginPage"
+import { useEffect } from "react"
+import { Navigate } from "react-router-dom"
 
-import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context";
+const Protected = ({ children }) => {
+    const isAuthenticated = !!localStorage.getItem('accessToken');
 
-// const Protected = ({ children }) => {
+    useEffect(() => {
+        if (!isAuthenticated) {
+            localStorage.clear();
+        }
+    }, [isAuthenticated]);
 
-//     useEffect(()=>{
-//         if(isUnAuthorize())
-//             localStorage.clear()
-//     },[])
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
 
-//       if (isUnAuthorize()) {
-//         return <LoginPage/>
-    
-//       }
-//       return children
-// }
-// export default Protected;
-
-const ProtectedRoute = ({ children }) => {
-  const { isAuth } = useAuth();
-  const location = useLocation();
-  if (isAuth) return <Navigate to="/" replace />
-  return children;
+    return children;
 };
+export default Protected;
 
-export default ProtectedRoute;
+// const ProtectedRoute = ({ children }) => {
+//   const { isAuth } = useAuth();
+//   const location = useLocation();
+//   if (isAuth) return <Navigate to="/" replace />
+//   return children;
+// };
+
+// export default ProtectedRoute;

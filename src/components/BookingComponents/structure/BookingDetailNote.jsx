@@ -10,7 +10,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                 color={colorstatus} 
                 styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px',color:'#fff'}}}
             >
-                <Text className='text-center fs-12' style={{color: colorstatus}}>{data?.service}</Text>
+                <Text className='text-center fs-12' style={{color: colorstatus}}>{data?.service?.name}</Text>
             </Tooltip>
             <Divider variant="dashed" className='border-dark m-0' />
             <Flex vertical gap={5}>
@@ -21,7 +21,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     >
                         <img src='/assets/icons/user.webp' width={14} alt='user icon' fetchPriority="high" />
                     </Tooltip>
-                    <Text className='text-gray fs-12'>{data?.firstName} {data?.lastName}</Text>
+                    <Text className='text-gray fs-12'>{data?.consumer?.firstName} {data?.consumer?.lastName}</Text>
                 </Flex>
                 <Flex gap={8} align='center'>
                     <Tooltip title={t('Phone' )}
@@ -30,7 +30,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     >
                         <img src='/assets/icons/call.webp' width={14} alt='call icon' fetchPriority="high" />
                     </Tooltip>
-                    <Text className='text-gray fs-12'>{data?.phone}</Text>
+                    <Text className='text-gray fs-12'>{data?.consumer?.phone}</Text>
                 </Flex>
             </Flex>
             <Divider variant="dashed" className='border-dark m-0' />
@@ -42,7 +42,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     >
                         <img src='/assets/icons/time.webp' width={14} alt='time icon' fetchPriority="high" />
                     </Tooltip>
-                    <Text className='text-gray fs-12'>{data?.duration}</Text>
+                    <Text className='text-gray fs-12'>{data?.service?.duration}</Text>
                 </Flex>
                 <Flex gap={8} align='center'>
                     <Tooltip title={t('Currency' )}
@@ -52,7 +52,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                         <img src='/assets/icons/symbol.webp' width={14} alt='currency icon' fetchPriority="high" />
                     </Tooltip>
                     <Flex gap={5} align='center'>
-                        <Text className='text-gray fs-12'>{t('SAR')}{data?.amount}</Text>
+                        <Text className='text-gray fs-12'>{t('SAR')} {data?.service?.price}</Text>
                         {
                             data?.off && <Text delete className='fs-10'>{t('SAR')}{data?.off}</Text>
                         }
@@ -119,7 +119,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                 </Text>
             </Flex>
             {
-                data?.reason && 
+                data?.status=== 'CANCELLED' && data?.reason && 
                 <Flex gap={8} align='center'>
                     <Tooltip title={t('Reason')}
                         color={colorstatus} 

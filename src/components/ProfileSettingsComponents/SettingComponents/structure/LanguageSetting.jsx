@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { Button, Card, Col, Flex, Form, Row, Typography } from 'antd'
 import { languageopt } from '../../../../shared'
-import { EditLanguage } from '../modal'
 import { MySelect } from '../../../Forms'
 import { useTranslation } from 'react-i18next'
+import { LanguageChange } from '../../../Ui'
+
 const { Title } = Typography
 const LanguageSetting = () => {
 const {t} = useTranslation();
     const [form] = Form.useForm();
-    const [ visible, setVisible ] = useState(false)
-    const [ edititem, setEditItem ] = useState(null)
 
     return (
         <>
@@ -17,34 +16,10 @@ const {t} = useTranslation();
                 <Flex gap={10} vertical>
                     <Flex gap={10} justify='space-between' align='center'>
                         <Title level={5} className="fw-500 m-0">{t('Language Settings')}</Title>
-                        <Button className='btncancel' onClick={()=>{setVisible(true);setEditItem(1)}}> 
-                            {t('Change')}
-                        </Button>
                     </Flex>
-                    <Form layout="vertical" 
-                        form={form} 
-                        // onFinish={} 
-                        requiredMark={false}
-                    >
-                        <Row gutter={16}>
-                            <Col span={24}>
-                                <MySelect 
-                                    label={t('Select Language')}
-                                    name="language" 
-                                    placeholder={t('Select Language')}
-                                    options={languageopt}
-                                    disabled 
-                                />
-                            </Col>
-                        </Row>
-                    </Form>
+                    <LanguageChange languageClass='btncancel px-3' />
                 </Flex>
             </Card>
-            <EditLanguage 
-                visible={visible}
-                edititem={edititem}
-                onClose={()=>{ setVisible(false); setEditItem(null) }}
-            />
         </>
     )
 }

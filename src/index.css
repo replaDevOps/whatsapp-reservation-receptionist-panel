@@ -1081,10 +1081,10 @@
 }
 
 .rbc-event{
-    width: 80% !important;
+    /* width: 80% !important;
     height: 70px !important;
     align-items: center !important;
-    text-align: center;
+    text-align: center; */
     margin-left: 30px !important;
 }
 
@@ -1107,7 +1107,7 @@
 }
 
 .rbc-time-view-resources .rbc-time-column .rbc-timeslot-group{
-    min-height: 90px !important;
+    min-height: 110px !important;
     padding: 18px;
 }
 
@@ -1408,6 +1408,10 @@
     z-index: 111;
     border-radius: 10px;
     backdrop-filter: blur(2px);
+}
+
+.rbc-day-slot .rbc-events-container{
+    overflow: auto;
 }
 
 /* =================================================== media querry =============================================== */

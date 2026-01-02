@@ -28,7 +28,9 @@ const GET_BOOKINGS = gql`
                 appointmentTime
                 appointmentTimeSlot
                 note
-                promoCode
+                cancelReason
+                reminderMinutesBefore
+                bookingType
                 service {
                     id
                     name
@@ -42,9 +44,22 @@ const GET_BOOKINGS = gql`
                     lastName
                 }
                 status
+                promotion {
+                    id
+                    name
+                }
             }
         }
     }
 `
 
-export {GET_BOOKINGS, GET_APPOINTMENTS_BY_SERVICE_PROVIDER}
+const VERIFY_PROMOTION_CODE = gql`
+    query VerifyPromotion($name: String!) {
+        verifyPromotion(name: $name) {
+            id
+            status
+        }
+    }
+`
+
+export {GET_BOOKINGS, GET_APPOINTMENTS_BY_SERVICE_PROVIDER, VERIFY_PROMOTION_CODE}

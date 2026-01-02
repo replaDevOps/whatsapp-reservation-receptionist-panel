@@ -11,9 +11,9 @@ import { BookingPage } from '../BookingPage';
 import { MenuItems } from './MenuItems';
 import { StaffVacationPage } from '../StaffVacationPage';
 import { useTranslation } from 'react-i18next';
-import { LanguageChange } from './LanguageChange';
 import { getBusinessImage, getBusinessName } from '../../utils/auth';
 import { getInitials } from '../../shared';
+import { LanguageChange } from '../../components';
 
 const { Header, Sider, Content } = Layout;
 const {Text} = Typography

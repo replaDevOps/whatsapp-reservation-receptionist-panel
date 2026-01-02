@@ -1,15 +1,12 @@
 import { Form, Button, Typography, Row, Col, Checkbox, Flex, Image, notification } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
-import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { MyInput } from "../../components";
+import { LanguageChange, MyInput } from "../../components";
 import { useTranslation } from "react-i18next";
-import { LanguageChange } from "../Sidebar/LanguageChange";
 import { LOGIN_USER } from "../../graphql/mutation/mutations";
 import { useMutation } from "@apollo/client/react";
 import { client } from "../../config/apolloClient";
 import { notifyError, notifySuccess } from "../../shared";
-import { useAuth } from "../../context";
 
 const { Title, Paragraph } = Typography;
 const LoginPage = () => {
@@ -18,7 +15,6 @@ const LoginPage = () => {
     const [api, contextHolder] = notification.useNotification();
     const [loginUser, { loading, error }] = useMutation(LOGIN_USER)
     const [form] = Form.useForm();
-    const { login } = useAuth();
     const location = useLocation();
 
     const from = location.state?.from?.pathname || "/";
@@ -32,9 +28,8 @@ const LoginPage = () => {
                 localStorage.setItem("accessToken", data.loginUser.token);
                 localStorage.setItem("user", JSON.stringify(data.loginUser.user));
                 await client.resetStore();
-                login(data.loginUser.token);
                 notifySuccess(api, "Login successful!");
-                navigate(from, { replace: true });
+                navigate("/")
             } else {
                 notifyError(api,"Login failed: Invalid credentials");
             }
@@ -56,7 +51,7 @@ const LoginPage = () => {
                             </div>
                         </NavLink>
 
-                        <Title level={3} className="mb-1">{t("Welcome Receptionist Admin Panel.")}</Title>
+                        <Title level={3} className="mb-1">{t("Welcome Receptionist Panel.")}</Title>
                         <Paragraph className="fs-16">
                             {t("Please sign in to access your system and manage platform activities.")}
                         </Paragraph>

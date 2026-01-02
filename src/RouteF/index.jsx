@@ -1,86 +1,83 @@
-import { lazy, Suspense } from 'react'
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { lazy, Suspense, useEffect } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { ForgotPassword, LoginPage } from '../pages';
 import { Fallback } from './Fallback';
-import ProtectedRoute from './Protected';
-import { useAuth } from '../context';
+import Protected from './Protected.jsx';
 const Entry = lazy(() => import('../pages/Sidebar/index.jsx'))
 
-// const isLoggedIn = () => !!localStorage.getItem('accessToken')
-
-// const ProtectedRoute = ({ children }) => {
-//   const location = useLocation()
-//   if (!isLoggedIn()) {
-//     return <Navigate to='/login' state={{ from: location }} replace />
-//   }
-//   return children
-// }
-
-// const RouteF = () => {
-//   return (
-//     <Suspense fallback={<Fallback />}>
-//       <Routes>
-//         {/* Protected */}
-//         <Route
-//           path='/*'
-//           element={
-//             <ProtectedRoute>
-//               <Sidebar />
-//             </ProtectedRoute>
-//           }
-//         />
-//         <Route
-//           path='/login'
-//           element={
-//               <LoginPage />
-//           }
-//         />
-//         <Route
-//           path='/forgotpassword'
-//           element={
-//               <ForgotPassword />
-//           }
-//         />
-
-//         {/* Fallback */}
-//         <Route
-//           path='*'
-//           element={isLoggedIn() ? <Navigate to='/' replace /> : <Navigate to='/login' replace />}
-//         />
-//       </Routes>
-//     </Suspense>
-//   )
-// }
-
-
 const RouteF = () => {
-  const { isAuth } = useAuth();
-
+  const isAuthenticated = () => {
+      return !!localStorage.getItem("accessToken");
+    };
+    useEffect(() => {
+      const handleStorageChange = () => {
+          if (!isAuthenticated()) {
+              window.location.href = "/login"; 
+          }
+      };
+      window.addEventListener('storage', handleStorageChange);
+      return () => {
+          window.removeEventListener('storage', handleStorageChange);
+      };
+    }, []);
   return (
+    
       <Routes>
+        <Route
+          path="/login"
+          element={!isAuthenticated() ? <LoginPage /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/forgotpassword"
+          element={!isAuthenticated() ? <ForgotPassword /> : <Navigate to="/" replace />}
+        />
         <Route
           path="/*"
           element={
-            <ProtectedRoute>
-              {/* <Sidebar /> */}
+            <Protected>
               <Suspense fallback={<Fallback />}>
                 <Entry />
               </Suspense>
-            </ProtectedRoute>
-            
+            </Protected>
           }
         />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
-
-        <Route
-          path="*"
-          element={<Navigate to={isAuth ? '/' : '/login'} replace />}
-        />
+        <Route path="*" element={<Navigate to={isAuthenticated() ? "/" : "/login"} replace />} />
       </Routes>
-  );
-};
-
-
+  )
+}
 
 export default RouteF
+
+
+
+// const RouteF = () => {
+//   const { isAuth } = useAuth();
+
+//   return (
+//       <Routes>
+//         <Route
+//           path="/*"
+//           element={
+//             <ProtectedRoute>
+//               {/* <Sidebar /> */}
+//               <Suspense fallback={<Fallback />}>
+//                 <Entry />
+//               </Suspense>
+//             </ProtectedRoute>
+            
+//           }
+//         />
+//         <Route path="/login" element={<LoginPage />} />
+//         <Route path="/forgotpassword" element={<ForgotPassword />} />
+
+//         <Route
+//           path="*"
+//           element={<Navigate to={isAuth ? '/' : '/login'} replace />}
+//         />
+//       </Routes>
+//   );
+// };
+
+
+
+// export default RouteF

@@ -1,5 +1,6 @@
 import { SyncOutlined } from '@ant-design/icons'
-import { Image, Space, Typography } from 'antd'
+import { Avatar, Image, Space, Typography } from 'antd'
+import { getBusinessImage } from '../utils/auth'
 
 const Fallback = () => (
   <div className='center w-100 h-100vh'>
@@ -8,14 +9,19 @@ const Fallback = () => (
       align='center'
       className='w-100 h-100 justify-center'
     >
-      {/* <Image
-        src='/assets/images/logo.webp'
-        alt='logo image'
-        preview={false}
-        fetchPriority="high"
-        className='w-150'
-      /> */}
-      <Typography.Title level={4}>Reservation System Via Whatsapp</Typography.Title>
+      {
+        getBusinessImage() ?
+          <Avatar size={100} shape='square' src={getBusinessImage()} alt='logo image' fetchPriority="high" />
+        :
+        <Image
+          src='/assets/images/logo.webp'
+          alt='logo image'
+          preview={false}
+          fetchPriority="high"
+          className='w-150'
+        />
+      }
+      <Typography.Title level={4}>Receptionist Panel Reservation System</Typography.Title>
       <SyncOutlined className='fs-35 text-brand' spin />
     </Space>
   </div>

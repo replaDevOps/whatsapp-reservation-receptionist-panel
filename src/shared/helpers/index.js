@@ -140,3 +140,4 @@ const getInitials = (name) => {
 
 export {utcDateTimeToLocal, greaterThanEqualTo, handleApolloError, capitalizeTranslated, formatTime24to12, useDebounce, notifySuccess, notifyError,FieldMerger,utcDateToLocal,utcTimeToLocal,getInitials}
 export * from "./TableLoader"
+export * from "./SmLoader"

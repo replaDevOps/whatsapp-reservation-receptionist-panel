@@ -1,64 +1,20 @@
 
-import React, { useEffect, useState } from 'react'
-import { Avatar, Button, Card, Dropdown, Flex, Image, Space, Typography,message } from 'antd'
-// import { SwitchAccount } from './SwitchAccount';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { Avatar, Button, Card, Dropdown, Flex, Space, Typography,message } from 'antd'
 import { DownOutlined } from '@ant-design/icons';
-// import { useMutation,useQuery } from '@apollo/client';
-// import { LOGOUT } from '../../../graphql/mutation/login';
-// import {ME} from '../../../graphql/query'
-
-// import { client } from '../../../config';
 import { useTranslation } from 'react-i18next';
 import { getBusinessImage, getBusinessName } from '../../../utils/auth';
-import { useAuth } from '../../../context';
 import { getInitials } from '../../../shared';
 const UserDropdown = ()=> {
-  // const userId = localStorage.getItem("userId"); 
   const [messageApi, contextHolder] = message.useMessage();
-  const [user, setUser] = useState(null)
-  const navigate = useNavigate()
   const [ loading, setLoaing ] = useState(false)
   const {t}= useTranslation();
-  const { logout } = useAuth();
-
-  // const { data, loading:isLoading, refetch } = useQuery(ME, {
-  //   variables: { getUserId:userId },
-  //   skip: !userId,
-  //   fetchPolicy: "network-only",
-  // });
-  
-  // const [logout, { loading }] = useMutation(LOGOUT, {
-  //   onCompleted: () => {
-  //     localStorage.removeItem("accessToken"); 
-  //     localStorage.removeItem("refreshToken");
-  //     localStorage.removeItem("userId");
-  //     client.resetStore(); 
-  //     window.location.reload();
-  //     },
-  //   onError: (err) => messageApi.error("Logout error:", err)
-  // });
   
   const handleLogout = () => {
-    setLoaing(true)
-    localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
-    logout();
+    localStorage.removeItem('accessToken');
     window.location.href = "/login";
   };
-
-  // const items = [
-  //   {
-  //     key: 'setting',
-  //     label: <Text className='fw-500'>{'Settings'}</Text>,
-  //     onClick: () => navigate('/setting', { state: { user } }),
-  //   },
-  //   {
-  //     key: 'logout',
-  //     label: (<Text className='fw-500' >{'Logout'}</Text>),
-  //     onClick: handleLogout,
-  //   },
-  // ];
 
   const dropdownContent = (
     <Card className='radius-12 shadow-c card-cs'>

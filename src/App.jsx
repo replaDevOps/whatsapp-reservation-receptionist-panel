@@ -6,7 +6,6 @@ import { store } from "./shared";
 import { useTranslation } from 'react-i18next';
 import { client } from './config'; 
 import { ApolloProvider } from '@apollo/client/react';
-import { AuthProvider } from './context/AuthContext';
 
 function App() {
 
@@ -15,7 +14,6 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <AuthProvider>
           <ApolloProvider client={client}>
             <ConfigProvider
               theme={{
@@ -36,7 +34,6 @@ function App() {
               <RouteF />
             </ConfigProvider>
           </ApolloProvider>
-        </AuthProvider>
       </BrowserRouter>
     </Provider>
   )

@@ -1,4 +1,3 @@
-import moment from "moment";
 import { Tag, Flex, Popover, Typography, Dropdown, Button, Tooltip } from "antd";
 import { ClockCircleOutlined, DownOutlined } from "@ant-design/icons";
 import { BookingDetailNote } from "./BookingDetailNote";
@@ -7,12 +6,31 @@ import { useState } from "react";
 import { CancelBooking } from "../modal";
 import { useTranslation } from "react-i18next";
 import { onlyTime } from "../../../utils";
+import { useMutation } from "@apollo/client/react";
+import { notifyError, notifySuccess } from "../../../shared";
+import { UPDATE_APPOINTMENT } from "../../../graphql/mutation/booking";
 
 const { Text } = Typography
-const BookingEventCard = ({ event, setBookedEvent, setEditEvent, refetch }) => {
+const BookingEventCard = ({ event, setBookedEvent, api, setEditEvent, refetch }) => {
     const { t } = useTranslation();
     const [cancelledevent, setCancelledEvent] = useState(false);
-
+    const [reason, setReason] = useState(null)
+    const [updateStatus, { loading } ] = useMutation(UPDATE_APPOINTMENT,{
+        onCompleted: () => {notifySuccess(api,"Booking Status Update","Booking status updated successfully",()=> {refetch()})},
+        onError: (error) => {notifyError(api, error);},
+    })
+    const handleCancelAppointment = async({id,status,cancelReason}) => {
+        const input = {
+            id: id,
+            status: status,
+            cancelReason: cancelReason ? cancelReason: null 
+        }
+        console.log('Appointment Status', input)
+        // return;
+        await updateStatus(
+            {variables: {input}
+        })
+    }
     // Use event fields directly
     const statusColors = {
         COMPLETED: { bg: "#C7EEC3", color: "#17BA05" },
@@ -24,8 +42,6 @@ const BookingEventCard = ({ event, setBookedEvent, setEditEvent, refetch }) => {
 
     const startTime = onlyTime(event.start);
     const endTime = onlyTime(event.end);
-    const statusStyle = statusColors[event.status] || {};
-console.log("event:", event)
     return (
         <>
             <Popover
@@ -41,7 +57,7 @@ console.log("event:", event)
             >
                 <Flex vertical gap={5} className="h-100 w-100">
                     <Flex justify="space-between" align="center">
-                        <Text className="fs-13 fw-500">{event.service}</Text>
+                        <Text className="fs-13 fw-500">{event.service?.name}</Text>
 
                         {event.status !== "PENDING" ? (
                             <Tag
@@ -49,28 +65,12 @@ console.log("event:", event)
                                 style={{ color: statusColors[event.status]?.color }}
                                 className="radius-20 fs-11"
                             >
-                                {t(event.status.charAt(0).toUpperCase() + event.status.slice(1))}
+                                {t(event.status.charAt(0).toUpperCase() + event.status.slice(1).toLowerCase())}
                             </Tag>
                         ) : (
                             <Dropdown
                                 menu={{
                                     items: [
-                                        // {
-                                        //     label: (
-                                        //         <NavLink
-                                        //             className="fs-12"
-                                        //             onClick={(e) => {
-                                        //                 e.preventDefault();
-                                        //                 e.stopPropagation();
-                                        //                 setBookedEvent(true);
-                                        //                 setEditEvent(event);
-                                        //             }}
-                                        //         >
-                                        //             {t("Reschedule")}
-                                        //         </NavLink>
-                                        //     ),
-                                        //     key: "1",
-                                        // },
                                         {
                                             label: (
                                                 <NavLink
@@ -78,7 +78,23 @@ console.log("event:", event)
                                                     onClick={(e) => {
                                                         e.preventDefault();
                                                         e.stopPropagation();
-                                                        setCancelledEvent(event?.id)
+                                                        setBookedEvent(true);
+                                                        setEditEvent(event);
+                                                    }}
+                                                >
+                                                    {t("Reschedule")}
+                                                </NavLink>
+                                            ),
+                                            key: "1",
+                                        },
+                                        {
+                                            label: (
+                                                <NavLink
+                                                    className="fs-12"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        setCancelledEvent({id:event?.id, status: 'CANCELLED'})
                                                     }}
                                                 >
                                                     {t("Cancelled")}
@@ -86,17 +102,21 @@ console.log("event:", event)
                                             ),
                                             key: "2",
                                         },
-                                        // {
-                                        //     label: (
-                                        //         <NavLink
-                                        //             className="fs-12"
-                                        //             onClick={(e) => e.preventDefault()}
-                                        //         >
-                                        //             {t("No Show")}
-                                        //         </NavLink>
-                                        //     ),
-                                        //     key: "3",
-                                        // },
+                                        {
+                                            label: (
+                                                <NavLink
+                                                    className="fs-12"
+                                                    onClick={(e) =>{
+                                                        e.preventDefault()
+                                                        e.stopPropagation();
+                                                        handleCancelAppointment({id:event?.id, status: 'NO_SHOW'})
+                                                    }}
+                                                >
+                                                    {t("No Show")}
+                                                </NavLink>
+                                            ),
+                                            key: "3",
+                                        },
                                     ],
                                 }}
                             >
@@ -104,7 +124,7 @@ console.log("event:", event)
                                     className="radius-20 border-0 sm-pill h-auto fs-10 pending-dropdown-color"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    {t(event.status.charAt(0).toUpperCase() + event.status.slice(1))}
+                                    {t(event.status.charAt(0).toUpperCase() + event.status.slice(1)?.toLowerCase())}
                                     <DownOutlined className="fs-10" />
                                 </Button>
                             </Dropdown>
@@ -122,7 +142,10 @@ console.log("event:", event)
 
             <CancelBooking
                 visible={cancelledevent}
-                onClose={() => setCancelledEvent(false)}
+                onClose={() => setCancelledEvent(null)}
+                loading={loading}
+                setReason={setReason}
+                onConfirm={()=>handleCancelAppointment({id: cancelledevent?.id,status:cancelledevent?.status, cancelReason: reason})}
                 refetch={refetch}
             />
         </>

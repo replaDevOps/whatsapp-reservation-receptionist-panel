@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, Flex, Table, Typography, Row, Col, Form, notification } from 'antd';
 import { ModuleTopHeading } from '../../PageComponent';
 import { CustomPagination } from '../../Ui';
-import { customerColumn, customertableData } from '../../../data';
+import { customerColumn } from '../../../data';
 import { SearchInput } from '../../Forms';
 import { AddCustomer } from '../modal';
 import { useTranslation } from 'react-i18next';

@@ -1,34 +1,16 @@
 import { CloseOutlined } from '@ant-design/icons'
-import { Button, Col, Divider, Flex, Form, Modal, Row, Typography, notification} from 'antd'
+import { Button, Col, Divider, Flex, Form, Modal, Row, Typography} from 'antd'
 import {MyInput } from '../../Forms'
-import { CANCEL_APPOINTMENT } from '../../../graphql/mutation'
-import { useState } from 'react'
-import { useMutation } from '@apollo/client/react'
-import { notifySuccess } from '../../../shared'
+
 const { Title, Text } = Typography
-const CancelBooking = ({visible,onClose,refetch}) => {
+const CancelBooking = ({visible,onClose,onConfirm,loading,setReason}) => {
 
     const [form] = Form.useForm()
-     const [api, contextHolder] = notification.useNotification();
-    const [cancelAppointment, { loading } ] = useMutation(CANCEL_APPOINTMENT,{
-        onCompleted: () => {notifySuccess(api,"Booking create","Booking created successfully",()=> {onClose()})},
-        onError: (error) => {notifyError(api, error);},
-    })
-    const [reason, setReason] = useState(null)
-
-    const handleCancelAppointment = async() => {
-        const input = {
-            id: visible,
-            status: "CANCELLED",
-        }
-        await cancelAppointment(
-            {variables: {input}
-        })
-        await refetch()
+    const onFinish = () =>{
+        onConfirm()
     }
     return (
         <>
-        {contextHolder}
         <Modal
             title={null}
             open={visible}
@@ -43,8 +25,9 @@ const CancelBooking = ({visible,onClose,refetch}) => {
                     <Button 
                         type="primary" 
                         className='btnsave border0 text-white brand-bg' 
-                        onClick={handleCancelAppointment}
                         loading={loading}
+                        htmlType='submit'
+                        onClick={()=>form.submit()}
                     >
                         Send
                     </Button>
@@ -67,17 +50,18 @@ const CancelBooking = ({visible,onClose,refetch}) => {
                 </Flex>
                 <Form layout="vertical" 
                     form={form} 
-                    // onFinish={} 
-                    requiredMark={false}
+                    onFinish={onFinish} 
                 >
                     <Row>
                         <Col span={24}>
                             <MyInput 
                                 textArea
                                 label="Reason" 
+                                name={'cancelReason'}
                                 placeholder="Write reason here..." 
+                                required
+                                message={'Please write reason'}
                                 rows={5}
-                                value={reason}
                                 onChange={(e) => setReason(e.target.value)}
                             />
                         </Col>
