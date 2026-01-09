@@ -34,25 +34,25 @@ const Dashboard = () => {
     {
       id: 1,
       icon: '/assets/icons/total-booking-w.webp',
-      title: dashboardStats?.todayAppoimtemtCount,
+      title: dashboardStats?.todayAppoimtemtCount ?? 0,
       subtitle: t('Total Bookings'),
     },
     {
       id: 2,
       icon: '/assets/icons/manual-booking.webp',
-      title: dashboardStats?.todayManualAppointmentCount,
+      title: dashboardStats?.todayManualAppointmentCount ?? 0,
       subtitle: t('Today’s  Manual Bookings'),
     },
     {
       id: 3,
       icon: '/assets/icons/whatsapp-booking.webp',
-      title: dashboardStats?.todaywhatsappAppointmentCount,
+      title: dashboardStats?.todaywhatsappAppointmentCount ?? 0,
       subtitle: t('Today’s WhatsApp Bookings'),
     },
     {
       id: 4,
       icon: '/assets/icons/cancel-booking.webp',
-      title: dashboardStats?.todaycanecledAppointments,
+      title: dashboardStats?.todaycanecledAppointments ?? 0,
       subtitle: t('Today’s Cancelled Bookings'),
     },
   ];
