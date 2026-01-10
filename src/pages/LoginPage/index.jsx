@@ -28,14 +28,14 @@ const LoginPage = () => {
                 localStorage.setItem("accessToken", data.loginUser.token);
                 localStorage.setItem("user", JSON.stringify(data.loginUser.user));
                 await client.resetStore();
-                notifySuccess(api, "Login successful!");
+                notifySuccess(api, t("Login successful!"));
                 navigate("/")
             } else {
-                notifyError(api,"Login failed: Invalid credentials");
+                notifyError(api,t("Invalid credentials"));
             }
         } catch (error) {
             console.error("Login error:", error);
-            notifyError(api,"Login failed: Something went wrong");
+            notifyError(api,t("Something went wrong"));
         }       
     };
 
@@ -70,7 +70,7 @@ const LoginPage = () => {
                                 name="password" 
                                 required 
                                 message={t("Please enter password")} 
-                                placeholder={t("Enter Password")} 
+                                placeholder={t("Enter password")} 
                             />
                             <Flex justify="space-between" className="mb-3">
                                 <Checkbox>{t("Remember Me")}</Checkbox>
@@ -84,7 +84,7 @@ const LoginPage = () => {
                                 {t("Sign In")}
                             </Button>
                             <Paragraph className="text-center mt-3">
-                                {t("For tablet based self-booking?")} <NavLink className={'text-brand'} to={'/'}>{t("Sign In")}</NavLink>
+                                {t("For tablet based self-booking?")} <NavLink className={'text-brand'} to={''}>{t("Sign In")}</NavLink>
                             </Paragraph>
                         </Form>
                     </div>

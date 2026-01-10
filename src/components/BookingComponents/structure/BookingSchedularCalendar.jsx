@@ -190,48 +190,55 @@ const BookingSchedularCalendar = () => {
                         </Col>
                     </Row>
                     <div className="position-relative">
-                        {/* {appointLoading && (
-                            <Flex justify="center" align="center" className="h-100 w-100 loading">
+                        {appointLoading ? (
+                            <Flex justify="center" align="center">
                                 <Spin {...TableLoader} size="large" />
                             </Flex>
-                        )} */}
-                        <Calendar
-                            localizer={localizer}
-                            events={normalizedEvents}
-                            date={currentDate}
-                            defaultView="day"
-                            views={["day"]}
-                            step={60} //each slot is 60 mins
-                            timeslots={1} //1 hr gap between slots
-                            eventPropGetter={eventStyleGetter}
-                            dayLayoutAlgorithm="no-overlap"
-                            popup={true}
-                            components={{
-                                event: ({ event }) => (
-                                    <BookingEventCard
-                                        event={event}
-                                        setBookedEvent={setBookedEvent}
-                                        setEditEvent={setEditEvent}
-                                        refetch={()=>fetchBooking()}
-                                        api={api}
-                                    />
-                                ),
-                                resourceHeader: ResourceHeader,
-                            }}
-                            resources={serviceProviders}
-                            resourceIdAccessor="id"
-                            resourceTitleAccessor="name"
-                            formats={{
-                                eventTimeRangeFormat: () => "",
-                            }}
-                            showMultiDayTimes={false}
-                            toolbar={false}
-                            selectable
-                            onSelectSlot={() => {
-                                setBookedEvent(true);
-                            }}
-                            className="booking-calendar"
-                        />
+                            )
+                            :
+                            (
+                                <Calendar
+                                    localizer={localizer}
+                                    events={normalizedEvents}
+                                    date={currentDate}
+                                    defaultView="day"
+                                    views={["day"]}
+                                    step={60} //each slot is 60 mins
+                                    timeslots={1} //1 hr gap between slots
+                                    eventPropGetter={eventStyleGetter}
+                                    dayLayoutAlgorithm="no-overlap"
+                                    popup={true}
+                                    components={{
+                                        event: ({ event }) => (
+                                            <BookingEventCard
+                                                event={event}
+                                                setBookedEvent={setBookedEvent}
+                                                setEditEvent={setEditEvent}
+                                                refetch={()=>fetchBooking()}
+                                                api={api}
+                                            />
+                                        ),
+                                        resourceHeader: ResourceHeader,
+                                    }}
+                                    resources={selectedProvider ? serviceProviders.filter(
+                                        (sp) => sp.id === selectedProvider
+                                    ) : serviceProviders}
+                                    resourceIdAccessor="id"
+                                    resourceTitleAccessor="name"
+                                    formats={{
+                                        eventTimeRangeFormat: () => "",
+                                    }}
+                                    showMultiDayTimes={false}
+                                    toolbar={false}
+                                    selectable
+                                    onSelectSlot={() => {
+                                        setBookedEvent(true);
+                                    }}
+                                    className="booking-calendar"
+                                />
+                            )
+                        }
+                        
                     </div>
                 </Flex>
             </Card>

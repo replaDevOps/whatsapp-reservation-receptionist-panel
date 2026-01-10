@@ -33,7 +33,7 @@ const ForgotPassword = () => {
 
     return (
         <Row className="signup-page">
-            <Col xs={24} sm={24} md={12} lg={14} className="signup-form-container">
+            <Col xs={24} sm={24} md={12} lg={10} className="signup-form-container">
                 <div className="form-inner">
                     <NavLink to={'/'}>
                       <div className="logo">
@@ -160,8 +160,8 @@ const ForgotPassword = () => {
                         </Col>
                         <Col span={24}>
                             <Paragraph className="text-center mt-2">
-                                {requestState === 'request' && <>{t("Remember Password?")} <NavLink to={'/login'}>{t("Sign In")}</NavLink></>}
-                                {requestState === 'otp' && <>{t("Didn’t receive code?")} <NavLink to={''}>{t("Resend")}</NavLink></>}
+                                {requestState === 'request' && <>{t("Remember Password?")} <NavLink className={'text-brand'} to={'/login'}>{t("Sign In")}</NavLink></>}
+                                {requestState === 'otp' && <>{t("Didn’t receive code?")} <NavLink className={'text-brand'} to={''}>{t("Resend")}</NavLink></>}
                                 {requestState === 'reset' && null}
                             </Paragraph>
                         </Col>
@@ -170,7 +170,7 @@ const ForgotPassword = () => {
                 </div>
             </Col>
 
-            <Col xs={0} md={12} lg={10} className="signup-visual-container">
+            <Col xs={0} md={12} lg={14} className="signup-visual-container">
                 <Flex justify="end">
                     <LanguageChange />
                 </Flex>

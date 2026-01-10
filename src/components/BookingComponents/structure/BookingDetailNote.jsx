@@ -6,7 +6,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
    const {t} = useTranslation();
     return (
         <Flex vertical gap={8}>
-            <Tooltip title={t('Service' )}
+            <Tooltip title={t('Service')}
                 color={colorstatus} 
                 styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px',color:'#fff'}}}
             >
@@ -15,7 +15,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
             <Divider variant="dashed" className='border-dark m-0' />
             <Flex vertical gap={5}>
                 <Flex gap={8} align='center'>
-                    <Tooltip title={t('User' )}
+                    <Tooltip title={t('User')}
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px',color:'#fff'}}}
                     >
@@ -24,7 +24,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     <Text className='text-gray fs-12'>{data?.consumer?.firstName} {data?.consumer?.lastName}</Text>
                 </Flex>
                 <Flex gap={8} align='center'>
-                    <Tooltip title={t('Phone' )}
+                    <Tooltip title={t('Phone')}
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                     >
@@ -115,7 +115,7 @@ const BookingDetailNote = ({data,colorstatus}) => {
                     <img src='/assets/icons/status.webp' width={14} alt='status icon' fetchPriority="high" />
                 </Tooltip>
                 <Text className='fs-12' style={{color: colorstatus}}>
-                    {capitalizeTranslated(t(data?.status))}
+                    {t(capitalizeTranslated(data?.status))}
                 </Text>
             </Flex>
             {

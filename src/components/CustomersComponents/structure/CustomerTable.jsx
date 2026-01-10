@@ -25,6 +25,18 @@ const CustomerTable = () => {
     const [getCustomers, { data, loading}] = useLazyQuery(GET_CUSTOMERS, {
         fetchPolicy: "network-only",
     })
+
+    const fetchCustomers = () => {
+        getCustomers({
+            variables:{
+                limit: pageSize,
+                offSet: (current - 1) * pageSize,
+                search: debouncedSearch?.trim() || null,
+                branchId: getBranchId(),
+            }
+        })
+    }
+
     const handlePageChange = (page, size) => {
         setCurrent(page);
         setPageSize(size);
@@ -32,17 +44,10 @@ const CustomerTable = () => {
 
     useEffect(()=>{
         if(getCustomers){
-            getCustomers({
-                variables:{
-                    limit: pageSize,
-                    offSet: (current - 1) * pageSize,
-                    search: debouncedSearch?.trim() || null,
-                    branchId: getBranchId(),
-                }
-            })
+            fetchCustomers();
         }
-            
     }, [
+
         getCustomers,
         debouncedSearch,
         current,
@@ -107,6 +112,7 @@ const CustomerTable = () => {
             <AddCustomer
                 visible={addmodal}
                 edititem={edititem}
+                refetch={()=>fetchCustomers()}
                 onClose={() => setAddModal(false)}
             />
         </>

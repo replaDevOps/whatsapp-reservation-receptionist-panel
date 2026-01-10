@@ -4,21 +4,17 @@ import { useTranslation } from 'react-i18next'
 import { CHANGE_PASSWORD_USER } from '../../../../graphql/mutation/mutations'
 import { useMutation } from '@apollo/client/react'
 import { notifyError, notifySuccess } from '../../../../shared'
+import { getUserId } from '../../../../utils/auth'
 
 const { Title } = Typography
 const ChangePasswordSetting = () => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
     const [api, contextHolder] = notification.useNotification();
-    const userId = localStorage.getItem('userId');
+    const userId = getUserId()
     const [ changePassword, { loading } ] = useMutation(CHANGE_PASSWORD_USER,{
         onCompleted: () => {
-            notifySuccess(
-                api,
-                "Password update",
-                "Password updated successfully",
-                ()=>{form.resetFields()}
-            )
+            notifySuccess( api,t("Password update"),t("Password updated successfully"),()=>{form.resetFields()})
         },
         onError: (error) => {
             notifyError(api, error);
@@ -27,15 +23,13 @@ const ChangePasswordSetting = () => {
     const onFinish = () => {
         const values = form.getFieldsValue();
         if (values.newPassword !== values.confirmPassword) {
-            notifyError(api, "New password and confirmation do not match.");
+            notifyError(api, t("New password and confirmation do not match."));
             return;
         }
-
         if (!userId) {
-            notifyError(api, "User not found.");
+            notifyError(api, t("User not found."));
             return;
         }
-
         changePassword({
             variables: {
                 changedPasswordId: userId,

@@ -19,4 +19,21 @@ const GET_NOTIFICATIONS = gql`
   }
 `
 
-export { GET_NOTIFICATIONS }
+const ALERTS_BY_USERID = gql`
+  query GetUserAlerts($userId: ID!, $limit: Int!, $offset: Int!) {
+    getUserAlerts(userId: $userId, limit: $limit, offset: $offset) {
+      totalCount
+      unreadCount
+      alerts {
+        id
+        isRead
+        activity
+        action
+        userName
+        createdAt
+      }
+    }
+  }
+`
+
+export { GET_NOTIFICATIONS, ALERTS_BY_USERID }

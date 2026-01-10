@@ -78,7 +78,7 @@ const StaffVacationsSchedule = () => {
     })
     const [deleteVacation, { loading: deleting }] = useMutation(DELETE_VACATION,{
       onCompleted: () => {
-        notifySuccess(api,"Vacation Event Delete","Vacation event deleted successfully", ()=> {refetch();setDeleteItem(null);})
+        notifySuccess(api,t("Vacation Event Delete"),t("Vacation event deleted successfully"), ()=> {refetch();setDeleteItem(null);})
       },
       onError: (error) => {notifyError(api, error);},
     });
@@ -139,45 +139,47 @@ const StaffVacationsSchedule = () => {
               formattedDate={formattedDate}
             />
             <div className="position-relative">
-              {/* {(loading || deleting) && (
-                <Flex justify="center" align="center" className="h-100 w-100 loading">
+              {(loading || deleting) ? (
+                <Flex justify="center" align="center">
                   <Spin {...TableLoader} size="large" />
                 </Flex>
-              )} */}
-
-              <Calendar
-                localizer={localizer}
-                events={events}
-                date={currentDate}
-                onNavigate={setCurrentDate}
-                defaultView="month"
-                views={["month"]}
-                step={60}
-                timeslots={1}
-                eventPropGetter={eventStyleGetter}
-                dayPropGetter={(date) => {
-                  return {
-                    style: {
-                      ...getCellStatusColor(date, events),
-                      borderRadius: "6px",
-                    },
-                  };
-                }}
-                popup
-                components={{
-                  event: StaffEventCard
-                }}
-                showMultiDayTimes={false}
-                className="h-700 vacation-calendar"
-                toolbar={false}
-                selectable={false}  
-                onSelectEvent={(event) => {
-                  if (event.status === "PENDING") {
-                    setEditEvent(event);
-                    setVisible(true);
-                  }
-                }}
-              />
+                )  : 
+                (
+                  <Calendar
+                    localizer={localizer}
+                    events={events}
+                    date={currentDate}
+                    onNavigate={setCurrentDate}
+                    defaultView="month"
+                    views={["month"]}
+                    step={60}
+                    timeslots={1}
+                    eventPropGetter={eventStyleGetter}
+                    dayPropGetter={(date) => {
+                      return {
+                        style: {
+                          ...getCellStatusColor(date, events),
+                          borderRadius: "6px",
+                        },
+                      };
+                    }}
+                    popup
+                    components={{
+                      event: StaffEventCard
+                    }}
+                    showMultiDayTimes={false}
+                    className="h-700 vacation-calendar"
+                    toolbar={false}
+                    selectable={false}  
+                    onSelectEvent={(event) => {
+                      if (event.status === "PENDING") {
+                        setEditEvent(event);
+                        setVisible(true);
+                      }
+                    }}
+                  />
+                )
+              }              
             </div>
           </Flex>
         </Card>

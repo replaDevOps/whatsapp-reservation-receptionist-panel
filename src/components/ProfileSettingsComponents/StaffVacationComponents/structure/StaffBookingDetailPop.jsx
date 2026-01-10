@@ -1,12 +1,13 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { Avatar, Button, Divider, Dropdown, Flex, Tag, Tooltip, Typography } from 'antd'
 import moment from "moment";
+import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 
 const { Text } = Typography
 const StaffBookingDetailPop = ({data,colorstatus}) => {
     console.log(data)
-    
+    const {t} = useTranslation();
     const startTime = moment(data.start).format("MM/DD/YYYY");
     const endTime = moment(data.end).format("MM/DD/YYYY");
     console.log('name',data?.name)
@@ -55,7 +56,7 @@ const StaffBookingDetailPop = ({data,colorstatus}) => {
             <Divider variant="dashed" className='border-dark m-0' />
             <Flex vertical gap={5}>
                 <Flex gap={8} align='center'>
-                    <Tooltip title='Duration' 
+                    <Tooltip title={t('Duration')} 
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                     >
@@ -73,7 +74,7 @@ const StaffBookingDetailPop = ({data,colorstatus}) => {
             <Divider variant="dashed" className='border-dark m-0' />
             <Flex vertical gap={5}>
                 <Flex gap={8} align='center'>
-                    <Tooltip title='Calendar' 
+                    <Tooltip title={t('Calendar')} 
                         color={colorstatus} 
                         styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                     >
@@ -86,7 +87,7 @@ const StaffBookingDetailPop = ({data,colorstatus}) => {
             </Flex>
             <Divider variant="dashed" className='border-dark m-0' />
             <Flex gap={8} align='center'>
-                <Tooltip title='Status' 
+                <Tooltip title={t('Status')} 
                     color={colorstatus} 
                     styles={{body:{fontSize: 11,minHeight: 15,padding: '4px 6px', color:'#fff'}}}
                 >

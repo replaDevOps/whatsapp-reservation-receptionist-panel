@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { CloseOutlined, EditFilled } from '@ant-design/icons'
-import { Button, Col, Divider, Flex, Form, message, Modal, notification, Row, Typography } from 'antd'
+import { Button, Col, Divider, Flex, Form, Modal, notification, Row, Typography } from 'antd'
 import { MyInput, SingleFileUpload } from '../../../Forms'
 import { useTranslation } from 'react-i18next'
 import { notifyError, notifySuccess, toArabicDigits } from '../../../../shared'
@@ -19,7 +19,7 @@ const EditGeneralSettings = ({visible,onClose,edititem,refetch}) => {
     const [api, contextHolder] = notification.useNotification();
     const [ updateUser,  { loading: updaing } ] = useMutation(UPDATE_USER,{
         onCompleted: () => {
-            notifySuccess(api,"Setting update","Setting updated successfully",()=> {refetch();onClose()})
+            notifySuccess(api,t("Setting update"),t("Setting updated successfully"),()=> {refetch();onClose()})
         },
         onError: (error) => {
             notifyError(api, error);
@@ -73,7 +73,7 @@ const EditGeneralSettings = ({visible,onClose,edititem,refetch}) => {
     
         } catch (err) {
             console.error("Upload error:", err);
-            notifyError(api,"Failed to upload file")
+            notifyError(api,t("Failed to upload file"))
             throw err;
         }
     };

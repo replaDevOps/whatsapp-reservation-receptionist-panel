@@ -32,11 +32,11 @@ const AddEditBooking = ({visible,onClose,edititem,refetch}) => {
     const [availableTimeSlots, setAvailableTimeSlots] = useState([])
 
     const [ createBooking, { loading:creating } ] = useMutation(CREATE_BOOKING,{
-        onCompleted: () => {notifySuccess(api,"Booking create","Booking created successfully",()=> {onClose();refetch()})},
+        onCompleted: () => {notifySuccess(api,t("Booking create"),t("Booking created successfully"),()=> {onClose();refetch()})},
         onError: (error) => {notifyError(api, error);},
     })
     const [updateBooking, { loading:updating } ] = useMutation(UPDATE_APPOINTMENT,{
-        onCompleted: () => {notifySuccess(api,"Booking Update","Booking updated successfully",()=> {onClose();refetch()})},
+        onCompleted: () => {notifySuccess(api,t("Booking Update"),t("Booking updated successfully"),()=> {onClose();refetch()})},
         onError: (error) => {notifyError(api, error);},
     })
     const handleRadioChange = (e) => {

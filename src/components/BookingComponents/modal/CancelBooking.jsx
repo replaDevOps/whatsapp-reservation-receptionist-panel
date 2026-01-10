@@ -3,7 +3,7 @@ import { Button, Col, Divider, Flex, Form, Modal, Row, Typography} from 'antd'
 import {MyInput } from '../../Forms'
 
 const { Title, Text } = Typography
-const CancelBooking = ({visible,onClose,onConfirm,loading,setReason}) => {
+const CancelBooking = ({visible,onClose,onConfirm,loading,setReason,t}) => {
 
     const [form] = Form.useForm()
     const onFinish = () =>{
@@ -20,7 +20,7 @@ const CancelBooking = ({visible,onClose,onConfirm,loading,setReason}) => {
             footer={
                 <Flex justify='end' gap={5}>
                     <Button type='button' className='btncancel text-black border-gray' onClick={onClose}>
-                        Skip
+                        {t("Skip")}
                     </Button>
                     <Button 
                         type="primary" 
@@ -29,7 +29,7 @@ const CancelBooking = ({visible,onClose,onConfirm,loading,setReason}) => {
                         htmlType='submit'
                         onClick={()=>form.submit()}
                     >
-                        Send
+                        {t("Send")}
                     </Button>
                 </Flex>
             }
@@ -38,14 +38,14 @@ const CancelBooking = ({visible,onClose,onConfirm,loading,setReason}) => {
                 <Flex vertical gap={0}>
                     <Flex justify='space-between' gap={6}>
                         <Title level={5} className='m-0'>
-                            Cancel Booking
+                            {t("Cancel Booking")}
                         </Title>
                         <Button type='button' onClick={onClose} className='p-0 border-0 bg-transparent'>
                             <CloseOutlined className='fs-18' />
                         </Button>
                     </Flex> 
                     <Text className='fs-13 text-gray'>
-                        Please provide a reason for cancelling this booking.
+                        {t("Please provide a reason for cancelling this booking.")}
                     </Text>
                 </Flex>
                 <Form layout="vertical" 
@@ -56,11 +56,11 @@ const CancelBooking = ({visible,onClose,onConfirm,loading,setReason}) => {
                         <Col span={24}>
                             <MyInput 
                                 textArea
-                                label="Reason" 
+                                label={t("Reason")} 
                                 name={'cancelReason'}
-                                placeholder="Write reason here..." 
+                                placeholder={t("Write reason here...")} 
                                 required
-                                message={'Please write reason'}
+                                message={t('Please write reason')}
                                 rows={5}
                                 onChange={(e) => setReason(e.target.value)}
                             />

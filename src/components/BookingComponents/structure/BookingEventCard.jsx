@@ -16,7 +16,7 @@ const BookingEventCard = ({ event, setBookedEvent, api, setEditEvent, refetch })
     const [cancelledevent, setCancelledEvent] = useState(false);
     const [reason, setReason] = useState(null)
     const [updateStatus, { loading } ] = useMutation(UPDATE_APPOINTMENT,{
-        onCompleted: () => {notifySuccess(api,"Booking Status Update","Booking status updated successfully",()=> {refetch()})},
+        onCompleted: () => {notifySuccess(api,t("Booking Status Update"),t("Booking status updated successfully"),()=> {refetch()})},
         onError: (error) => {notifyError(api, error);},
     })
     const handleCancelAppointment = async({id,status,cancelReason}) => {
@@ -144,6 +144,7 @@ const BookingEventCard = ({ event, setBookedEvent, api, setEditEvent, refetch })
                 visible={cancelledevent}
                 onClose={() => setCancelledEvent(null)}
                 loading={loading}
+                t={t}
                 setReason={setReason}
                 onConfirm={()=>handleCancelAppointment({id: cancelledevent?.id,status:cancelledevent?.status, cancelReason: reason})}
                 refetch={refetch}
