@@ -38,6 +38,9 @@ const ChangePasswordSetting = () => {
             }
         });
     };
+    useEffect(() => {
+        form.resetFields();
+    }, [i18n.language]);
     return (
         <>
             {contextHolder}
