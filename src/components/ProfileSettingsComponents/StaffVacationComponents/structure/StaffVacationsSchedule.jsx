@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import { mystaffData } from "../../../../data";
-import { Button, Card, Flex, Image, notification, Spin, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Flex,
+  Image,
+  notification,
+  Spin,
+  Typography,
+} from "antd";
 import { StaffEventCard } from "./StaffEventCard";
 import { NavigationControl } from "./NavigationControl";
 import { ModuleTopHeading } from "../../../PageComponent";
@@ -19,11 +27,11 @@ import { getUserId } from "../../../../utils/auth";
 const localizer = momentLocalizer(moment);
 
 const getCellStatusColor = (date, events) => {
-  const current = moment(date).startOf('day');
+  const current = moment(date).startOf("day");
   const matchedEvent = events.find((ev) => {
-    const start = moment(ev.start).startOf('day');
-    const end = moment(ev.end).startOf('day');
-    return current.isBetween(start, end, null, '[]');
+    const start = moment(ev.start).startOf("day");
+    const end = moment(ev.end).startOf("day");
+    return current.isBetween(start, end, null, "[]");
   });
 
   if (!matchedEvent) return {};
@@ -41,167 +49,197 @@ const getCellStatusColor = (date, events) => {
 };
 
 const eventStyleGetter = (event) => {
-    let backgroundColor = "";
-    switch (event.status) {
-        case "APPROVED":
-            backgroundColor = "#E6F4E8";
-            break;
-        case "REJECTED":
-            backgroundColor = "#FFECEB";
-            break;
-        case "PENDING":
-            backgroundColor = "#FCF1E6";
-            break;
-        default:
-            backgroundColor = "#05BAB5";
-    }
+  let backgroundColor = "";
+  switch (event.status) {
+    case "APPROVED":
+      backgroundColor = "#E6F4E8";
+      break;
+    case "REJECTED":
+      backgroundColor = "#FFECEB";
+      break;
+    case "PENDING":
+      backgroundColor = "#FCF1E6";
+      break;
+    default:
+      backgroundColor = "#05BAB5";
+  }
 
-    return {
-        style: {
-          backgroundColor,
-          borderRadius: "6px",
-          padding: "2px 3px",
-          fontSize: "13px",
-          cursor: "pointer",
-          width:'auto'
-        },
-    };
+  return {
+    style: {
+      backgroundColor,
+      borderRadius: "6px",
+      padding: "2px 3px",
+      fontSize: "13px",
+      cursor: "pointer",
+      width: "auto",
+    },
+  };
 };
-const { Title, Text } = Typography
+const { Title, Text } = Typography;
 const StaffVacationsSchedule = () => {
-    const {t} = useTranslation();
-    const [ vacationdata, setVactionData ] = useState([])
-    const [api, contextHolder] = notification.useNotification();
-    const [events, setEvents] = useState([]);
-    const [ getVacation, {data,loading, refetch} ] = useLazyQuery(GET_VACATIONS,{
-       fetchPolicy:'network-only'
-    })
-    const [deleteVacation, { loading: deleting }] = useMutation(DELETE_VACATION,{
-      onCompleted: () => {
-        notifySuccess(api,t("Vacation Event Delete"),t("Vacation event deleted successfully"), ()=> {refetch();setDeleteItem(null);})
-      },
-      onError: (error) => {notifyError(api, error);},
-    });
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [ visible, setVisible ] = useState(false)
-    const [ editevent, setEditEvent ] = useState(null)
-    const [ deleteitem, setDeleteItem ] = useState(null)
+  const { t } = useTranslation();
+  const [vacationdata, setVactionData] = useState([]);
+  const [api, contextHolder] = notification.useNotification();
+  const [events, setEvents] = useState([]);
+  const [getVacation, { data, loading, refetch }] = useLazyQuery(
+    GET_VACATIONS,
+    {
+      fetchPolicy: "network-only",
+    },
+  );
+  const [deleteVacation, { loading: deleting }] = useMutation(DELETE_VACATION, {
+    onCompleted: () => {
+      notifySuccess(
+        api,
+        t("Vacation Event Delete"),
+        t("Vacation event deleted successfully"),
+      );
+      refetch();
+      setDeleteItem(null);
+    },
+    onError: (error) => {
+      notifyError(api, error);
+    },
+  });
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [visible, setVisible] = useState(false);
+  const [editevent, setEditEvent] = useState(null);
+  const [deleteitem, setDeleteItem] = useState(null);
 
-    const formattedDate = currentDate.toDateString();
-    
-    useEffect(() => {
-      const userId = getUserId();
-      if (!userId) return;
-      getVacation({ variables: { staffId: userId } });
-    }, [getVacation]);
+  const formattedDate = currentDate.toDateString();
 
-    useEffect(() => {
-      if (data?.getVacations) {
-        setVactionData(data.getVacations);
+  useEffect(() => {
+    const userId = getUserId();
+    if (!userId) return;
+    getVacation({ variables: { staffId: userId } });
+  }, [getVacation]);
 
-        const mapped = data.getVacations.vacations?.map(v => ({
+  useEffect(() => {
+    if (data?.getVacations) {
+      setVactionData(data.getVacations);
+
+      const mapped =
+        data.getVacations.vacations?.map((v) => ({
           id: v.id,
-          start: dayjs(v.startDate).startOf('day').toDate(),
-          end: dayjs(v.endDate).endOf('day').toDate(),
+          start: dayjs(v.startDate).startOf("day").toDate(),
+          end: dayjs(v.endDate).endOf("day").toDate(),
           title: v.status,
-          status: v.status
+          status: v.status,
         })) || [];
-        setEvents(mapped);
-      }
-    }, [data]);
+      setEvents(mapped);
+    }
+  }, [data]);
 
-    return (
-      <>
-        {contextHolder}
-        <Card className='card-bg radius-12 border-gray card-cs'>
-          <Flex vertical gap={20}>
-            <Flex justify="space-between" align="center" gap={10}>
-              <Flex vertical>
-                <ModuleTopHeading level={4} name={t('Staff Vacations')} />
-                <Text className='text-gray fs-13'>{t('Manage your staff vacations.')}</Text>
-              </Flex>
-              <Button className='btncancel' onClick={()=>{setVisible(true)}}> 
-                <PlusOutlined /> {t('Add Vacation')}
-              </Button>
+  return (
+    <>
+      {contextHolder}
+      <Card className="card-bg radius-12 border-gray card-cs">
+        <Flex vertical gap={20}>
+          <Flex justify="space-between" align="center" gap={10}>
+            <Flex vertical>
+              <ModuleTopHeading level={4} name={t("Staff Vacations")} />
+              <Text className="text-gray fs-13">
+                {t("Manage your staff vacations.")}
+              </Text>
             </Flex>
-            <Flex gap={15} align='center'>
-              <Image src='/assets/icons/newcust-ar.webp' width={40} preview={false} alt='total vacations icon' fetchPriority="high" />
-              <Flex vertical>
-                <Text className='text-gray fs-15'>{t('Total vacations (this month)')}</Text>
-                <Title className='fw-600 m-0' level={4}>
-                  {vacationdata?.totalVacation}
-                </Title>
-              </Flex>
-            </Flex>
-            <NavigationControl
-              currentDate={currentDate}
-              setCurrentDate={setCurrentDate}
-              formattedDate={formattedDate}
-            />
-            <div className="position-relative">
-              {(loading || deleting) ? (
-                <Flex justify="center" align="center">
-                  <Spin {...TableLoader} size="large" />
-                </Flex>
-                )  : 
-                (
-                  <Calendar
-                    localizer={localizer}
-                    events={events}
-                    date={currentDate}
-                    onNavigate={setCurrentDate}
-                    defaultView="month"
-                    views={["month"]}
-                    step={60}
-                    timeslots={1}
-                    eventPropGetter={eventStyleGetter}
-                    dayPropGetter={(date) => {
-                      return {
-                        style: {
-                          ...getCellStatusColor(date, events),
-                          borderRadius: "6px",
-                        },
-                      };
-                    }}
-                    popup
-                    components={{
-                      event: StaffEventCard
-                    }}
-                    showMultiDayTimes={false}
-                    className="h-700 vacation-calendar"
-                    toolbar={false}
-                    selectable={false}  
-                    onSelectEvent={(event) => {
-                      if (event.status === "PENDING") {
-                        setEditEvent(event);
-                        setVisible(true);
-                      }
-                    }}
-                  />
-                )
-              }              
-            </div>
+            <Button
+              className="btncancel"
+              onClick={() => {
+                setVisible(true);
+              }}
+            >
+              <PlusOutlined /> {t("Add Vacation")}
+            </Button>
           </Flex>
-        </Card>
-        <AddVacation 
-          visible={visible}
-          edititem={editevent}
-          setDeleteItem={setDeleteItem}
-          onClose={()=>{setVisible(false);setEditEvent(null)}}
-          refetch={refetch}
-        />
-        <DeleteModal 
-          visible={deleteitem}
-          title={'Are you sure?'}
-          subtitle={'This action cannot be undone. Are you sure you want to delete this vacation?'}
-          onClose={()=>setDeleteItem(null)}
-          onConfirm= {async (deleteVacationId )=>{
-            await deleteVacation({ variables: {deleteVacationId}  })
-          }}
-          loading={deleting}
-        />
-      </>
-    );
+          <Flex gap={15} align="center">
+            <Image
+              src="/assets/icons/newcust-ar.webp"
+              width={40}
+              preview={false}
+              alt="total vacations icon"
+              fetchPriority="high"
+            />
+            <Flex vertical>
+              <Text className="text-gray fs-15">
+                {t("Total vacations (this month)")}
+              </Text>
+              <Title className="fw-600 m-0" level={4}>
+                {vacationdata?.totalVacation}
+              </Title>
+            </Flex>
+          </Flex>
+          <NavigationControl
+            currentDate={currentDate}
+            setCurrentDate={setCurrentDate}
+            formattedDate={formattedDate}
+          />
+          <div className="position-relative">
+            {loading || deleting ? (
+              <Flex justify="center" align="center">
+                <Spin {...TableLoader} size="large" />
+              </Flex>
+            ) : (
+              <Calendar
+                localizer={localizer}
+                events={events}
+                date={currentDate}
+                onNavigate={setCurrentDate}
+                defaultView="month"
+                views={["month"]}
+                step={60}
+                timeslots={1}
+                eventPropGetter={eventStyleGetter}
+                dayPropGetter={(date) => {
+                  return {
+                    style: {
+                      ...getCellStatusColor(date, events),
+                      borderRadius: "6px",
+                    },
+                  };
+                }}
+                popup
+                components={{
+                  event: StaffEventCard,
+                }}
+                showMultiDayTimes={false}
+                className="h-700 vacation-calendar"
+                toolbar={false}
+                selectable={false}
+                onSelectEvent={(event) => {
+                  if (event.status === "PENDING") {
+                    setEditEvent(event);
+                    setVisible(true);
+                  }
+                }}
+              />
+            )}
+          </div>
+        </Flex>
+      </Card>
+      <AddVacation
+        visible={visible}
+        edititem={editevent}
+        setDeleteItem={setDeleteItem}
+        onClose={() => {
+          setVisible(false);
+          setEditEvent(null);
+        }}
+        refetch={refetch}
+      />
+      <DeleteModal
+        visible={deleteitem}
+        title={"Are you sure?"}
+        subtitle={
+          "This action cannot be undone. Are you sure you want to delete this vacation?"
+        }
+        onClose={() => setDeleteItem(null)}
+        onConfirm={async (deleteVacationId) => {
+          await deleteVacation({ variables: { deleteVacationId } });
+        }}
+        loading={deleting}
+      />
+    </>
+  );
 };
 
 export { StaffVacationsSchedule };
